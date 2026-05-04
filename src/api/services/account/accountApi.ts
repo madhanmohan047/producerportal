@@ -6,7 +6,7 @@ import { Account, Submission } from './types'
  * GET /api/accounts
  */
 export const getAllAccounts = () => {
-    return axiosInstance.get<Account[]>('/api/accounts');
+    return axiosInstance.get<Account[]>('/accounts');
 }
 
 /**
@@ -14,7 +14,7 @@ export const getAllAccounts = () => {
  * POST /api/accounts
  */
 export const createAccount = (accountData: Account) => {
-    return axiosInstance.post<Account>('/api/accounts', accountData);
+    return axiosInstance.post<Account>('/accounts', accountData);
 }
 
 /**
@@ -22,7 +22,7 @@ export const createAccount = (accountData: Account) => {
  * GET /api/accounts/{id}
  */
 export const getAccountById = (id: string) => {
-    return axiosInstance.get<Account>(`/api/accounts/${id}`);
+    return axiosInstance.get<Account>(`/accounts/${id}`);
 }
 
 /**
@@ -31,7 +31,7 @@ export const getAccountById = (id: string) => {
    */
 export const createSubmission = (accountId: string, submissionData: Submission) => {
     return axiosInstance.post<Submission>(
-        `/api/accounts/${accountId}/submissions`,
+        `/accounts/${accountId}/submissions`,
         submissionData
     );
 }
