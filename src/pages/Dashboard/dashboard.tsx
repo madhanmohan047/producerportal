@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import {DASHBOARD_MESSAGES} from "./dashboard.messages";
 import styles from "../Dashboard/dashboard.module.scss";
-import {ROUTES} from "./Routes";
+import {Features} from "./DashboardFeatures";
 
 
 export default function Dashboard(){
@@ -17,7 +17,7 @@ export default function Dashboard(){
                 <h2> {DASHBOARD_MESSAGES.DASHBOARDS_TITLE}</h2>
             </section>
              <div className={styles.featuresGrid}>
-          {ROUTES.map((f) => (
+          {Features.map((f) => (
             <div key={f.title} className={styles.featureCard} onClick={() => navigate(f.path)}>
               <div className={styles[f.classname as keyof typeof styles]}><FontAwesomeIcon icon={f.icon} /> </div>
               <h3 className={styles.featureTitle}>{f.title}</h3> <h2>{f.number}</h2>

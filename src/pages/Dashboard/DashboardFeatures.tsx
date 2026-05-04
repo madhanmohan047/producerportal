@@ -2,7 +2,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faFileInvoiceDollar, faShieldHalved, faBuilding } from '@fortawesome/free-solid-svg-icons';
 import { DASHBOARD_MESSAGES } from "./dashboard.messages";
 
-export interface Route {
+export interface Features {
   icon: IconDefinition;
   title: string;
   path: string;
@@ -10,7 +10,7 @@ export interface Route {
   number: string;
 }
 
-export const ROUTES: Route[] = [
+export const Features: Features[] = [
   {
     icon: faFileInvoiceDollar,
     title: DASHBOARD_MESSAGES.QUOTES,
