@@ -1,13 +1,9 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import AppFloorplan from "./AppFloorplan";
+import config from "./App.config";
 
 function App() {
-  return (
-   <div className="App">
-      <header className="App-header">
-      </header>
-    </div>
-  );
+  return <AppFloorplan routes={config.defaultRoutes.routes} />;
 }
 
 export default App;
