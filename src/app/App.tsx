@@ -1,13 +1,18 @@
 import React, { useEffect } from "react";
+import { IntlProvider } from "react-intl";
 import AppFloorplan from "./AppFloorplan";
 import config from "./App.config";
 
 function App() {
-  useEffect(() => {
+    useEffect(() => {
     document.documentElement.setAttribute("data-theme", "light");
   }, []);
 
-  return <AppFloorplan floorplanConfig={config.floorplanConfig} />;
+  return (
+    <IntlProvider locale="en">
+      <AppFloorplan routes={config.defaultRoutes.routes} />
+    </IntlProvider>
+  );
 }
 
 export default App;
