@@ -10,7 +10,7 @@ function App() {
 
   return (
     <IntlProvider locale="en">
-      <AppFloorplan routes={config.defaultRoutes.routes} />
+      <AppFloorplan floorplanConfig={config.floorplanConfig} />
     </IntlProvider>
   );
 }
