@@ -1,0 +1,391 @@
+// .account-details-page {
+//   display: flex;
+//   justify-content: center;
+//   align-items: flex-start;
+//   padding: 2rem;
+//   background-color: #f5f7fa;
+//   min-height: 100vh;
+// }
+
+// .account-details-card {
+//   background: #e5e0e0;
+//   border-radius: 12px;
+//   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+//   width: 100%;
+//   max-width: 900px;
+//   padding: 1.5rem 2rem;
+// }
+
+// .card-header {
+//   display: flex;
+//   align-items: center;
+//   margin-bottom: 1.5rem;
+
+//   .header-left {
+//     display: flex;
+//     align-items: center;
+//     gap: 1rem; // increase from 0.75rem → 1rem or more
+//   }
+
+//   .account-details-title {
+//     font-size: 1.5rem;
+//     font-weight: 600;
+//     color: #333;
+//     margin-left: 0.75rem;
+//   }
+
+//   .back-button {
+//     background: transparent;
+//     border: none;
+//     color: #007bff;
+//     font-size: 0.95rem;
+//     cursor: pointer;
+//     padding: 0;
+
+//     &:hover {
+//       text-decoration: underline;
+//     }
+//   }
+// }
+
+// .card-content {
+//   .account-details-grid {
+//     display: grid;
+//     grid-template-columns: repeat(2, 1fr); // 2 columns
+//     grid-template-rows: repeat(3, auto); // 3 rows
+//     gap: 1.25rem 2rem;
+//   }
+
+//   .account-details-row {
+//     display: flex;
+//     flex-direction: column;
+//     background: #f9fafc;
+//     padding: 0.75rem 1rem;
+//     border-radius: 8px;
+
+//     .account-details-label {
+//       font-size: 0.8rem;
+//       color: #777;
+//       margin-bottom: 0.25rem;
+//       text-transform: uppercase;
+//       letter-spacing: 0.5px;
+//     }
+
+//     .account-details-value {
+//       font-size: 1rem;
+//       font-weight: 500;
+//       color: #222;
+//       word-break: break-word;
+//     }
+//   }
+// }
+
+// .related-entities {
+//   margin-top: 2rem;
+//   padding-top: 1.5rem;
+//   border-top: 1px solid #e5e7eb;
+
+//   .policies,
+//   .jobs {
+//     margin-bottom: 2rem; // ensures they stay in different rows clearly
+
+//     h3 {
+//       font-size: 1.1rem;
+//       font-weight: 600;
+//       margin-bottom: 0.75rem;
+//       color: #444;
+//     }
+//   }
+
+//   .policy-card,
+//   .job-card {
+//     background: #ffffff;
+//     border: 1px solid #eaeaea;
+//     border-radius: 10px;
+//     padding: 0.9rem 1rem;
+//     margin-bottom: 0.75rem;
+//     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+//     transition: 0.2s ease;
+
+//     &:hover {
+//       transform: translateY(-2px);
+//       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+//     }
+
+//     h4 {
+//       font-size: 1rem;
+//       font-weight: 600;
+//       margin-bottom: 0.3rem;
+//       color: #111;
+//     }
+
+//     p {
+//       font-size: 0.9rem;
+//       color: #666;
+//       line-height: 1.4;
+//     }
+//   }
+
+//   // optional visual distinction
+//   .policy-card {
+//     border-left: 4px solid #3b82f6;
+//   }
+
+//   .job-card {
+//     border-left: 4px solid #10b981;
+//   }
+// }
+
+// /* Responsive */
+// @media (max-width: 768px) {
+//   .account-details-card {
+//     padding: 1rem;
+//   }
+
+//   .card-content {
+//     .account-details-grid {
+//       grid-template-columns: 1fr; // stack on small screens
+//       grid-template-rows: auto;
+//     }
+//   }
+// }
+// .page {
+//   padding: 1.5rem;
+//   background: #f5f6f8;
+//   min-height: 100vh;
+//   font-family: Arial, sans-serif;
+// }
+
+// /* HEADER */
+// .header {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: 1rem;
+// }
+
+// .titleRow {
+//   display: flex;
+//   align-items: center;
+//   gap: 0.75rem;
+
+//   h1 {
+//     font-size: 1.4rem;
+//     font-weight: 600;
+//   }
+// }
+
+// .backBtn {
+//   border: none;
+//   background: transparent;
+//   font-size: 1.4rem;
+//   cursor: pointer;
+// }
+
+// .primaryBtn {
+//   background: #2f6fed;
+//   color: white;
+//   border: none;
+//   padding: 0.5rem 1rem;
+//   border-radius: 4px;
+//   cursor: pointer;
+// }
+
+// /* CARD */
+// .card {
+//   background: white;
+//   border: 1px solid #ddd;
+//   padding: 1rem;
+//   border-radius: 6px;
+//   margin-bottom: 1rem;
+// }
+
+// .infoGrid {
+//   display: flex;
+//   justify-content: space-between;
+// }
+
+// .col {
+//   width: 48%;
+// }
+
+// .row {
+//   display: flex;
+//   justify-content: space-between;
+//   padding: 0.4rem 0;
+
+//   span {
+//     color: #666;
+//     font-size: 0.85rem;
+//   }
+
+//   b {
+//     font-size: 0.9rem;
+//     color: #111;
+//   }
+// }
+
+// /* SECTION */
+// .section {
+//   margin-top: 1rem;
+//   border: 1px solid #ddd;
+//   background: white;
+//   border-radius: 6px;
+// }
+
+// .sectionHeader {
+//   padding: 0.75rem;
+//   font-weight: 600;
+//   border-bottom: 1px solid #eee;
+// }
+
+// /* TABLE */
+// .table {
+//   padding: 0.5rem;
+// }
+
+// .tableHeader,
+// .tableRow {
+//   display: grid;
+//   grid-template-columns: 1fr 1fr 1fr 2fr;
+//   padding: 0.5rem;
+// }
+
+// .tableHeader {
+//   font-weight: 600;
+//   color: #666;
+//   border-bottom: 1px solid #eee;
+// }
+
+// .tableRow {
+//   border-bottom: 1px solid #f0f0f0;
+// }
+
+// .link {
+//   color: #2f6fed;
+//   cursor: pointer;
+// }
+.account-details-page {
+  padding: 1.5rem;
+  background: #f5f6f8;
+  min-height: 100vh;
+}
+
+/* MAIN CARD */
+.account-details-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+/* HEADER */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.back-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+}
+
+.back-icon {
+  color: #282c34;
+  font-size: 1.4rem;
+}
+
+.account-details-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #282c34;
+}
+
+/* GRID (Account Details Section) */
+.account-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
+}
+
+.account-details-row {
+  display: flex;
+  // justify-content: space-between;
+  flex-direction: column; // key change
+  align-items: flex-start;
+  gap: 0.25rem;
+  padding: 0.35rem 0;
+}
+
+.account-details-label {
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.account-details-value {
+  color: #282c34;
+
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* RELATED ENTITIES SECTION */
+.related-entities {
+  margin-top: 1rem;
+}
+
+/* POLICIES + JOBS */
+.policies,
+.jobs {
+  margin-bottom: 1rem;
+
+  h3 {
+    color: #282c34;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+  }
+}
+
+/* POLICY CARD */
+.policy-card,
+.job-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  transition: 0.2s ease;
+}
+
+.policy-card:hover,
+.job-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* JOB CARD TEXT */
+.job-card h4,
+.policy-card h4 {
+  color: #282c34;
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.job-card p,
+.policy-card p {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: #666;
+}
