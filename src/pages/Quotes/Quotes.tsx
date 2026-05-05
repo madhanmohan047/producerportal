@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaFileInvoiceDollar } from "react-icons/fa";
+//import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+//import { faDollar } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Quotes.module.scss";
 import { getAllJobs } from "../../api/services/job/jobApi";
 
@@ -201,7 +202,6 @@ const Quotes: React.FC = () => {
   //     setFilteredQuotes(filtered);
   //   };
 
-  // Reset filters and show all quotes
   //   const handleReset = () => {
   //     setFirstName('');
   //     setLastName('');
@@ -214,7 +214,8 @@ const Quotes: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>
-          <FaFileInvoiceDollar size={40} /> Quotes
+          {/* <FontAwesomeIcon icon={faDollar} className={styles.icon} /> Quotes */}
+          Quotes
         </h1>
       </div>
       <div className={styles.card}>
@@ -244,8 +245,12 @@ const Quotes: React.FC = () => {
             />
           </div>
           <div className={styles.buttonRow}>
-            <button onClick={handleSearch}>Search</button>
-            <button onClick={handleReset}>Reset</button>
+            <button className={styles.button} onClick={handleSearch}>
+              Search
+            </button>
+            <button className={styles.button} onClick={handleReset}>
+              Reset
+            </button>
           </div>
         </div>
         <table className={styles.table}>
