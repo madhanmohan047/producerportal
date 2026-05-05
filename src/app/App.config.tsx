@@ -1,5 +1,6 @@
 import Dashboard from "../pages/Dashboard/Dashboard";
-import Home from "../pages/Home/Home";
+import Quotes from "../pages/Quotes/Quotes";
+import { AccountDetails } from "../pages/AccountDetails/AccountDetails";
 
 export default {
   floorplanConfig: {
@@ -13,10 +14,20 @@ export default {
         component: Dashboard,
       },
       {
-        title: "Home",
-        path: "/home",
+        title: "Quotes",
+        path: "/quotes",
         showNavbar: true,
-        component: Home,
+        showHeader: true,
+        showSubHeader: true,
+        component: Quotes,
+      },
+      {
+        title: "Account Details",
+        path: "/accountDetails",
+        showNavbar: false,
+        showHeader: true,
+        showSubHeader: true,
+        component: AccountDetails,
       },
     ],
   },
