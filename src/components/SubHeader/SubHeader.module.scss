@@ -2,7 +2,7 @@
   display: flex;
   gap: 20px;
   padding: 12px 20px;
-  background-color: #f5f5f5;
+  background-color: var(--tab-color);
   border-bottom: 1px solid #ddd;
   overflow-x: auto;
 }
@@ -18,11 +18,11 @@
 }
 
 .subheaderLink:hover {
-  background-color: #e0e0e0;
-  color: #000;
+  background-color: var(--button-color);
+  color: var(--text-color);
 }
 
 .active {
-  background-color: #253f4b;
-  color: #ffffff;
+  background-color: var(--button-color);
+  color: var(--text-color);
 }

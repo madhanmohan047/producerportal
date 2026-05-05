@@ -1,0 +1,14 @@
+:root {
+  --primary-color: #4a89dc;
+  --secondary-color: #74c2bc;
+  --text-color: #ffffff;
+  --tertiary-color: #76c86b;
+  --tab-color: #eff1f9;
+  --button-color: #000000;
+}
+
+[data-theme="dark"] {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --primary-color: #818cf8;
+}

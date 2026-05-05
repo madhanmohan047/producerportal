@@ -3,8 +3,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: #253f4b;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--text-color);
 }
 
 .gwlogo {
@@ -13,5 +13,5 @@
 }
 
 .userlogo {
-  color: white;
+  color: var(--text-color);
 }
