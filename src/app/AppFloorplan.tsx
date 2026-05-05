@@ -2,28 +2,39 @@ import React from "react";
 import { useLocation, BrowserRouter } from "react-router-dom";
 import Header from "../components/Header/Header";
 import AppRoutes from "./AppRoutes";
-import { RouteConfig } from "../api/utils/routeConfig";
+import { FloorplanConfig, RouteConfig } from "../api/utils/routeConfig";
 
-function AppContent({ routes }: { routes: RouteConfig[] }) {
-  const location = useLocation();
+function AppContent({ floorplanConfig }: { floorplanConfig: FloorplanConfig }) {
+  // const location = useLocation();
 
-  const currentRoute = routes.find((route) => route.path === location.pathname);
+  // const currentRoute = floorplanConfig.routes.find(
+  //   (route) => route.path === location.pathname,
+  // );
 
-  const showHeader = currentRoute?.showHeader ?? false;
-  const showSubHeader = currentRoute?.showSubHeader ?? false;
+  // const showHeader = currentRoute?.showHeader ?? false;
+  // const showSubHeader = currentRoute?.showSubHeader ?? false;
 
   return (
     <>
-      {showHeader && <Header showSubHeader={showSubHeader} />}
-      <AppRoutes routes={routes} />
+      {floorplanConfig.showHeader && (
+        <Header
+          showSubHeader={floorplanConfig.showSubHeader}
+          routes={floorplanConfig.routes}
+        />
+      )}
+      <AppRoutes routes={floorplanConfig.routes} />
     </>
   );
 }
 
-const AppFloorplan = ({ routes }: { routes: RouteConfig[] }) => {
+const AppFloorplan = ({
+  floorplanConfig,
+}: {
+  floorplanConfig: FloorplanConfig;
+}) => {
   return (
     <BrowserRouter>
-      <AppContent routes={routes} />
+      <AppContent floorplanConfig={floorplanConfig} />
     </BrowserRouter>
   );
 };
