@@ -1,12 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import config from "../../app/App.config";
 import styles from "./SubHeader.module.scss";
+import { RouteConfig } from "../../api/utils/routeConfig";
 
-const SubHeader = () => {
+const SubHeader = ({ routes }: { routes: RouteConfig[] }) => {
   return (
     <div className={styles.subheader}>
-      {config.defaultRoutes.routes.map((route) => (
+      {routes.map((route) => (
         <NavLink
           key={route.path}
           to={route.path}
