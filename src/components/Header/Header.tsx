@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Header.module.scss";
-import appfabs_logo from "../../assets/appfabs_logo.png"; // Guidewire logo
+import appfabs_logo from "../../assets/images/appfabs_logo.png"; // Guidewire logo
 import SubHeader from "../SubHeader/SubHeader";
 import { RouteConfig } from "../../api/utils/routeConfig";
 

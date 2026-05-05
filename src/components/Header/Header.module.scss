@@ -3,15 +3,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: #253f4b;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--text-color);
 }
 
 .gwlogo {
-  width: 120px;
-  height: 40px;
+  width: 150px;
+  height: 65px;
 }
 
 .userlogo {
-  color: white;
+  color: var(--text-color);
 }
