@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAccountById } from "./../../api/services";
 import styles from "./AccountDetails.module.scss";
-import { IoArrowBack } from "react-icons/io5";
 
 export const AccountDetails = () => {
   const navigate = useNavigate();
@@ -35,7 +34,7 @@ export const AccountDetails = () => {
             className={styles["back-button"]}
             onClick={() => navigate(-1)}
           >
-            <span className={styles["back-icon"]}>{IoArrowBack({})}</span>
+            Back
           </button>
           <h1 className={styles["account-details-title"]}>Account Details</h1>
         </div>
