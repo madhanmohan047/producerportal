@@ -1,7 +1,8 @@
 .subheader {
   display: flex;
-  gap: 20px;
-  padding: 12px 20px;
+  padding: 0 var(--space-xl);
+  height: 40px;
+  align-items: stretch;
   background-color: var(--tab-color);
   border-bottom: 1px solid #ddd;
   overflow-x: auto;
@@ -10,19 +11,34 @@
 .subheaderLink {
   text-decoration: none;
   color: #333;
-  font-size: 14px;
-  padding: 8px 12px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
+  font-size: var(--font-size-md);
+  padding: 0 var(--space-sm);
+  display: flex;
+  align-items: center;
+  height: 100%;
+  position: relative;
   white-space: nowrap;
+  transition: background-color 0.3s ease;
+  border-radius: var(--radius-sm);
 }
 
+/* hover */
 .subheaderLink:hover {
-  background-color: var(--button-color);
-  color: var(--text-color);
+  background-color: var(--hover-color);
 }
 
+/* active background */
 .active {
+  background-color: var(--tab-button-color);
+}
+
+/* underline */
+.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
   background-color: var(--button-color);
-  color: var(--text-color);
 }
