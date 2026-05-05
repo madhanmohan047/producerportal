@@ -12,21 +12,8 @@ export const AccountDetails = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      //   try {
-      //     const response = await getAccountById(accountId || "");
-      //     .then((res) => res.data)
-      //     .then((data) => {
-      //       setAccountDetails(data);
-      //       console.log('Account details fetched successfully:', accountDetails);
-
-      //     });
-      //     console.log('Fetched account details:', setAccountDetails);
-      //   }
-      //     catch (error) {
-      //     console.error('Error fetching account:', error);
-      //   }
       try {
-        const res = await getAccountById("AC-77668852");
+        const res = await getAccountById(accountId || "");
         const data = res.data;
 
         setAccountDetails(data);
