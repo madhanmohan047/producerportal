@@ -1,5 +1,5 @@
 import React from 'react';
-import './FormInput.css';
+import '../FormInput/FormInput.css';
 
 interface FormInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {

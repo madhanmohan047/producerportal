@@ -1,5 +1,5 @@
 import React from 'react';
-import './EmptyState.css';
+import '../EmptyState/EmptyState.css';
 
 interface EmptyStateProps {
   title: string;
