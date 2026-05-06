@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { Address } from "../../api/services/account/types/Address";
 import FormInput from "../common/FormInput/FormInput";
 import { ADDRESS_MESSAGES } from "./AddressComponent.messages";
 import styles from "./AddressComponent.module.scss";
 import Combobox, { ComboboxOption } from "../common/Combobox/Combobox";
-import { STATE_OPTIONS, COUNTRY_OPTIONS, ADDRESS_TYPE_OPTIONS } from "../ComponentsConstants";
+import { getTypeList } from "../../api/services/typelist/typelistApi";
 
 type AddressSectionProps = {
     readOnly: boolean;
@@ -24,6 +24,25 @@ export const AddressSection = ({ readOnly, address, onAddressChange, addressLine
     const handleTypeKeyValueChange = (field: keyof Address) => (option: ComboboxOption) => {
         onAddressChange?.((prev) => ({ ...prev, [field]: option }));
     };
+
+    const [countries, setCountries] = useState<ComboboxOption[]>([]);
+    const [states, setStates] = useState<ComboboxOption[]>([]);
+    const [addressTypes, setAddressTypes] = useState<ComboboxOption[]>([]);
+
+    useEffect(() => {
+        Promise.all([
+            getTypeList('State'),
+            getTypeList('AddressType'),
+            getTypeList('Country'),
+        ]).then(([stateRes, addressTypeRes, countryRes]) => {
+            setStates(stateRes.data);
+            setAddressTypes(addressTypeRes.data);
+            setCountries(countryRes.data);
+        }).catch(error => {
+            console.error('Error loading typelists', error);
+        });
+    }, []);
+
 
     return (
         <div className={styles.addressSection}>
@@ -64,7 +83,7 @@ export const AddressSection = ({ readOnly, address, onAddressChange, addressLine
                 <Combobox
                     label={intl.formatMessage(ADDRESS_MESSAGES.stateLabel)}
                     required
-                    options={STATE_OPTIONS}
+                    options={states}
                     value={address.state}
                     onChange={handleTypeKeyValueChange("state")}
                     disabled={readOnly}
@@ -79,7 +98,7 @@ export const AddressSection = ({ readOnly, address, onAddressChange, addressLine
                 <Combobox
                     label={intl.formatMessage(ADDRESS_MESSAGES.countryLabel)}
                     required
-                    options={COUNTRY_OPTIONS}
+                    options={countries}
                     value={address.country}
                     onChange={handleTypeKeyValueChange("country")}
                     disabled={readOnly}
@@ -87,7 +106,7 @@ export const AddressSection = ({ readOnly, address, onAddressChange, addressLine
             </div>
             <Combobox
                 label={intl.formatMessage(ADDRESS_MESSAGES.addressTypeLabel)}
-                options={ADDRESS_TYPE_OPTIONS}
+                options={addressTypes}
                 value={address.addressType}
                 onChange={handleTypeKeyValueChange("addressType")}
                 disabled={readOnly}
