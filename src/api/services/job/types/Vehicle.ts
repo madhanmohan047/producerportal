@@ -1,7 +1,10 @@
-export interface Vehicle {
-  _id?: string;
-  make: string;
-  model: string;
-  year: number;
-  vin: string;
+import { Base } from '../../../utils/types';
+
+export interface Vehicle extends Base {
+  make?: string;
+  model?: string;
+  year?: number;
+  vin?: string;
+  color?: string;
+  costNew?: number;
 }
