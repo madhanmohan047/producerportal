@@ -31,18 +31,12 @@ export const AccountDetails = () => {
     if (accountId) fetchData();
   }, [accountId]);
 
-  // --- Dynamic loaders ---
-
-  /** Fetch policies linked to this account */
   const loadPolicies = async (): Promise<ComboboxOption[]> => {
-    // Replace with your real API call, e.g. getPoliciesByAccountId(accountId)
-    // Expected shape from API: [{ id: 1, name: "Policy A" }, ...]
     const res = await fetch(`/api/accounts/${accountId}/policies`);
     const data = await res.json();
     return data.map((p: any) => ({ id: p.id, value: p.name }));
   };
 
-  /** Fetch jobs linked to this account */
   const loadJobs = async (): Promise<ComboboxOption[]> => {
     const res = await fetch(`/api/accounts/${accountId}/jobs`);
     const data = await res.json();
@@ -53,7 +47,6 @@ export const AccountDetails = () => {
     }));
   };
 
-  /** Static status options — swap for an API call if statuses are dynamic */
   const statusOptions: ComboboxOption[] = [
     { id: 1, value: "Active" },
     { id: 2, value: "Inactive" },
@@ -161,7 +154,6 @@ export const AccountDetails = () => {
                 onOptionChange={(opt) => {
                   setSelectedPolicyId(opt.id);
                   console.log("Policy selected:", opt);
-                  // navigate or load policy details as needed
                 }}
               />
               {selectedPolicyId !== 0 && (
@@ -185,7 +177,6 @@ export const AccountDetails = () => {
                 onOptionChange={(opt) => {
                   setSelectedJobId(opt.id);
                   console.log("Job selected:", opt);
-                  // navigate or load job details as needed
                 }}
               />
               {selectedJobId !== 0 && (
