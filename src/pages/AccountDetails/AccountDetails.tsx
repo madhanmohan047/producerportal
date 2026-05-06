@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getAccountById } from "./../../api/services";
 import styles from "./AccountDetails.module.scss";
 
 export const AccountDetails = () => {
   const navigate = useNavigate();
-  const { accountId } = useParams<{ accountId: string }>();
   const [accountDetails, setAccountDetails] = useState<any>(null);
-  // const [policies, setPolicies] = useState<any[]>([]);
-  // const [jobs, setJobs] = useState<any[]>([]);
+
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const accountId = params.get("id");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,7 +24,7 @@ export const AccountDetails = () => {
       }
     };
 
-    fetchData();
+    if (accountId) fetchData();
   }, [accountId]);
 
   return (
@@ -65,7 +66,7 @@ export const AccountDetails = () => {
                 Account Status
               </span>
               <span className={styles["account-details-value"]}>
-                {accountDetails?.status || ""}
+                {accountDetails?.status?.name || ""}
               </span>
             </div>
 
@@ -74,11 +75,11 @@ export const AccountDetails = () => {
                 Account Location
               </span>
               <span className={styles["account-details-value"]}>
-                {accountDetails?.primaryLocationId.addressLine1 || ""}{" "}
-                {accountDetails?.primaryLocationId.addressLine2 || ""}{" "}
-                {accountDetails?.primaryLocationId.city || ""}{" "}
-                {accountDetails?.primaryLocationId.state || ""}{" "}
-                {accountDetails?.primaryLocationId.zipCode || ""}
+                {accountDetails?.primaryLocation?.addressLine1 || ""}{" "}
+                {accountDetails?.primaryLocation?.addressLine2 || ""}{" "}
+                {accountDetails?.primaryLocation?.city || ""}{" "}
+                {accountDetails?.primaryLocation?.state?.name || ""}{" "}
+                {accountDetails?.primaryLocation?.zipCode || ""}
               </span>
             </div>
 
@@ -100,32 +101,20 @@ export const AccountDetails = () => {
               </span>
             </div>
           </div>
+
           <div className={styles["related-entities"]}>
             <div className={styles["policies"]}>
               <h3>Policies</h3>
-              {/* {policies.map((policy) => ( */}
-              <div
-                // key={policy.id}
-                className={styles["policy-card"]}
-              >
-                {/* <h4>{policy.name}</h4> */}
+              <div className={styles["policy-card"]}>
                 <h4>Policy 1</h4>
-                {/* <p>{policy.description}</p> */}
               </div>
-              {/* ))} */}
             </div>
+
             <div className={styles["jobs"]}>
               <h3>Jobs</h3>
-              {/* {jobs.map((job) => ( */}
-              <div
-                // key={job.id}
-                className={styles["job-card"]}
-              >
-                {/* <h4>{job.title}</h4> */}
+              <div className={styles["job-card"]}>
                 <h4>Job 1</h4>
-                {/* <p>{job.description}</p> */}
               </div>
-              {/* ))} */}
             </div>
           </div>
         </div>

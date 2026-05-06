@@ -1,14 +1,15 @@
 import { defineMessages } from "react-intl";
 
-export const DASHBOARD_MESSAGES= defineMessages({
-    title:{
-        id:"dashboard.title",
-        defaultMessage: "Dashboard"
-    },
-     openQuotes: {
+export default defineMessages({
+  title: {
+    id: "dashboard.title",
+    defaultMessage: "Dashboard",
+  },
+  openQuotes: {
     id: "dashboard.openQuotes",
     defaultMessage: "Open Quotes",
-  }, openPolicyChanges: {
+  },
+  openPolicyChanges: {
     id: "dashboard.openPolicyChanges",
     defaultMessage: "Open Policy Changes",
   },

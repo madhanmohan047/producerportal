@@ -1,0 +1,65 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--table-header-color);
+  color: var(--secondary-text-color);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+thead {
+  background-color: var(--primary-color);
+}
+
+th {
+  text-align: center;
+  vertical-align: middle;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  color: white;
+}
+
+td {
+  padding: 12px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+tbody tr {
+  transition: background 0.2s ease;
+}
+
+/* ZEBRA */
+tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* HOVER (must come AFTER) */
+tbody tr:hover {
+  background-color: var(--tab-color);
+}
+/* SORTABLE HEADER */
+.sortable {
+  cursor: pointer;
+  position: relative;
+}
+
+.sortable:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* SORT ICON */
+.sortIcon {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle; /* ✅ aligns with text */
+  margin-right: 6px; /* space from text */
+}
+
+/* EMPTY STATE */
+.empty {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+}
