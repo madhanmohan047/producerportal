@@ -180,7 +180,7 @@ const Dashboard = () => {
   }, []);
   const formatAddress = (loc: PrimaryLocation | undefined) => {
     if (!loc) return "—";
-    return [loc.addressLine1, loc.city, loc.state, loc.postalCode]
+    return [loc.addressLine1, loc.city, loc.state.name, loc.postalCode]
       .filter(Boolean)
       .join(", ");
   };
