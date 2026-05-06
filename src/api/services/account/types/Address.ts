@@ -5,8 +5,8 @@ export interface Address extends Base {
     addressLine2: string;
     city: string;
     county: string;
-    state: string;
+    state: TypeKeyValue;
     postalCode: string;
-    country: string;
-    addressType: string;
+    country: TypeKeyValue;
+    addressType: TypeKeyValue;
 }
