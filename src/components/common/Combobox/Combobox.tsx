@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Combobox.css';
+import '../Combobox/Combobox.css';
 
 export interface ComboboxOption {
   id: number | string;
