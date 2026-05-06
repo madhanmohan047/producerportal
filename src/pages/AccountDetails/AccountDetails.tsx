@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getAccountById } from "./../../api/services";
-import Combobox, { ComboboxOption } from "../../components/common/Combobox/Combobox";
+import Combobox, {
+  ComboboxOption,
+} from "../../components/common/Combobox/Combobox";
 import styles from "./AccountDetails.module.scss";
 
 export const AccountDetails = () => {
   const navigate = useNavigate();
-  const { accountId } = useParams<{ accountId: string }>();
   const [accountDetails, setAccountDetails] = useState<any>(null);
-
   const [selectedPolicyId, setSelectedPolicyId] = useState<number | string>(0);
   const [selectedJobId, setSelectedJobId] = useState<number | string>(0);
   const [selectedStatus, setSelectedStatus] = useState<number | string>(0);
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const accountId = params.get("id");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,29 +28,25 @@ export const AccountDetails = () => {
       }
     };
 
-    fetchData();
+    if (accountId) fetchData();
   }, [accountId]);
 
-  // --- Dynamic loaders ---
-
-  /** Fetch policies linked to this account */
   const loadPolicies = async (): Promise<ComboboxOption[]> => {
-    // Replace with your real API call, e.g. getPoliciesByAccountId(accountId)
-    // Expected shape from API: [{ id: 1, name: "Policy A" }, ...]
     const res = await fetch(`/api/accounts/${accountId}/policies`);
     const data = await res.json();
     return data.map((p: any) => ({ id: p.id, value: p.name }));
   };
 
-  /** Fetch jobs linked to this account */
   const loadJobs = async (): Promise<ComboboxOption[]> => {
-    // Replace with your real API call, e.g. getJobsByAccountId(accountId)
     const res = await fetch(`/api/accounts/${accountId}/jobs`);
     const data = await res.json();
-    return data.map((j: any) => ({ id: j.id, value: j.title }));
+
+    return data.map((j: any) => ({
+      id: j._id,
+      value: `${j.jobNumber} - ${j.jobType?.name}`,
+    }));
   };
 
-  /** Static status options — swap for an API call if statuses are dynamic */
   const statusOptions: ComboboxOption[] = [
     { id: 1, value: "Active" },
     { id: 2, value: "Inactive" },
@@ -75,8 +74,8 @@ export const AccountDetails = () => {
                 Account Holder Name
               </span>
               <span className={styles["account-details-value"]}>
-                {accountDetails?.accountHolderId?.firstName || ""}{" "}
-                {accountDetails?.accountHolderId?.lastName || ""}
+                {accountDetails?.accountHolder?.firstName || ""}{" "}
+                {accountDetails?.accountHolder?.lastName || ""}
               </span>
             </div>
 
@@ -113,11 +112,11 @@ export const AccountDetails = () => {
                 Account Location
               </span>
               <span className={styles["account-details-value"]}>
-                {accountDetails?.primaryLocationId?.addressLine1 || ""}{" "}
-                {accountDetails?.primaryLocationId?.addressLine2 || ""}{" "}
-                {accountDetails?.primaryLocationId?.city || ""}{" "}
-                {accountDetails?.primaryLocationId?.state || ""}{" "}
-                {accountDetails?.primaryLocationId?.zipCode || ""}
+                {accountDetails?.primaryLocation?.addressLine1 || ""}{" "}
+                {accountDetails?.primaryLocation?.addressLine2 || ""}{" "}
+                {accountDetails?.primaryLocation?.city || ""}{" "}
+                {accountDetails?.primaryLocation?.state?.name || ""}{" "}
+                {accountDetails?.primaryLocation?.zipCode || ""}
               </span>
             </div>
 
@@ -140,9 +139,7 @@ export const AccountDetails = () => {
             </div>
           </div>
 
-          {/* Related entities */}
           <div className={styles["related-entities"]}>
-
             {/* Policies */}
             <div className={styles["policies"]}>
               <h3>Policies</h3>
@@ -157,7 +154,6 @@ export const AccountDetails = () => {
                 onOptionChange={(opt) => {
                   setSelectedPolicyId(opt.id);
                   console.log("Policy selected:", opt);
-                  // navigate or load policy details as needed
                 }}
               />
               {selectedPolicyId !== 0 && (
@@ -181,7 +177,6 @@ export const AccountDetails = () => {
                 onOptionChange={(opt) => {
                   setSelectedJobId(opt.id);
                   console.log("Job selected:", opt);
-                  // navigate or load job details as needed
                 }}
               />
               {selectedJobId !== 0 && (
@@ -190,7 +185,6 @@ export const AccountDetails = () => {
                 </div>
               )}
             </div>
-
           </div>
         </div>
       </div>
