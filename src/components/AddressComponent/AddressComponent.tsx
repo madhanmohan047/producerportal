@@ -56,13 +56,13 @@ const AddressSection = ({ readOnly, address, onAddressChange, addressLine1Input 
                 readOnly={readOnly}
             />
             <div className={styles.row}>
-                <FormInput
+                {/* <FormInput
                     label={intl.formatMessage(ADDRESS_MESSAGES.stateLabel)}
                     required
                     value={address.state}
                     onChange={handleFieldChange("state")}
                     readOnly={readOnly}
-                />
+                /> */}
                 <FormInput
                     label={intl.formatMessage(ADDRESS_MESSAGES.postalCodeLabel)}
                     required
@@ -70,21 +70,21 @@ const AddressSection = ({ readOnly, address, onAddressChange, addressLine1Input 
                     onChange={handleFieldChange("postalCode")}
                     readOnly={readOnly}
                 />
-                <FormInput
+                {/* <FormInput
                     label={intl.formatMessage(ADDRESS_MESSAGES.countryLabel)}
                     required
                     value={address.country}
                     onChange={handleFieldChange("country")}
                     readOnly={readOnly}
-                />
+                /> */}
             </div>
-            <FormInput
+            {/* <FormInput
                 label={intl.formatMessage(ADDRESS_MESSAGES.addressTypeLabel)}
                 value={address.addressType}
                 onChange={handleFieldChange("addressType")}
                 readOnly={readOnly}
                 placeholder={intl.formatMessage(ADDRESS_MESSAGES.addressTypePlaceholder)}
-            />
+            /> */}
         </div>
     );
 };
