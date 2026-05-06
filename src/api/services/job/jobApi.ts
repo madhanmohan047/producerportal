@@ -1,19 +1,17 @@
-import axiosInstance from '../../utils/axiosInstance';
+import axiosInstance from "../../utils/axiosInstance";
 import type {
   Job,
-  JobType,
   Driver,
   Vehicle,
   Coverage,
-  UpdateJobPayload,
-} from './types';
+} from "./types";
 
 /**
  * Retrieve all jobs
  * GET /api/jobs
  */
 export const getAllJobs = () => {
-  return axiosInstance.get<Job[]>('/jobs');
+  return axiosInstance.get<Job[]>("/jobs");
 };
 
 /**
@@ -28,7 +26,7 @@ export const getJobById = (id: string) => {
  * Update Job, Drivers, and Vehicles using Job ID
  * PUT /api/jobs/{jobId}
  */
-export const updateJob = (jobId: string, jobData: UpdateJobPayload) => {
+export const updateJob = (jobId: string, jobData: Job) => {
   return axiosInstance.put<Job>(`/jobs/${jobId}`, jobData);
 };
 
@@ -71,4 +69,3 @@ export const getJobVehicles = (jobId: string) => {
 export const getJobCoverages = (jobId: string) => {
   return axiosInstance.get<Coverage[]>(`/jobs/${jobId}/coverages`);
 };
-
