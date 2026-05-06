@@ -22,7 +22,7 @@ const formatAddress = (loc: PrimaryLocation | undefined) => {
 };
 
 const getAccountName = (account: Account) => {
-  const holder = account.accountHolderId;
+  const holder = account.accountHolder;
   if (!holder) return '—';
   return holder.companyName || `${holder.firstName} ${holder.lastName}`.trim() || '—';
 };
@@ -97,8 +97,8 @@ const Dashboard = () => {
                         <tr key={account._id}>
                           <td>{account.accountNumber}</td>
                           <td>{getAccountName(account)}</td>
-                          <td>{account.status || '—'}</td>
-                          <td>{formatAddress(account?.primaryLocationId)}</td>
+                          <td>{account.status.name || '—'}</td>
+                          <td>{formatAddress(account?.primaryLocation)}</td>
                         </tr>
                       ))
                     )}
@@ -126,9 +126,9 @@ const Dashboard = () => {
                       </tr>
                     ) : (
                       policies.map((policy) => (
-                        <tr key={policy.id}>
+                        <tr key={policy._id}>
                           <td>{(policy as any)._id || '—'}</td>
-                          <td>{policy.jobNumber || policy.id}</td>
+                          <td>{policy.jobNumber || '_'}</td>
                           <td>{policy.jobType?.name || '—'}</td>
                           
                         </tr>
