@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import '../Combobox/Combobox.css';
 
 export interface ComboboxOption {
-  id: number | string;
-  value: string;
+  code: string;
+  name: string;
 }
 
 export interface ComboboxProps
-  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
-  /** Async or sync loader — return { id, value }[] */
+  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size' | 'value'| 'onChange'> {
   loadOptions?: () => Promise<ComboboxOption[]>;
-  /** Static options (used when loadOptions is not provided) */
   options?: ComboboxOption[];
-  /** Controlled selected id */
-  selectedId?: number | string;
-  /** Fires with the chosen option (or the default option when id === 0) */
-  onOptionChange?: (option: ComboboxOption) => void;
+  value?: ComboboxOption;
+  onChange?: (option: ComboboxOption) => void;
   variant?: 'primary' | 'secondary' | 'danger' | 'success';
   size?: 'small' | 'medium' | 'large';
   fullWidth?: boolean;
@@ -24,15 +20,15 @@ export interface ComboboxProps
   className?: string;
 }
 
-const DEFAULT_OPTION: ComboboxOption = { id: 0, value: '--Select--' };
+const DEFAULT_CODE = '0';
 
 const Combobox = React.forwardRef<HTMLSelectElement, ComboboxProps>(
   (
     {
       loadOptions,
       options: staticOptions,
-      selectedId,
-      onOptionChange,
+      value,
+      onChange,
       variant = 'primary',
       size = 'medium',
       fullWidth = false,
@@ -40,6 +36,7 @@ const Combobox = React.forwardRef<HTMLSelectElement, ComboboxProps>(
       placeholder = '--Select--',
       className = '',
       disabled,
+      id: elementId,
       ...rest
     },
     ref
@@ -48,47 +45,53 @@ const Combobox = React.forwardRef<HTMLSelectElement, ComboboxProps>(
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Resolve to controlled or internal value
-    const [internalId, setInternalId] = useState<number | string>(
-      selectedId ?? 0
+    const [internalCode, setInternalCode] = useState<string>(
+      value?.code ?? DEFAULT_CODE
     );
-    const currentId = selectedId !== undefined ? selectedId : internalId;
 
-    // Sync controlled selectedId → internal state
-    useEffect(() => {
-      if (selectedId !== undefined) setInternalId(selectedId);
-    }, [selectedId]);
+    const currentCode = value !== undefined ? value.code : internalCode;
 
-    // Load options dynamically
     useEffect(() => {
+      if (value !== undefined) {
+        setInternalCode(value.code);
+      }
+    }, [value]);
+
+    useEffect(() => {
+      let isMounted = true;
       if (loadOptions) {
         setLoading(true);
         setError(null);
         loadOptions()
-          .then((data) => setOptions(data))
-          .catch(() => setError('Failed to load options'))
-          .finally(() => setLoading(false));
+          .then((data) => {
+            if (isMounted) setOptions(data);
+          })
+          .catch(() => {
+            if (isMounted) setError('Failed to load options');
+          })
+          .finally(() => {
+            if (isMounted) setLoading(false);
+          });
       } else if (staticOptions) {
         setOptions(staticOptions);
       }
+      return () => { isMounted = false; };
     }, [loadOptions, staticOptions]);
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const rawId = e.target.value;
-      // Preserve numeric ids if originally numeric
-      const id = rawId === '0' ? 0 : isNaN(Number(rawId)) ? rawId : Number(rawId);
-      setInternalId(id);
-      if (onOptionChange) {
-        const found =
-          id === 0
-            ? { id: 0, value: placeholder }
-            : options.find((o) => String(o.id) === String(id)) ?? {
-                id,
-                value: '',
-              };
-        onOptionChange(found);
+      const selectedCode = e.target.value;
+      setInternalCode(selectedCode);
+
+      if (onChange) {
+        const foundOption = options.find((o) => o.code === selectedCode);
+        
+        if (foundOption) {
+          onChange(foundOption);
+        }
       }
     };
+
+    const generatedId = useMemo(() => elementId || `combobox-${Math.random().toString(36).substr(2, 9)}`, [elementId]);
 
     const containerClass = [
       'combobox',
@@ -96,70 +99,43 @@ const Combobox = React.forwardRef<HTMLSelectElement, ComboboxProps>(
       `combobox--${size}`,
       fullWidth ? 'combobox--full-width' : '',
       className,
-    ]
-      .filter(Boolean)
-      .join(' ');
-
-    const selectClass = [
-      'combobox__select',
-      loading ? 'combobox__select--loading' : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
+    ].filter(Boolean).join(' ');
 
     return (
       <div className={containerClass}>
         {label && (
-          <label className="combobox__label">{label}</label>
+          <label className="combobox__label" htmlFor={generatedId}>{label}</label>
         )}
 
-        <select
-          ref={ref}
-          className={selectClass}
-          value={String(currentId)}
-          onChange={handleChange}
-          disabled={disabled || loading}
-          {...rest}
-        >
-          {/* Default "-- Select --" option with id 0 */}
-          <option value="0">{loading ? 'Loading…' : placeholder}</option>
-
-          {error && (
-            <option disabled value="">
-              {error}
-            </option>
-          )}
-
-          {!loading &&
-            options.map((opt) => (
-              <option key={opt.id} value={String(opt.id)}>
-                {opt.value}
+        <div className="combobox__input-wrapper">
+          <select
+            ref={ref}
+            id={generatedId}
+            className={`combobox__select ${loading ? 'combobox__select--loading' : ''}`}
+            value={currentCode}
+            onChange={handleChange}
+            disabled={disabled || loading}
+            {...rest}
+          >
+            <option value={DEFAULT_CODE}>{loading ? 'Loading…' : placeholder}</option>
+            {error && <option disabled value="">⚠️ {error}</option>}
+            {!loading && options.map((opt) => (
+              <option key={opt.code} value={opt.code}>
+                {opt.name}
               </option>
             ))}
-        </select>
+          </select>
 
-        {/* Show spinner while loading, chevron otherwise */}
-        {loading ? (
-          <span className="combobox__spinner" aria-hidden="true" />
-        ) : (
-          <span className="combobox__chevron" aria-hidden="true">
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M2 4L6 8L10 4"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
-        )}
+          {loading ? (
+            <span className="combobox__spinner" aria-hidden="true" />
+          ) : (
+            <span className="combobox__chevron" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          )}
+        </div>
       </div>
     );
   }

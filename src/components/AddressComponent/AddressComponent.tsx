@@ -4,6 +4,8 @@ import { Address } from "../../api/services/account/types/Address";
 import FormInput from "../common/FormInput/FormInput";
 import { ADDRESS_MESSAGES } from "./AddressComponent.messages";
 import styles from "./AddressComponent.module.scss";
+import Combobox, { ComboboxOption } from "../common/Combobox/Combobox";
+import { STATE_OPTIONS, COUNTRY_OPTIONS, ADDRESS_TYPE_OPTIONS } from "../ComponentsConstants";
 
 type AddressSectionProps = {
     readOnly: boolean;
@@ -12,12 +14,15 @@ type AddressSectionProps = {
     addressLine1Input?: React.ReactNode;
 };
 
-const AddressSection = ({ readOnly, address, onAddressChange, addressLine1Input }: AddressSectionProps) => {
+export const AddressSection = ({ readOnly, address, onAddressChange, addressLine1Input }: AddressSectionProps) => {
     const intl = useIntl();
-    readOnly=false;
 
     const handleFieldChange = (field: keyof Address) => (e: React.ChangeEvent<HTMLInputElement>) => {
         onAddressChange?.((prev) => ({ ...prev, [field]: e.target.value }));
+    };
+
+    const handleTypeKeyValueChange = (field: keyof Address) => (option: ComboboxOption) => {
+        onAddressChange?.((prev) => ({ ...prev, [field]: option }));
     };
 
     return (
@@ -56,13 +61,14 @@ const AddressSection = ({ readOnly, address, onAddressChange, addressLine1Input 
                 readOnly={readOnly}
             />
             <div className={styles.row}>
-                {/* <FormInput
+                <Combobox
                     label={intl.formatMessage(ADDRESS_MESSAGES.stateLabel)}
                     required
+                    options={STATE_OPTIONS}
                     value={address.state}
-                    onChange={handleFieldChange("state")}
-                    readOnly={readOnly}
-                /> */}
+                    onChange={handleTypeKeyValueChange("state")}
+                    disabled={readOnly}
+                />
                 <FormInput
                     label={intl.formatMessage(ADDRESS_MESSAGES.postalCodeLabel)}
                     required
@@ -70,21 +76,23 @@ const AddressSection = ({ readOnly, address, onAddressChange, addressLine1Input 
                     onChange={handleFieldChange("postalCode")}
                     readOnly={readOnly}
                 />
-                {/* <FormInput
+                <Combobox
                     label={intl.formatMessage(ADDRESS_MESSAGES.countryLabel)}
                     required
+                    options={COUNTRY_OPTIONS}
                     value={address.country}
-                    onChange={handleFieldChange("country")}
-                    readOnly={readOnly}
-                /> */}
+                    onChange={handleTypeKeyValueChange("country")}
+                    disabled={readOnly}
+                />
             </div>
-            {/* <FormInput
+            <Combobox
                 label={intl.formatMessage(ADDRESS_MESSAGES.addressTypeLabel)}
+                options={ADDRESS_TYPE_OPTIONS}
                 value={address.addressType}
-                onChange={handleFieldChange("addressType")}
-                readOnly={readOnly}
+                onChange={handleTypeKeyValueChange("addressType")}
+                disabled={readOnly}
                 placeholder={intl.formatMessage(ADDRESS_MESSAGES.addressTypePlaceholder)}
-            /> */}
+            /> 
         </div>
     );
 };
