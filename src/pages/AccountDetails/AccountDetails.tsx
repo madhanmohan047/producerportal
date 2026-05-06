@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getAccountById } from "./../../api/services";
+import Combobox, {
+  ComboboxOption,
+} from "../../components/common/Combobox/Combobox";
 import styles from "./AccountDetails.module.scss";
 
 export const AccountDetails = () => {
   const navigate = useNavigate();
   const [accountDetails, setAccountDetails] = useState<any>(null);
-
+  const [selectedPolicyId, setSelectedPolicyId] = useState<number | string>(0);
+  const [selectedJobId, setSelectedJobId] = useState<number | string>(0);
+  const [selectedStatus, setSelectedStatus] = useState<number | string>(0);
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const accountId = params.get("id");
@@ -16,7 +21,6 @@ export const AccountDetails = () => {
       try {
         const res = await getAccountById(accountId || "");
         const data = res.data;
-
         setAccountDetails(data);
         console.log("Account details fetched successfully:", data);
       } catch (error) {
@@ -26,6 +30,36 @@ export const AccountDetails = () => {
 
     if (accountId) fetchData();
   }, [accountId]);
+
+  // --- Dynamic loaders ---
+
+  /** Fetch policies linked to this account */
+  const loadPolicies = async (): Promise<ComboboxOption[]> => {
+    // Replace with your real API call, e.g. getPoliciesByAccountId(accountId)
+    // Expected shape from API: [{ id: 1, name: "Policy A" }, ...]
+    const res = await fetch(`/api/accounts/${accountId}/policies`);
+    const data = await res.json();
+    return data.map((p: any) => ({ id: p.id, value: p.name }));
+  };
+
+  /** Fetch jobs linked to this account */
+  const loadJobs = async (): Promise<ComboboxOption[]> => {
+    const res = await fetch(`/api/accounts/${accountId}/jobs`);
+    const data = await res.json();
+
+    return data.map((j: any) => ({
+      id: j._id,
+      value: `${j.jobNumber} - ${j.jobType?.name}`,
+    }));
+  };
+
+  /** Static status options — swap for an API call if statuses are dynamic */
+  const statusOptions: ComboboxOption[] = [
+    { id: 1, value: "Active" },
+    { id: 2, value: "Inactive" },
+    { id: 3, value: "Pending" },
+    { id: 4, value: "Suspended" },
+  ];
 
   return (
     <div className={styles["account-details-page"]}>
@@ -47,8 +81,8 @@ export const AccountDetails = () => {
                 Account Holder Name
               </span>
               <span className={styles["account-details-value"]}>
-                {accountDetails?.accountHolderId?.firstName || ""}{" "}
-                {accountDetails?.accountHolderId?.lastName || ""}
+                {accountDetails?.accountHolder?.firstName || ""}{" "}
+                {accountDetails?.accountHolder?.lastName || ""}
               </span>
             </div>
 
@@ -61,13 +95,23 @@ export const AccountDetails = () => {
               </span>
             </div>
 
+            {/* Account Status — driven by Combobox */}
             <div className={styles["account-details-row"]}>
               <span className={styles["account-details-label"]}>
                 Account Status
               </span>
-              <span className={styles["account-details-value"]}>
-                {accountDetails?.status?.name || ""}
-              </span>
+              <Combobox
+                options={statusOptions}
+                selectedId={selectedStatus}
+                variant="primary"
+                size="small"
+                placeholder="--Select Status--"
+                onOptionChange={(opt) => {
+                  setSelectedStatus(opt.id);
+                  console.log("Status changed:", opt);
+                  // call your update API here if needed
+                }}
+              />
             </div>
 
             <div className={styles["account-details-row"]}>
@@ -103,18 +147,52 @@ export const AccountDetails = () => {
           </div>
 
           <div className={styles["related-entities"]}>
+            {/* Policies */}
             <div className={styles["policies"]}>
               <h3>Policies</h3>
-              <div className={styles["policy-card"]}>
-                <h4>Policy 1</h4>
-              </div>
+              <Combobox
+                label="Select Policy"
+                loadOptions={loadPolicies}
+                selectedId={selectedPolicyId}
+                variant="primary"
+                size="medium"
+                fullWidth
+                placeholder="--Select Policy--"
+                onOptionChange={(opt) => {
+                  setSelectedPolicyId(opt.id);
+                  console.log("Policy selected:", opt);
+                  // navigate or load policy details as needed
+                }}
+              />
+              {selectedPolicyId !== 0 && (
+                <div className={styles["policy-card"]}>
+                  <h4>Policy ID: {selectedPolicyId}</h4>
+                </div>
+              )}
             </div>
 
+            {/* Jobs */}
             <div className={styles["jobs"]}>
               <h3>Jobs</h3>
-              <div className={styles["job-card"]}>
-                <h4>Job 1</h4>
-              </div>
+              <Combobox
+                label="Select Job"
+                loadOptions={loadJobs}
+                selectedId={selectedJobId}
+                variant="secondary"
+                size="medium"
+                fullWidth
+                placeholder="--Select Job--"
+                onOptionChange={(opt) => {
+                  setSelectedJobId(opt.id);
+                  console.log("Job selected:", opt);
+                  // navigate or load job details as needed
+                }}
+              />
+              {selectedJobId !== 0 && (
+                <div className={styles["job-card"]}>
+                  <h4>Job ID: {selectedJobId}</h4>
+                </div>
+              )}
             </div>
           </div>
         </div>

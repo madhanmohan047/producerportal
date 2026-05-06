@@ -1,5 +1,5 @@
 import React from 'react';
-import './StatusBadge.css';
+import '../StatusBadge/StatusBadge.css';
 
 interface StatusBadgeProps {
   status: string;

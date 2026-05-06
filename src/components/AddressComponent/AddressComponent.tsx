@@ -1,7 +1,7 @@
 import React from "react";
 import { useIntl } from "react-intl";
 import { Address } from "../../api/services/account/types/Address";
-import FormInput from "../common/FormInput";
+import FormInput from "../common/FormInput/FormInput";
 import { ADDRESS_MESSAGES } from "./AddressComponent.messages";
 import styles from "./AddressComponent.module.scss";
 
