@@ -1,32 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-//import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-//import { faDollar } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Quotes.module.scss";
 import { getAllJobs } from "../../api/services/job/jobApi";
 
+// Type based on the API
 type Quote = {
   account?: {
-    id?: string;
-    displayName?: string;
+    _id?: string;
     accountNumber?: string;
+    displayName?: string;
   };
+
   jobNumber?: string;
-  jobStatus?: { name: string };
-  primaryInsured?: { displayName: string };
-  primaryLocation?: { displayName: string };
-  _related?: {
-    account?: {
-      id?: string;
-      displayName?: string;
-      accountNumber?: string;
-    };
-    primaryInsured?: {
-      firstName?: string;
-      lastName?: string;
-      companyName?: string;
-    };
-    primaryLocation?: { postalCode?: string };
+
+  jobStatus?: {
+    code?: string;
+    name?: string;
+  };
+
+  primaryInsured?: {
+    type?: { code?: string };
+    firstName?: string;
+    lastName?: string;
+    companyName?: string;
+  };
+
+  primaryAddress?: {
+    addressLine1?: string;
+    city?: string;
+    state?: { code?: string };
+    postalCode?: string;
+    country?: { code?: string };
   };
 };
 
@@ -39,117 +43,51 @@ const Quotes: React.FC = () => {
   const [companyName, setCompanyName] = useState("");
   const [zipCode, setZipCode] = useState("");
 
+  // Fetching the data
   useEffect(() => {
-    const sampleQuotes: Quote[] = [
-      {
-        account: {
-          id: "ACC-001",
-          displayName: "John Smith Insurance",
-          accountNumber: "ACC-12345",
-        },
-        jobNumber: "JOB-2026-001",
-        jobStatus: { name: "Draft" },
-        primaryInsured: { displayName: "John Smith" },
-        primaryLocation: { displayName: "123 Main St, New York, NY 10001" },
-        _related: {
-          primaryInsured: {
-            firstName: "John",
-            lastName: "Smith",
-            companyName: "Smith Enterprises",
-          },
-          primaryLocation: { postalCode: "10001" },
-        },
-      },
-      {
-        account: {
-          id: "ACC-002",
-          displayName: "Sarah Johnson Corp",
-          accountNumber: "ACC-12346",
-        },
-        jobNumber: "JOB-2026-002",
-        jobStatus: { name: "Active" },
-        primaryInsured: { displayName: "Sarah Johnson" },
-        primaryLocation: { displayName: "456 Oak Ave, Los Angeles, CA 90001" },
-        _related: {
-          primaryInsured: {
-            firstName: "Sarah",
-            lastName: "Johnson",
-            companyName: "Johnson & Co",
-          },
-          primaryLocation: { postalCode: "90001" },
-        },
-      },
-      {
-        account: {
-          id: "ACC-003",
-          displayName: "Mike Chen Services",
-          accountNumber: "ACC-12347",
-        },
-        jobNumber: "JOB-2026-003",
-        jobStatus: { name: "Pending" },
-        primaryInsured: { displayName: "Mike Chen" },
-        primaryLocation: { displayName: "789 Pine Rd, Chicago, IL 60601" },
-        _related: {
-          primaryInsured: {
-            firstName: "Mike",
-            lastName: "Chen",
-            companyName: "Chen Industries",
-          },
-          primaryLocation: { postalCode: "60601" },
-        },
-      },
-      {
-        account: {
-          id: "ACC-004",
-          displayName: "Emma Williams LLC",
-          accountNumber: "ACC-12348",
-        },
-        jobNumber: "JOB-2026-004",
-        jobStatus: { name: "Completed" },
-        primaryInsured: { displayName: "Emma Williams" },
-        primaryLocation: { displayName: "321 Elm St, Houston, TX 77001" },
-        _related: {
-          primaryInsured: {
-            firstName: "Emma",
-            lastName: "Williams",
-            companyName: "Williams Group",
-          },
-          primaryLocation: { postalCode: "77001" },
-        },
-      },
-    ];
+    const fetchJobs = async () => {
+      try {
+        const response = await getAllJobs();
+        const data = response.data as Quote[];
 
-    setQuotes(sampleQuotes);
-    setFilteredQuotes(sampleQuotes);
+        setQuotes(data);
+        setFilteredQuotes(data);
+      } catch (error) {
+        console.error("Error fetching quotes:", error);
+      }
+    };
+
+    fetchJobs();
   }, []);
 
-  const handleSearch = () => {
-    const filtered = quotes.filter((item) => {
-      return (
-        (firstName
-          ? item._related?.primaryInsured?.firstName
-              ?.toLowerCase()
-              .includes(firstName.toLowerCase())
-          : true) &&
-        (lastName
-          ? item._related?.primaryInsured?.lastName
-              ?.toLowerCase()
-              .includes(lastName.toLowerCase())
-          : true) &&
-        (companyName
-          ? item._related?.primaryInsured?.companyName
-              ?.toLowerCase()
-              .includes(companyName.toLowerCase())
-          : true) &&
-        (zipCode
-          ? item._related?.primaryLocation?.postalCode?.includes(zipCode)
-          : true)
-      );
-    });
+  const getPrimaryInsuredName = (row: Quote) => {
+    const insured = row.primaryInsured;
 
-    setFilteredQuotes(filtered);
+    if (!insured) return "N/A";
+
+    if (insured.type?.code === "person") {
+      return `${insured.firstName ?? ""} ${insured.lastName ?? ""}`.trim();
+    }
+
+    return insured.companyName || "N/A";
   };
 
+  const getAddress = (row: Quote) => {
+    const addr = row.primaryAddress;
+
+    if (!addr) return "N/A";
+    return [
+      addr.addressLine1,
+      addr.city,
+      addr.state?.code,
+      addr.postalCode,
+      addr.country?.code,
+    ]
+      .filter(Boolean)
+      .join(", ");
+  };
+
+  // Reset
   const handleReset = () => {
     setFirstName("");
     setLastName("");
@@ -158,92 +96,107 @@ const Quotes: React.FC = () => {
     setFilteredQuotes(quotes);
   };
 
-  //   useEffect(() => {
+  const handleSearch = () => {
+    const fName = firstName.trim().toLowerCase();
+    const lName = lastName.trim().toLowerCase();
+    const comp = companyName.trim().toLowerCase();
+    const zip = zipCode.trim().toLowerCase();
 
-  //     const fetchJobs = async () => {
-  //       try {
-  //         const response = await getAllJobs();
-  //         const data = response.data as Quote[];
-  //         //console.log('First item:', data[0]);
-  //         setQuotes(data);
-  //         setFilteredQuotes(data);
-  //       } catch (error) {
-  //         console.error('Error fetching quotes:', error);
-  //       }
-  //     };
+    const filtered = quotes.filter((item) => {
+      const insured = item.primaryInsured;
+      const address = item.primaryAddress;
 
-  //     fetchJobs();
-  //   }, []);
+      const first = insured?.firstName?.toLowerCase() || "";
+      const last = insured?.lastName?.toLowerCase() || "";
+      const company = insured?.companyName?.toLowerCase() || "";
+      const postal = address?.postalCode?.toLowerCase() || "";
 
-  //   const handleSearch = () => {
-  //     const filtered = quotes.filter((item) => {
-  //       return (
-  //         (firstName
-  //           ? item._related?.primaryInsured?.firstName
-  //               ?.toLowerCase()
-  //               .includes(firstName.toLowerCase())
-  //           : true) &&
-  //         (lastName
-  //           ? item._related?.primaryInsured?.lastName
-  //               ?.toLowerCase()
-  //               .includes(lastName.toLowerCase())
-  //           : true) &&
-  //         (companyName
-  //           ? item._related?.primaryInsured?.companyName
-  //               ?.toLowerCase()
-  //               .includes(companyName.toLowerCase())
-  //           : true) &&
-  //         (zipCode
-  //           ? item._related?.primaryLocation?.postalCode?.includes(zipCode)
-  //           : true)
-  //       );
-  //     });
+      const matchesFirst =
+        !fName || first.includes(fName) || company.includes(fName);
+      const matchesLast =
+        !lName || last.includes(lName) || company.includes(lName);
+      const matchesCompany =
+        !comp ||
+        company.includes(comp) ||
+        first.includes(comp) ||
+        last.includes(comp);
+      const matchesZip = !zip || postal.includes(zip);
+      console.log(
+        "Print",
+        matchesCompany,
+        matchesFirst,
+        matchesLast,
+        matchesZip,
+      );
 
-  //     setFilteredQuotes(filtered);
-  //   };
+      return matchesFirst && matchesLast && matchesCompany && matchesZip;
+    });
 
-  //   const handleReset = () => {
-  //     setFirstName('');
-  //     setLastName('');
-  //     setCompanyName('');
-  //     setZipCode('');
-  //     setFilteredQuotes(quotes);
-  //   };
+    setFilteredQuotes(filtered);
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1>
-          {/* <FontAwesomeIcon icon={faDollar} className={styles.icon} /> Quotes */}
-          Quotes
-        </h1>
+        <h1>Quotes</h1>
       </div>
+
       <div className={styles.card}>
         <h2>Quote List</h2>
+
         <div className={styles.filterSection}>
           <h4>Filter By</h4>
+
           <div className={styles.filterGrid}>
             <input
               placeholder='First Name'
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch();
+                }
+              }}
             />
+
             <input
               placeholder='Last Name'
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch();
+                }
+              }}
             />
+
             <input
               placeholder='Company Name'
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch();
+                }
+              }}
             />
+
             <input
               placeholder='Zip Code'
               value={zipCode}
               onChange={(e) => setZipCode(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch();
+                }
+              }}
             />
           </div>
+
           <div className={styles.buttonRow}>
             <button className={styles.button} onClick={handleSearch}>
               Search
@@ -253,6 +206,7 @@ const Quotes: React.FC = () => {
             </button>
           </div>
         </div>
+
         <table className={styles.table}>
           <thead>
             <tr>
@@ -271,23 +225,21 @@ const Quotes: React.FC = () => {
                   <Link
                     to='/AccountDetails'
                     state={{
-                      id: row.account?.id || row._related?.account?.id,
-                      displayName:
-                        row.account?.displayName ||
-                        row._related?.account?.displayName,
-                      accountNumber:
-                        row.account?.accountNumber ||
-                        row._related?.account?.accountNumber,
+                      id: row.account?._id,
+                      displayName: row.account?.displayName,
+                      accountNumber: row.account?.accountNumber,
                     }}>
-                    {row.account?.accountNumber ||
-                      row._related?.account?.accountNumber ||
-                      "N/A"}
+                    {row.account?.accountNumber || "N/A"}
                   </Link>
                 </td>
-                <td>{row.jobNumber}</td>
-                <td>{row.jobStatus?.name}</td>
-                <td>{row.primaryInsured?.displayName}</td>
-                <td>{row.primaryLocation?.displayName}</td>
+
+                <td>{row.jobNumber || "N/A"}</td>
+
+                <td>{row.jobStatus?.name || "N/A"}</td>
+
+                <td>{getPrimaryInsuredName(row)}</td>
+
+                <td>{getAddress(row)}</td>
               </tr>
             ))}
           </tbody>
