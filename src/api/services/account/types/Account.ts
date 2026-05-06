@@ -11,8 +11,8 @@ export interface PrimaryLocation extends Address {
 
 export interface Account extends Base {
   accountNumber?: string;
-  accountHolder: string | Contact; 
-  primaryLocation: string | Address; 
+  accountHolder: AccountHolder; 
+  primaryLocation: PrimaryLocation; 
   status: TypeKeyValue;
   organization: string | Organization; 
   producerCode: string | ProducerCode; 
