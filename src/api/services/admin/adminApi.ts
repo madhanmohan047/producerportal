@@ -11,7 +11,7 @@ import type {
  * GET /api/organizations
  */
 export const getAllOrganizations = () => {
-  return axiosInstance.get<Organization[]>("/organizations");
+  return axiosInstance.get<Organization[]>("/admin/organizations");
 };
 
 /**
@@ -19,7 +19,7 @@ export const getAllOrganizations = () => {
  * POST /api/organizations
  */
 export const createOrganization = (organizationData: Organization) => {
-  return axiosInstance.post<Organization>("/organizations", organizationData);
+  return axiosInstance.post<Organization>("/admin/organizations", organizationData);
 };
 
 /**
@@ -27,7 +27,7 @@ export const createOrganization = (organizationData: Organization) => {
  * GET /api/organizations/{id}
  */
 export const getOrganizationById = (id: string) => {
-  return axiosInstance.get<Organization>(`/organizations/${id}`);
+  return axiosInstance.get<Organization>(`/admin/organizations/${id}`);
 };
 
 /**
@@ -35,7 +35,7 @@ export const getOrganizationById = (id: string) => {
  * PUT /api/organizations/{id}
  */
 export const updateOrganization = (id: string, organizationData: Organization) => {
-  return axiosInstance.put<Organization>(`/organizations/${id}`, organizationData);
+  return axiosInstance.put<Organization>(`/admin/organizations/${id}`, organizationData);
 };
 
 /**
@@ -43,7 +43,7 @@ export const updateOrganization = (id: string, organizationData: Organization) =
  * DELETE /api/organizations/{id}
  */
 export const deleteOrganization = (id: string) => {
-  return axiosInstance.delete<void>(`/organizations/${id}`);
+  return axiosInstance.delete<void>(`/admin/organizations/${id}`);
 };
 
 /**
@@ -51,7 +51,7 @@ export const deleteOrganization = (id: string) => {
  * GET /api/groups
  */
 export const getAllGroups = () => {
-  return axiosInstance.get<Group[]>("/groups");
+  return axiosInstance.get<Group[]>("/admin/groups");
 };
 
 /**
@@ -59,7 +59,7 @@ export const getAllGroups = () => {
  * POST /api/groups
  */
 export const createGroup = (groupData: Group) => {
-  return axiosInstance.post<Group>("/groups", groupData);
+  return axiosInstance.post<Group>("/admin/groups", groupData);
 };
 
 /**
@@ -67,7 +67,7 @@ export const createGroup = (groupData: Group) => {
  * GET /api/groups/{id}
  */
 export const getGroupById = (id: string) => {
-  return axiosInstance.get<Group>(`/groups/${id}`);
+  return axiosInstance.get<Group>(`/admin/groups/${id}`);
 };
 
 /**
@@ -75,7 +75,7 @@ export const getGroupById = (id: string) => {
  * PUT /api/groups/{id}
  */
 export const updateGroup = (id: string, groupData: Group) => {
-  return axiosInstance.put<Group>(`/groups/${id}`, groupData);
+  return axiosInstance.put<Group>(`/admin/groups/${id}`, groupData);
 };
 
 /**
@@ -83,7 +83,7 @@ export const updateGroup = (id: string, groupData: Group) => {
  * DELETE /api/groups/{id}
  */
 export const deleteGroup = (id: string) => {
-  return axiosInstance.delete<void>(`/groups/${id}`);
+  return axiosInstance.delete<void>(`/admin/groups/${id}`);
 };
 
 /**
@@ -91,7 +91,7 @@ export const deleteGroup = (id: string) => {
  * GET /api/producercodes
  */
 export const getAllProducerCodes = () => {
-  return axiosInstance.get<ProducerCode[]>("/producercodes");
+  return axiosInstance.get<ProducerCode[]>("/admin/producercodes");
 };
 
 /**
@@ -99,7 +99,7 @@ export const getAllProducerCodes = () => {
  * POST /api/producercodes
  */
 export const createProducerCode = (producerCodeData: ProducerCode) => {
-  return axiosInstance.post<ProducerCode>("/producercodes", producerCodeData);
+  return axiosInstance.post<ProducerCode>("/admin/producercodes", producerCodeData);
 };
 
 /**
@@ -107,7 +107,7 @@ export const createProducerCode = (producerCodeData: ProducerCode) => {
  * PUT /api/producercodes/{id}
  */
 export const updateProducerCode = (id: string, producerCodeData: ProducerCode) => {
-  return axiosInstance.put<ProducerCode>(`/producercodes/${id}`, producerCodeData);
+  return axiosInstance.put<ProducerCode>(`/admin/producercodes/${id}`, producerCodeData);
 };
 
 /**
@@ -115,7 +115,7 @@ export const updateProducerCode = (id: string, producerCodeData: ProducerCode) =
  * DELETE /api/producercodes/{id}
  */
 export const deleteProducerCode = (id: string) => {
-  return axiosInstance.delete<void>(`/producercodes/${id}`);
+  return axiosInstance.delete<void>(`/admin/producercodes/${id}`);
 };
 
 /**
@@ -123,7 +123,7 @@ export const deleteProducerCode = (id: string) => {
  * GET /api/users
  */
 export const getAllUsers = () => {
-  return axiosInstance.get<User[]>("/users");
+  return axiosInstance.get<User[]>("/admin/users");
 };
 
 /**
@@ -131,7 +131,7 @@ export const getAllUsers = () => {
  * POST /api/users
  */
 export const createUser = (userData: User) => {
-  return axiosInstance.post<User>("/users", userData);
+  return axiosInstance.post<User>("/admin/users", userData);
 };
 
 /**
@@ -139,7 +139,7 @@ export const createUser = (userData: User) => {
  * PUT /api/users/{id}
  */
 export const updateUser = (id: string, userData: User) => {
-  return axiosInstance.put<User>(`/users/${id}`, userData);
+  return axiosInstance.put<User>(`/admin/users/${id}`, userData);
 };
 
 /**
@@ -147,5 +147,5 @@ export const updateUser = (id: string, userData: User) => {
  * DELETE /api/users/{id}
  */
 export const deleteUser = (id: string) => {
-  return axiosInstance.delete<void>(`/users/${id}`);
+  return axiosInstance.delete<void>(`/admin/users/${id}`);
 };
