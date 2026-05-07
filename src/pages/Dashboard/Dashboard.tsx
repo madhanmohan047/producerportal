@@ -21,7 +21,9 @@ import DataTable from "../../components/DataTable/DataTable";
 import { TableColumn } from "../../types/TableTypes";
 import { Link } from "react-router-dom";
 import messages from "./Dashboard.messages";
-import { get } from "http";
+import Accordion, {
+  AccordionCard,
+} from "../../components/AccordionComponent/AccordionComponent";
 
 const INITIAL_TILES: TileData[] = [
   {
@@ -211,21 +213,18 @@ const Dashboard = () => {
             </div>
 
             <div className={styles.tablesSection}>
-              {/* Recently Viewed Accounts */}
-              <div className={styles.tableBlock}>
-                <h2 className={styles.tableTitle}>
-                  <FormattedMessage {...messages.recentlyViewedAccounts} />
-                </h2>
-
-                <DataTable columns={columns} data={tableData} />
-              </div>
-              {/* Recently Viewed Policies */}
-              <div className={styles.tableBlock}>
-                <h2 className={styles.tableTitle}>
-                  <FormattedMessage {...messages.recentlyViewedPolicies} />
-                </h2>
-                <DataTable columns={policyColumns} data={policyTableData} />
-              </div>
+              <Accordion defaultOpenIndex={0}>
+                <AccordionCard
+                  title={<FormattedMessage {...messages.recentlyViewedAccounts} />}
+                >
+                  <DataTable columns={columns} data={tableData} />
+                </AccordionCard>
+                <AccordionCard
+                  title={<FormattedMessage {...messages.recentlyViewedPolicies} />}
+                >
+                  <DataTable columns={policyColumns} data={policyTableData} />
+                </AccordionCard>
+              </Accordion>
             </div>
           </>
         )}
