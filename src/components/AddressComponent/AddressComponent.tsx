@@ -10,7 +10,7 @@ import { getTypeList } from "../../api/services/typelist/typelistApi";
 type AddressSectionProps = {
   readOnly: boolean;
   address: Address;
-  onAddressChange?: React.Dispatch<React.SetStateAction<Address>>;
+  onAddressChange?: (address: Address) => void;
   addressLine1Input?: React.ReactNode;
 };
 
@@ -24,12 +24,18 @@ export const AddressSection = ({
 
   const handleFieldChange =
     (field: keyof Address) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      onAddressChange?.((prev) => ({ ...prev, [field]: e.target.value }));
+      onAddressChange?.({
+        ...address,
+        [field]: e.target.value,
+      });
     };
 
   const handleTypeKeyValueChange =
     (field: keyof Address) => (option: ComboboxOption) => {
-      onAddressChange?.((prev) => ({ ...prev, [field]: option }));
+      onAddressChange?.({
+        ...address,
+        [field]: option,
+      });
     };
 
   const [countries, setCountries] = useState<ComboboxOption[]>([]);
@@ -37,6 +43,7 @@ export const AddressSection = ({
   const [addressTypes, setAddressTypes] = useState<ComboboxOption[]>([]);
 
   useEffect(() => {
+    console.log("addrsss from props", address);
     Promise.all([
       getTypeList("State"),
       getTypeList("AddressType"),

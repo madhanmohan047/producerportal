@@ -1,7 +1,7 @@
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Quotes from "../pages/Quotes/Quotes";
 import { AccountDetails } from "../pages/AccountDetails/AccountDetails";
-import Vehicle from "../pages/Vehicle/Vehicle";
+import VehicleComponent from "../components/Vehicle/VehicleComponent";
 
 export default {
   floorplanConfig: {
@@ -30,7 +30,7 @@ export default {
         title: "Vehicle",
         path: "/vehicle",
         showNavbar: true,
-        component: Vehicle,
+        component: VehicleComponent,
       },
     ],
   },
