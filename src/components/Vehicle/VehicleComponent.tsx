@@ -39,7 +39,7 @@ const VehicleComponent: React.FC = () => {
   } as Vehicle;
 
   const [vehicle, setVehicle] = useState<Vehicle>(emptyVehicle);
-  const [isReadOnly, setIsReadOnly] = useState(true);
+  const [isReadOnly, setIsReadOnly] = useState(false);
 
   const clearForm = () => {
     setIsReadOnly(true);
