@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { Address } from "../../api/services/account/types/Address";
 import FormInput from "../common/FormInput/FormInput";
 import { ADDRESS_MESSAGES } from "./AddressComponent.messages";
 import styles from "./AddressComponent.module.scss";
+import Combobox, { ComboboxOption } from "../common/Combobox/Combobox";
+import { getTypeList } from "../../api/services/typelist/typelistApi";
 
 type AddressSectionProps = {
   readOnly: boolean;
@@ -12,19 +14,43 @@ type AddressSectionProps = {
   addressLine1Input?: React.ReactNode;
 };
 
-const AddressSection = ({
+export const AddressSection = ({
   readOnly,
   address,
   onAddressChange,
   addressLine1Input,
 }: AddressSectionProps) => {
   const intl = useIntl();
-  readOnly = false;
 
   const handleFieldChange =
     (field: keyof Address) => (e: React.ChangeEvent<HTMLInputElement>) => {
       onAddressChange?.((prev) => ({ ...prev, [field]: e.target.value }));
     };
+
+  const handleTypeKeyValueChange =
+    (field: keyof Address) => (option: ComboboxOption) => {
+      onAddressChange?.((prev) => ({ ...prev, [field]: option }));
+    };
+
+  const [countries, setCountries] = useState<ComboboxOption[]>([]);
+  const [states, setStates] = useState<ComboboxOption[]>([]);
+  const [addressTypes, setAddressTypes] = useState<ComboboxOption[]>([]);
+
+  useEffect(() => {
+    Promise.all([
+      getTypeList("State"),
+      getTypeList("AddressType"),
+      getTypeList("Country"),
+    ])
+      .then(([stateRes, addressTypeRes, countryRes]) => {
+        setStates(stateRes.data);
+        setAddressTypes(addressTypeRes.data);
+        setCountries(countryRes.data);
+      })
+      .catch((error) => {
+        console.error("Error loading typelists", error);
+      });
+  }, []);
 
   return (
     <div className={styles.addressSection}>
@@ -66,13 +92,14 @@ const AddressSection = ({
         readOnly={readOnly}
       />
       <div className={styles.row}>
-        {/* <FormInput
-                    label={intl.formatMessage(ADDRESS_MESSAGES.stateLabel)}
-                    required
-                    value={address.state}
-                    onChange={handleFieldChange("state")}
-                    readOnly={readOnly}
-                /> */}
+        <Combobox
+          label={intl.formatMessage(ADDRESS_MESSAGES.stateLabel)}
+          required
+          options={states}
+          value={address.state}
+          onChange={handleTypeKeyValueChange("state")}
+          disabled={readOnly}
+        />
         <FormInput
           label={intl.formatMessage(ADDRESS_MESSAGES.postalCodeLabel)}
           required
@@ -80,21 +107,25 @@ const AddressSection = ({
           onChange={handleFieldChange("postalCode")}
           readOnly={readOnly}
         />
-        {/* <FormInput
-                    label={intl.formatMessage(ADDRESS_MESSAGES.countryLabel)}
-                    required
-                    value={address.country}
-                    onChange={handleFieldChange("country")}
-                    readOnly={readOnly}
-                /> */}
+        <Combobox
+          label={intl.formatMessage(ADDRESS_MESSAGES.countryLabel)}
+          required
+          options={countries}
+          value={address.country}
+          onChange={handleTypeKeyValueChange("country")}
+          disabled={readOnly}
+        />
       </div>
-      {/* <FormInput
-                label={intl.formatMessage(ADDRESS_MESSAGES.addressTypeLabel)}
-                value={address.addressType}
-                onChange={handleFieldChange("addressType")}
-                readOnly={readOnly}
-                placeholder={intl.formatMessage(ADDRESS_MESSAGES.addressTypePlaceholder)}
-            /> */}
+      <Combobox
+        label={intl.formatMessage(ADDRESS_MESSAGES.addressTypeLabel)}
+        options={addressTypes}
+        value={address.addressType}
+        onChange={handleTypeKeyValueChange("addressType")}
+        disabled={readOnly}
+        placeholder={intl.formatMessage(
+          ADDRESS_MESSAGES.addressTypePlaceholder,
+        )}
+      />
     </div>
   );
 };

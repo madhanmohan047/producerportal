@@ -47,12 +47,13 @@ export const AccountDetails = () => {
     }));
   };
 
-  const statusOptions: ComboboxOption[] = [
-    { id: 1, value: "Active" },
-    { id: 2, value: "Inactive" },
-    { id: 3, value: "Pending" },
-    { id: 4, value: "Suspended" },
-  ];
+  /** Static status options — swap for an API call if statuses are dynamic */
+  // const statusOptions: ComboboxOption[] = [
+  //   { id: 1, value: "Active" },
+  //   { id: 2, value: "Inactive" },
+  //   { id: 3, value: "Pending" },
+  //   { id: 4, value: "Suspended" },
+  // ];
 
   return (
     <div className={styles["account-details-page"]}>
@@ -93,7 +94,7 @@ export const AccountDetails = () => {
               <span className={styles["account-details-label"]}>
                 Account Status
               </span>
-              <Combobox
+              {/* <Combobox
                 options={statusOptions}
                 selectedId={selectedStatus}
                 variant="primary"
@@ -104,7 +105,7 @@ export const AccountDetails = () => {
                   console.log("Status changed:", opt);
                   // call your update API here if needed
                 }}
-              />
+              /> */}
             </div>
 
             <div className={styles["account-details-row"]}>
@@ -143,7 +144,7 @@ export const AccountDetails = () => {
             {/* Policies */}
             <div className={styles["policies"]}>
               <h3>Policies</h3>
-              <Combobox
+              {/* <Combobox
                 label="Select Policy"
                 loadOptions={loadPolicies}
                 selectedId={selectedPolicyId}
@@ -155,7 +156,7 @@ export const AccountDetails = () => {
                   setSelectedPolicyId(opt.id);
                   console.log("Policy selected:", opt);
                 }}
-              />
+              /> */}
               {selectedPolicyId !== 0 && (
                 <div className={styles["policy-card"]}>
                   <h4>Policy ID: {selectedPolicyId}</h4>
@@ -166,7 +167,7 @@ export const AccountDetails = () => {
             {/* Jobs */}
             <div className={styles["jobs"]}>
               <h3>Jobs</h3>
-              <Combobox
+              {/* <Combobox
                 label="Select Job"
                 loadOptions={loadJobs}
                 selectedId={selectedJobId}
@@ -178,7 +179,7 @@ export const AccountDetails = () => {
                   setSelectedJobId(opt.id);
                   console.log("Job selected:", opt);
                 }}
-              />
+              /> */}
               {selectedJobId !== 0 && (
                 <div className={styles["job-card"]}>
                   <h4>Job ID: {selectedJobId}</h4>
