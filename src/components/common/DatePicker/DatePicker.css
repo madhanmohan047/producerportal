@@ -1,0 +1,71 @@
+.datepicker {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: inherit;
+}
+
+.datepicker--full-width {
+  width: 100%;
+}
+
+.datepicker__label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 4px;
+}
+
+.datepicker__input {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background: #fff;
+  color: #212529;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.datepicker__input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+/* Sizes */
+.datepicker--small .datepicker__input {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.datepicker--medium .datepicker__input {
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+.datepicker--large .datepicker__input {
+  padding: 12px 18px;
+  font-size: 16px;
+}
+
+/* Variants */
+.datepicker--primary .datepicker__input:focus {
+  border-color: #007bff;
+}
+
+.datepicker--secondary .datepicker__input:focus {
+  border-color: #6c757d;
+}
+
+.datepicker--success .datepicker__input:focus {
+  border-color: #28a745;
+}
+
+.datepicker--danger .datepicker__input:focus {
+  border-color: #dc3545;
+}
+
+.datepicker__input:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
