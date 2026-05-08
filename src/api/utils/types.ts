@@ -14,4 +14,3 @@ export interface TypeKeyValue {
   code: string;
   name: string;
 }
-

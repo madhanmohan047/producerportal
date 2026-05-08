@@ -6,6 +6,7 @@ import { ADDRESS_MESSAGES } from "./AddressComponent.messages";
 import styles from "./AddressComponent.module.scss";
 import Combobox, { ComboboxOption } from "../common/Combobox/Combobox";
 import { getTypeList } from "../../api/services/typelist/typelistApi";
+import { TypeList } from "../../api/utils/types";
 
 type AddressSectionProps = {
   readOnly: boolean;
@@ -41,22 +42,17 @@ export const AddressSection = ({
   const [countries, setCountries] = useState<ComboboxOption[]>([]);
   const [states, setStates] = useState<ComboboxOption[]>([]);
   const [addressTypes, setAddressTypes] = useState<ComboboxOption[]>([]);
+  //   const defaultCountry: TypeList = {
+  //     code: "CANADA",
+  //     name: "CANADA",
+  //   };
+  console.log("country val in addresscomp", address.country);
 
   useEffect(() => {
-    console.log("addrsss from props", address);
-    Promise.all([
-      getTypeList("State"),
-      getTypeList("AddressType"),
-      getTypeList("Country"),
-    ])
-      .then(([stateRes, addressTypeRes, countryRes]) => {
-        setStates(stateRes.data);
-        setAddressTypes(addressTypeRes.data);
-        setCountries(countryRes.data);
-      })
-      .catch((error) => {
-        console.error("Error loading typelists", error);
-      });
+    getTypeList("State").then((response) => {
+      console.log("addressstate", response.data);
+      setStates(response.data);
+    });
   }, []);
 
   return (
@@ -120,7 +116,7 @@ export const AddressSection = ({
           options={countries}
           value={address.country}
           onChange={handleTypeKeyValueChange("country")}
-          disabled={readOnly}
+          disabled={true}
         />
       </div>
       <Combobox

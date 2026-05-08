@@ -12,7 +12,8 @@ export interface Vehicle extends Base {
   licensePlate: string;
   annualMileage: number;
   bodyType: TypeKeyValue;
+  costNew: number;
   licenseState: TypeKeyValue;
   garageLocation: Address;
-  driverList: Driver[];
+  vehicleDrivers: Driver[];
 }

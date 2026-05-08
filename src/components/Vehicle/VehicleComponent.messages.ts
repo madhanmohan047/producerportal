@@ -18,6 +18,10 @@ export default defineMessages({
     id: "vehicle.year",
     defaultMessage: "Year",
   },
+  costnew: {
+    id: "vehicle.costnew",
+    defaultMessage: "Cost New",
+  },
   vin: {
     id: "vehicle.vin",
     defaultMessage: "VIN",

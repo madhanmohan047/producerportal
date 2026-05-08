@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, FormInput } from "../common";
 import AddressComponent from "../AddressComponent/AddressComponent";
 import { Vehicle } from "../../api/services/job/types/Vehicle";
 import { TypeKeyValue } from "../../api/utils/types";
 import { Address } from "../../api/services/account/types/Address";
 import styles from "./VehicleComponent.module.scss";
+import { getTypeList } from "../../api/services/typelist/typelistApi";
+import { TypeList } from "../../api/utils/types";
+import Combobox from "../common/Combobox/Combobox";
 
 import { useIntl } from "react-intl";
 import messages from "./VehicleComponent.messages";
+import { ComboboxOption } from "../common/Combobox/Combobox";
+import { addVehicleToJob } from "../../api/services/job/jobApi";
 
 const VehicleComponent: React.FC = () => {
   const intl = useIntl();
@@ -25,21 +30,24 @@ const VehicleComponent: React.FC = () => {
   } as Address;
   const emptyVehicle: Vehicle = {
     _id: "",
-    make: "",
-    model: "",
+    make: "Toyota",
+    model: "Camry",
+    vin: "V4435GY",
+    color: "RED",
     year: 0,
-    vin: "",
-    color: "",
-    licensePlate: "",
-    annualMileage: 0,
+    licensePlate: "ONTTHS",
+    annualMileage: 10000,
+    costNew: 0,
     bodyType: { code: "", name: "" },
     licenseState: { code: "", name: "" },
     garageLocation: emptyAddress,
-    driverList: [],
+    vehicleDrivers: [],
   } as Vehicle;
 
   const [vehicle, setVehicle] = useState<Vehicle>(emptyVehicle);
   const [isReadOnly, setIsReadOnly] = useState(false);
+  const [bodyTypes, setBodyTypes] = useState<TypeList[]>([]);
+  const [states, setStates] = useState<TypeList[]>([]);
 
   const clearForm = () => {
     setIsReadOnly(true);
@@ -48,8 +56,34 @@ const VehicleComponent: React.FC = () => {
 
   const handleSubmit = () => {
     console.log("Vehicle data submitted:", vehicle);
+    addVehicleToJob("pc:437d8b43", vehicle)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((e) => {
+        console.log("Errror from api", e);
+      });
     clearForm();
   };
+
+  useEffect(() => {
+    getTypeList("BodyType").then((response) => {
+      setBodyTypes(response.data);
+    });
+    getTypeList("State").then((response) => {
+      setStates(response.data);
+    });
+    setVehicle((prev) => ({
+      ...prev,
+      garageLocation: {
+        ...prev?.garageLocation,
+        country: {
+          code: "CA",
+          name: "Canada",
+        },
+      },
+    }));
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -75,7 +109,15 @@ const VehicleComponent: React.FC = () => {
             setVehicle((prev) => ({ ...prev, model: e.target.value }))
           }
         />
-
+        {/* <FormInput
+          label={intl.formatMessage(messages.year)}
+          placeholder={isReadOnly ? "" : intl.formatMessage(messages.year)}
+          value={vehicle.year}
+          readOnly={isReadOnly}
+          onChange={(e) =>
+            setVehicle((prev) => ({ ...prev, year: e.target.value }))
+          }
+        /> */}
         <FormInput
           label={intl.formatMessage(messages.year)}
           placeholder={isReadOnly ? "" : intl.formatMessage(messages.year)}
@@ -85,6 +127,18 @@ const VehicleComponent: React.FC = () => {
             setVehicle((prev) => ({
               ...prev,
               year: parseInt(e.target.value) || 0,
+            }))
+          }
+        />
+        <FormInput
+          label={intl.formatMessage(messages.costnew)}
+          placeholder={isReadOnly ? "" : intl.formatMessage(messages.costnew)}
+          value={vehicle.costNew}
+          readOnly={isReadOnly}
+          onChange={(e) =>
+            setVehicle((prev) => ({
+              ...prev,
+              costNew: parseInt(e.target.value) || 0,
             }))
           }
         />
@@ -139,30 +193,32 @@ const VehicleComponent: React.FC = () => {
           }
         />
 
-        <FormInput
+        <Combobox
           label={intl.formatMessage(messages.bodyType)}
-          placeholder={isReadOnly ? "" : intl.formatMessage(messages.bodyType)}
-          value={vehicle.bodyType.name}
-          readOnly={isReadOnly}
-          onChange={(e) =>
+          required
+          options={bodyTypes}
+          value={vehicle.bodyType}
+          onChange={(option) =>
             setVehicle((prev) => ({
               ...prev,
-              bodyType: { ...prev.bodyType, name: e.target.value },
+              bodyType: option,
             }))
           }
+          disabled={isReadOnly}
         />
 
-        <FormInput
+        <Combobox
           label={intl.formatMessage(messages.licenseState)}
           placeholder={
             isReadOnly ? "" : intl.formatMessage(messages.licenseState)
           }
-          value={vehicle.licenseState.name}
-          readOnly={isReadOnly}
-          onChange={(e) =>
+          options={states}
+          value={vehicle.licenseState}
+          disabled={isReadOnly}
+          onChange={(option) =>
             setVehicle((prev) => ({
               ...prev,
-              licenseState: { ...prev.licenseState, name: e.target.value },
+              licenseState: option,
             }))
           }
         />

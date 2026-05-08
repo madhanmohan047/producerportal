@@ -52,13 +52,11 @@ const Combobox = React.forwardRef<HTMLSelectElement, ComboboxProps>(
     );
 
     const currentCode = value !== undefined ? value.code : internalCode;
-
     useEffect(() => {
       if (value !== undefined) {
         setInternalCode(value.code);
       }
     }, [value]);
-
     useEffect(() => {
       let isMounted = true;
       if (loadOptions) {
