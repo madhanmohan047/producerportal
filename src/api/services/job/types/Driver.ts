@@ -1,11 +1,14 @@
 import { Base } from '../../../utils/types';
-import { Contact } from './../../account/types/Contact';
+import { Contact } from '../../account/types/Contact';
 
 export interface Driver extends Base {
-  contactId: string | Contact; 
+  person: string | Contact;        
   licenseNumber?: string;
   licenseState?: string;
   licenseStatus?: string;
-  yearsOfExperience?: number;
+  licenseYear?: number;            
+  yearsOfExperience?: number;      
+  numAccidents?: number;           
+  numViolations?: number;          
   violations: string[];
 }
