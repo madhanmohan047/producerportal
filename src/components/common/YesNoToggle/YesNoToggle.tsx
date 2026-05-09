@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../YesNoToggle/YesNoToggle.css';
+import '../YesNoToggle/YesNoToggle.scss';
 
 export interface YesNoToggleProps {
   value?: boolean;

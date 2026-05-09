@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../PageHeader/PageHeader.css';
+import '../PageHeader/PageHeader.scss';
 
 interface PageHeaderProps {
   title: string;
