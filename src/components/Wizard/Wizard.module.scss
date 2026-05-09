@@ -1,0 +1,54 @@
+.wizard-layout {
+  display: flex;
+  justify-content: center; /* Centers the whole wizard on the screen */
+  align-items: flex-start;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f4f7f9; /* Light grey background to make the white card pop */
+  padding-top: 50px;
+}
+
+.wizard-container {
+  display: flex;
+  width: 100%;
+  max-width: 1000px; /* Keeps the UI from getting too wide */
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Clips the sidebar background to the border radius */
+}
+
+/* LEFT NAVIGATION */
+.wizard-nav {
+  width: 240px;
+  flex-shrink: 0;
+  background-color: #fafbfc;
+  border-right: 1px solid #eaecef;
+  padding: 30px 0;
+}
+
+.nav-item {
+  padding: 12px 24px;
+  font-size: 14px;
+  color: #6a737d;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f1f3f5;
+  }
+
+  &.active {
+    color: #0366d6;
+    font-weight: 600;
+    background: #f0f7ff;
+    border-left-color: #0366d6;
+  }
+}
+
+.wizard-content {
+  flex: 1;
+  padding: 40px;
+  min-height: 500px;
+}

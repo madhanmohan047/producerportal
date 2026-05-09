@@ -2,6 +2,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Quotes from "../pages/Quotes/Quotes";
 import { AccountDetails } from "../pages/AccountDetails/AccountDetails";
 import VehicleComponent from "../components/Vehicle/VehicleComponent";
+import { PAWizard } from "../pages/PAWizard/PAWizard";
 
 export default {
   floorplanConfig: {
@@ -31,6 +32,12 @@ export default {
         path: "/vehicle",
         showNavbar: true,
         component: VehicleComponent,
+      },
+      {
+        title: "PAWizard",
+        path: "/pawizard",
+        showNavbar: true,
+        component: PAWizard,
       },
     ],
   },

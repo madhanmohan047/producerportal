@@ -1,0 +1,17 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.content {
+  width: 100%;
+  max-width: 700px;
+}
+
+.title {
+  margin-bottom: 12px;
+  font-weight: 600;
+}
