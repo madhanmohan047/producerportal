@@ -1,5 +1,5 @@
 import React from 'react';
-import '../LoadingSpinner/LoadingSpinner.css';
+import '../LoadingSpinner/LoadingSpinner.scss';
 
 interface LoadingSpinnerProps {
   message?: string;
