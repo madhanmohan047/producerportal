@@ -28,8 +28,7 @@ const VehicleComponent: React.FC = () => {
     country: { code: "", name: "" },
     addressType: { code: "", name: "" },
   } as Address;
-  const emptyVehicle: Vehicle = {
-    _id: "",
+  const emptyVehicle = {
     make: "Toyota",
     model: "Camry",
     vin: "V4435GY",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import "../Combobox/Combobox.css";
+import "../Combobox/Combobox.scss";
 
 export interface ComboboxOption {
   code: string;

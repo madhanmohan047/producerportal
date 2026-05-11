@@ -3,7 +3,7 @@ import { Address } from "../../account/types/Address";
 import { Driver } from "./Driver";
 
 export interface Vehicle extends Base {
-  _id: string;
+  _id?: string;
   make: string;
   model: string;
   year: number;

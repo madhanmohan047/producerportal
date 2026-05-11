@@ -1,5 +1,5 @@
 import React from "react";
-import "../FormInput/FormInput.css";
+import "../FormInput/FormInput.scss";
 
 interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
