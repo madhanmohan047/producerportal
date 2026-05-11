@@ -4,9 +4,10 @@ import styles from "./SubHeader.module.scss";
 import { RouteConfig } from "../../api/utils/routeConfig";
 
 const SubHeader = ({ routes }: { routes: RouteConfig[] }) => {
+  const navRoutes = routes.filter((r) => r.showNavbar !== false);
   return (
     <div className={styles.subheader}>
-      {routes.map((route) => (
+      {navRoutes.map((route) => (
         <NavLink
           key={route.path}
           to={route.path}

@@ -6,6 +6,7 @@ export type RouteConfig = {
   component: React.ComponentType;
   showHeader?: boolean;
   showSubHeader?: boolean;
+  showNavbar?: boolean;
 };
 export type FloorplanConfig = {
   showHeader: boolean;

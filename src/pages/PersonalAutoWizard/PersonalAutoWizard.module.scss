@@ -1,0 +1,285 @@
+.page {
+  padding: 1.5rem;
+  background: #f5f6f8;
+  min-height: calc(100vh - 80px);
+}
+
+.wizard {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ----- LEFT RAIL ----- */
+.sidebar {
+  background: #fafbfc;
+  border-right: 1px solid #e5e7eb;
+  padding: 1.5rem 1rem;
+
+  @media (max-width: 720px) {
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+}
+
+.sidebarTitle {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #111827;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.stepList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  color: #4b5563;
+  font-size: 0.9rem;
+
+  &:hover {
+    background: #eef2ff;
+  }
+
+  &.active {
+    background: #e0ecff;
+    color: #0b5ed7;
+    font-weight: 600;
+
+    .stepIndex {
+      background: #0b5ed7;
+      color: #fff;
+    }
+  }
+
+  &.complete {
+    color: #065f46;
+
+    .stepIndex {
+      background: #10b981;
+      color: #fff;
+    }
+  }
+}
+
+.stepIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  color: #6b7280;
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.stepLabel {
+  font-weight: 500;
+}
+
+/* ----- CONTENT AREA ----- */
+.content {
+  display: flex;
+  flex-direction: column;
+  min-height: 70vh;
+}
+
+.contentBody {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  border-top: 1px solid #e5e7eb;
+  background: #fafbfc;
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* ----- STEP HEADER ----- */
+.stepHeader {
+  margin-bottom: 1.5rem;
+}
+
+.stepTitle {
+  margin: 0 0 0.25rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.stepSubtitle {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+/* ----- FORMS ----- */
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 2rem;
+  align-items: start;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* zero-out FormInput's own bottom margin so the grid gap is the single
+     source of truth for vertical spacing between fields */
+  :global(.form-input) {
+    margin-bottom: 0;
+  }
+}
+
+.fullSpan {
+  grid-column: 1 / -1;
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed #e5e7eb;
+}
+
+.subSectionTitle {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* ----- TABLE (lists) ----- */
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+
+  thead {
+    background: #f9fafb;
+  }
+
+  th,
+  td {
+    padding: 0.85rem 1rem;
+    font-size: 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+  }
+
+  th {
+    color: #374151;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  td {
+    color: #111827;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: #fafbfc;
+  }
+}
+
+.tableActions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.empty {
+  padding: 1.5rem;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  background: #fafbfc;
+  border: 1px dashed #e5e7eb;
+  border-radius: 6px;
+  margin-top: 1rem;
+}
+
+/* ----- SAVED CARD (read mode) ----- */
+.savedCard {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+}
+
+.savedTitle {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: #065f46;
+  font-weight: 600;
+}
+
+.savedRow {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  border-bottom: 1px dashed #d1fae5;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.savedLabel {
+  color: #6b7280;
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.savedValue {
+  color: #111827;
+  font-weight: 500;
+}
