@@ -32,7 +32,7 @@ export default {
       },
       {
         title: "Wizard",
-        path: "/wizard",
+        path: "/pawizard",
         showNavbar: false,
         showHeader: true,
         showSubHeader: true,
