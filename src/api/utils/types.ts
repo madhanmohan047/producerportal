@@ -1,5 +1,5 @@
 export interface Base {
-  _id: string;
+  _id?: string;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }
@@ -14,4 +14,3 @@ export interface TypeKeyValue {
   code: string;
   name: string;
 }
-
