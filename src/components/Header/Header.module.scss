@@ -2,16 +2,116 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  background-color: var(--primary-color);
-  color: var(--text-color);
-}
-
-.gwlogo {
-  width: 150px;
+  padding: 0 20px;
   height: 65px;
+  background-color: var(--primary-color, #ffffff);
+  color: var(--text-color, #333);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 100;
+
+  .gwlogo {
+    height: 40px;
+    width: auto;
+  }
 }
 
-.userlogo {
-  color: var(--text-color);
+.userMenuContainer {
+  position: relative;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  background-color: #5c6bc0;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  user-select: none;
+
+  &:hover {
+    background-color: #3f51b5;
+  }
+}
+
+.dropdown {
+  position: absolute;
+  top: 45px; // Appear just below the avatar
+  right: 0;
+  width: 220px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid #eee;
+  padding: 15px 0;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+
+  .userProfile {
+    padding: 0 20px 15px 20px;
+    text-align: left;
+
+    .userName {
+      margin: 0;
+      font-weight: 600;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .userEmail {
+      margin: 2px 0 8px 0;
+      font-size: 12px;
+      color: #777;
+    }
+
+    .roleBadge {
+      font-size: 10px;
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #666;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+  }
+
+  .divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 0 10px;
+  }
+
+  .logoutBtn {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #dc3545;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background-color: #fef2f2;
+      color: #a71d2a;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
