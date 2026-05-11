@@ -5,15 +5,6 @@ import AppRoutes from "./AppRoutes";
 import { FloorplanConfig, RouteConfig } from "../api/utils/routeConfig";
 
 function AppContent({ floorplanConfig }: { floorplanConfig: FloorplanConfig }) {
-  // const location = useLocation();
-
-  // const currentRoute = floorplanConfig.routes.find(
-  //   (route) => route.path === location.pathname,
-  // );
-
-  // const showHeader = currentRoute?.showHeader ?? false;
-  // const showSubHeader = currentRoute?.showSubHeader ?? false;
-
   return (
     <>
       {floorplanConfig.showHeader && (
