@@ -1,5 +1,6 @@
 import React from "react";
-import WizardPage from "../../../../components/Wizard/Wizardpage";
+import { DriverComponent } from "../../../../components/DriverComponent/DriverComponent";
+import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
 
 const DriverStep = (wizardPageProps: WizardPageProps) => {
@@ -10,7 +11,7 @@ const DriverStep = (wizardPageProps: WizardPageProps) => {
       handleNext={wizardPageProps.handleNext}
       handlePrevious={wizardPageProps.handlePrevious}
     >
-      <div>hi I am child Driver</div>
+      <div>Driver Step</div>
     </WizardPage>
   );
 };

@@ -1,45 +1,43 @@
 import React, { useState } from "react";
 import { WizardProps } from "../../types/Wizardtype";
+import styles from "./Wizard.module.scss";
 
 export const Wizard = (wizardProps: WizardProps) => {
   // works also=>export const Wizard = ({ steps, location }: WizardProps) => {
+
   const [currentIndex, setCurrentIndex] = useState(0);
+
   const currentStep = wizardProps.steps[currentIndex];
   const CurrentComponent = currentStep.component;
+
   const goNext = () => {
     if (currentIndex < wizardProps.steps.length - 1) {
       setCurrentIndex(currentIndex + 1);
     }
   };
+
   const goBack = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
     }
   };
+
   return (
-    <div style={{ display: "flex" }}>
-      <div>
+    <div className={styles["wizard-container"]}>
+      <div className={styles["wizard-sidebar"]}>
         {wizardProps.steps.map((step, index) => (
           <div
             key={step.id}
-            style={{
-              padding: "8px 12px",
-              cursor: "default",
-              fontWeight: index === currentIndex ? "bold" : "normal",
-              backgroundColor:
-                index === currentIndex ? "#d9d9d9" : "transparent",
-              borderLeft:
-                index === currentIndex
-                  ? "4px solid #000"
-                  : "4px solid transparent",
-            }}
+            className={`${styles["wizard-step"]} ${
+              index === currentIndex ? styles["active-step"] : ""
+            }`}
           >
             {step.wizardPageConfig.title}
           </div>
         ))}
       </div>
 
-      <div style={{ margin: "20px" }}>
+      <div className={styles["wizard-content"]}>
         {CurrentComponent ? (
           <CurrentComponent
             step={currentStep}

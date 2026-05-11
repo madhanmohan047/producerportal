@@ -1,6 +1,6 @@
 import React from "react";
 
-import WizardPage from "../../../../components/Wizard/Wizardpage";
+import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
 
 const VehicleStep = (wizardPageProps: WizardPageProps) => {
@@ -11,7 +11,7 @@ const VehicleStep = (wizardPageProps: WizardPageProps) => {
       handleNext={wizardPageProps.handleNext}
       handlePrevious={wizardPageProps.handlePrevious}
     >
-      <div>hi I am child vehicle</div>
+      <div>Vehicle Step</div>
     </WizardPage>
   );
 };

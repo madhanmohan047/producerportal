@@ -1,5 +1,6 @@
 import React from "react";
-import WizardPage from "../../../../components/Wizard/Wizardpage";
+import { Contact } from "../../../../components/ContactComponent/ContactComponent";
+import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
 
 const PersonalInfoStep = (wizardPageProps: WizardPageProps) => {
@@ -10,7 +11,7 @@ const PersonalInfoStep = (wizardPageProps: WizardPageProps) => {
       handleNext={wizardPageProps.handleNext}
       handlePrevious={wizardPageProps.handlePrevious}
     >
-      <div>hi I am child PersonalInfo</div>
+      <div>Personal Info</div>
     </WizardPage>
   );
 };
