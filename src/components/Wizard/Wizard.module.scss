@@ -35,7 +35,7 @@
 .active-step {
   font-weight: 600;
   background-color: #ededed;
-  border-left: 4px solid #000;
+  border-left: 4px solid var(--primary-color);
 }
 
 .wizard-content {
