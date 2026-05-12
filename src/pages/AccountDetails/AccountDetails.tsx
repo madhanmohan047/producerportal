@@ -5,6 +5,7 @@ import Combobox, {
   ComboboxOption,
 } from "../../components/common/Combobox/Combobox";
 import styles from "./AccountDetails.module.scss";
+import NewSubmission from "../NewSubmission/NewSubmission";
 
 export const AccountDetails = () => {
   const navigate = useNavigate();
@@ -167,6 +168,20 @@ export const AccountDetails = () => {
             {/* Jobs */}
             <div className={styles["jobs"]}>
               <h3>Jobs</h3>
+              <button
+                className={styles["new-submission-btn"]}
+                onClick={() =>
+                  navigate(`/newSubmission?accountId=${accountId}
+                    &organizationCode=${accountDetails?.organization?.code || ""}
+    &organizationName=${accountDetails?.organization?.name || ""}
+    &producerCode=${accountDetails?.producerCode?.code || ""}
+    &producerName=${accountDetails?.producerCode?.name || ""}
+    &primaryLocation=${accountDetails?.primaryLocation?.state?.name || ""}`)
+                }
+              >
+                New Submission
+              </button>
+
               {/* <Combobox
                 label="Select Job"
                 loadOptions={loadJobs}

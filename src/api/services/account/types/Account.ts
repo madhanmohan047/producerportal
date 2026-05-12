@@ -8,7 +8,7 @@ export interface AccountHolder extends Contact {}
 export interface PrimaryLocation extends Address {}
 
 export interface Account extends Base {
-  _id: string;
+  _id?: string;
   accountNumber?: string;
   accountHolder: AccountHolder;
   primaryLocation: PrimaryLocation;
