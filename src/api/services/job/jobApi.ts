@@ -1,11 +1,5 @@
 import axiosInstance from "../../utils/axiosInstance";
-import type {
-  Job,
-  Driver,
-  Vehicle,
-  Coverage,
-} from "./types";
-import type { ApiListResponse } from "../../utils/types";
+import type { Job, Driver, Vehicle, Coverage } from "./types";
 
 /**
  * Retrieve all jobs

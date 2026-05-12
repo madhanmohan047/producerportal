@@ -1,41 +1,43 @@
 import axios from "axios";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "/api";
-
-const basicAuthHeader = (axios.defaults.headers.common["Authorization"] =
-  "Basic " + btoa("admin:password"));
+const AUTH_MODE = process.env.REACT_APP_AUTH_MODE || "BASIC";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: basicAuthHeader,
-  },
+  headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
 
+let jwtToken: string | null = null;
+
+export const setAuthToken = (token: string | null) => {
+  jwtToken = token;
+};
+
 axiosInstance.interceptors.request.use(
-  (config: any) => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  async (config) => {
+    if (AUTH_MODE != "JWT") {
+      const username = process.env.REACT_APP_BASIC_USER || "admin";
+      const password = process.env.REACT_APP_BASIC_PASS || "password";
+      const encoded = btoa(`${username}:${password}`);
+      config.headers.Authorization = `Basic ${encoded}`;
+    } else {
+      if (jwtToken) {
+        config.headers.Authorization = `Bearer ${jwtToken}`;
+      } else {
+        const fallbackToken = localStorage.getItem("auth0_token");
+        if (fallbackToken) {
+          config.headers.Authorization = `Bearer ${fallbackToken}`;
+        } else {
+          console.error("[Axios] NO TOKEN AVAILABLE in memory or storage!");
+        }
+      }
     }
     return config;
   },
-  (error: any) => {
-    return Promise.reject(error);
-  },
-);
-
-axiosInstance.interceptors.response.use(
-  (response: any) => response,
-  (error: any) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("authToken");
-    }
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error)
 );
 
 export default axiosInstance;
