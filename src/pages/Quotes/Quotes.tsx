@@ -48,7 +48,7 @@ const Quotes: React.FC = () => {
     const fetchJobs = async () => {
       try {
         const response = await getAllJobs();
-        const data = response.data as Quote[];
+        const data = response.data.data as Quote[];
 
         setQuotes(data);
         setFilteredQuotes(data);

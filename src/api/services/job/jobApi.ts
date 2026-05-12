@@ -5,13 +5,14 @@ import type {
   Vehicle,
   Coverage,
 } from "./types";
+import type { ApiListResponse } from "../../utils/types";
 
 /**
  * Retrieve all jobs
  * GET /api/jobs
  */
 export const getAllJobs = () => {
-  return axiosInstance.get<Job[]>("/jobs");
+  return axiosInstance.get<ApiListResponse<Job>>("/jobs");
 };
 
 /**
