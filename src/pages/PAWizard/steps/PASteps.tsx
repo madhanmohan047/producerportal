@@ -7,7 +7,7 @@ export const PASteps: WizardStep[] = [
   {
     id: "personalinfo",
     type: "wizard",
-    route: "/personalInfo",
+    route: "personalInfo",
     component: PersonalInfoStep,
     wizardPageConfig: {
       title: "Personal Information",
@@ -25,7 +25,7 @@ export const PASteps: WizardStep[] = [
   {
     id: "vehicle",
     type: "wizard",
-    route: "/personalInfo",
+    route: "vehicle",
     component: VehicleStep,
     wizardPageConfig: {
       title: "Vehicle",
@@ -43,7 +43,7 @@ export const PASteps: WizardStep[] = [
   {
     id: "driver",
     type: "wizard",
-    route: "/personalInfo",
+    route: "driver",
     component: DriverStep,
     wizardPageConfig: {
       title: "Driver",

@@ -19,6 +19,7 @@ type WizardPageConfig = {
 };
 type WizardProps = {
   steps: WizardStep[];
+  url: string;
   location: any;
 };
 type WizardPageProps = {

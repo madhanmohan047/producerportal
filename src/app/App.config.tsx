@@ -30,9 +30,7 @@ export default {
       {
         title: "Wizard",
         path: "/pawizard",
-        showNavbar: false,
-        showHeader: true,
-        showSubHeader: true,
+        showNavbar: true,
         component: PAWizard,
       },
     ],

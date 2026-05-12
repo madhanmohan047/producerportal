@@ -21,11 +21,16 @@ const PersonalInfoStep = (wizardPageProps: WizardPageProps) => {
     cellPhone: "",
   });
   const handleValueChange = (value: any, path: string) => {
-    if (path === "emailAddress" && !value.includes("@")) {
+    if (
+      path === "emailAddress" &&
+      value.length > 0 &&
+      (!value.includes("@") || !value.includes("."))
+    ) {
       setIsProceed(false);
     } else {
       setIsProceed(true);
     }
+
     setContact((prevContact) => ({
       ...prevContact,
       [path]: value,
@@ -38,8 +43,11 @@ const PersonalInfoStep = (wizardPageProps: WizardPageProps) => {
       handleNext={isProceed ? wizardPageProps.handleNext : undefined}
       handlePrevious={wizardPageProps.handlePrevious}
     >
-      <div>{!isProceed && <div>Fix email error</div>}</div>
-      <ContactComponent value={contact} onValueChange={handleValueChange} />
+      <div style={{ display: "flex" }}>
+        <div>{!isProceed && <div>Fix email error</div>}</div>
+
+        <ContactComponent value={contact} onValueChange={handleValueChange} />
+      </div>
     </WizardPage>
   );
 };

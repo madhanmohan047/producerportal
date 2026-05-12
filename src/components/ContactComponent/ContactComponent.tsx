@@ -46,7 +46,7 @@ export const ContactComponent = ({
             className={`${styles.button} ${
               contactType === "person" ? styles.active : ""
             }`}
-            onClick={() => handleToggle(contactType)}
+            onClick={() => handleToggle("person")}
             disabled={readOnly}
           >
             Person
