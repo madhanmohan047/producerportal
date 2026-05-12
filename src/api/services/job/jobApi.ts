@@ -6,7 +6,7 @@ import type { Job, Driver, Vehicle, Coverage } from "./types";
  * GET /api/jobs
  */
 export const getAllJobs = () => {
-  return axiosInstance.get<Job[]>("/jobs");
+  return axiosInstance.get<ApiListResponse<Job>>("/jobs");
 };
 
 /**

@@ -9,13 +9,12 @@ import DashboardTile, {
   TileData,
 } from "../../components/DashboardTile/DashboardTile";
 import { getAllAccounts } from "../../api/services/account/accountApi";
-import { getAllJobs } from "../../api/services/job/jobApi";
-import { FormattedMessage, useIntl } from "react-intl";
+import { getAllPolicies, PolicyListItem } from "../../api/services/policy/policyApi";
+  import { FormattedMessage, useIntl } from "react-intl";
 import type {
   Account,
   PrimaryLocation,
 } from "../../api/services/account/types";
-import type { Job } from "../../api/services/job/types";
 import styles from "./Dashboard.module.scss";
 import DataTable from "../../components/DataTable/DataTable";
 import { TableColumn } from "../../types/TableTypes";
@@ -63,6 +62,7 @@ type TableAccount = {
   address: string;
 };
 type TablePolicy = {
+  id: string;
   jobNumber: string;
   name: string;
   status: string;
@@ -71,7 +71,7 @@ type TablePolicy = {
 const Dashboard = () => {
   const [tiles, setTiles] = useState<TileData[]>(INITIAL_TILES);
   const [accounts, setAccounts] = useState<Account[]>([]);
-  const [policies, setPolicies] = useState<Job[]>([]);
+  const [policies, setPolicies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [tableData, setTableData] = useState<TableAccount[]>([]);
   const [policyTableData, setPolicyTableData] = useState<TablePolicy[]>([]);
@@ -115,6 +115,14 @@ const Dashboard = () => {
     {
       key: "jobNumber",
       label: intl.formatMessage(messages.colAccountNumber),
+      cell: (value: TablePolicy) => (
+        <Link
+          to={`/policySummary?id=${value.id}`}
+          className={styles.accountLink}
+        >
+          {value.id}
+        </Link>
+      ),
       sortable: true,
       sortType: "string",
     },
@@ -136,19 +144,19 @@ const Dashboard = () => {
     return acct ? acct._id : "";
   };
   useEffect(() => {
-    Promise.all([getAllJobs(), getAllAccounts()])
-      .then(([jobsRes, accountsRes]) => {
-        const jobs = jobsRes.data;
-        const accts = accountsRes.data;
+    Promise.all([getAllAccounts(), getAllPolicies()])
+      .then(([accountsResult, policiesResult]) => {
+        const accts = accountsResult.data;
+        const pols = policiesResult.data;
 
-        const quotes = jobs.filter(
-          (item) => item.jobType?.name === "Submission",
+        const quotes = pols.data.filter(
+          (item) => item.jobType?.code === "submission",
         ).length;
-        const policyChanges = jobs.filter(
-          (item) => item.jobType?.name === "PolicyChange",
+        const policyChanges = pols.data.filter(
+          (item) => item.jobType?.code === "policyChange",
         ).length;
-        const cancellations = jobs.filter(
-          (item) => item.jobType?.name === "Cancellation",
+        const cancellations = pols.data.filter(
+          (item) => item.jobType?.code === "cancellation",
         ).length;
         const requests = accts.length;
 
@@ -168,31 +176,38 @@ const Dashboard = () => {
             address: formatAddress(acct.primaryLocation),
           })),
         );
-        setPolicies(jobs);
+        setPolicies(pols.data);  
         setPolicyTableData(
-          jobs.map((job) => ({
-            jobNumber: ((job as any)._id || "—") ?? "—",
-            name: job.jobNumber ?? "—",
-            status: job.jobType.name ?? "—",
-          })),
+          pols.data.map((pol) => {
+            const insured = pol.primaryInsured ?? null;
+            return {
+              id: pol._id,
+              jobNumber: pol.jobNumber ?? pol._id,
+              name:
+                [insured?.firstName, insured?.lastName].filter(Boolean).join(" ") ||
+                pol.product?.name ||
+                "—",
+              status: pol.jobStatus?.name ?? pol.policyStatus?.name ?? "—",
+            };
+          }),
         );
       })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
-  const formatAddress = (loc: PrimaryLocation | undefined) => {
-    if (!loc) return "—";
-    return [loc.addressLine1, loc.city, loc.state.name, loc.postalCode]
+  const formatAddress = (loc: PrimaryLocation | string | undefined) => {
+    if (!loc || typeof loc === "string") return "—";
+    return [loc.addressLine1, loc.city, loc.state?.name, loc.postalCode]
       .filter(Boolean)
       .join(", ");
   };
 
   const getAccountName = (account: Account) => {
     const holder = account.accountHolder;
-    if (!holder) return "—";
+    if (!holder || typeof holder === "string") return "—";
     return (
       holder.companyName ||
-      `${holder.firstName} ${holder.lastName}`.trim() ||
+      `${holder.firstName ?? ""} ${holder.lastName ?? ""}`.trim() ||
       "—"
     );
   };
