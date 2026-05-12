@@ -1,5 +1,5 @@
 export interface Base {
-  _id: string;
+  _id?: string;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }

@@ -1,8 +1,7 @@
-import React from 'react';
-import '../FormInput/FormInput.css';
+import React from "react";
+import "../FormInput/FormInput.scss";
 
-interface FormInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   helperText?: string;
@@ -10,7 +9,7 @@ interface FormInputProps
 }
 
 const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
-  ({ label, error, helperText, required, className = '', ...props }, ref) => {
+  ({ label, error, helperText, required, className = "", ...props }, ref) => {
     return (
       <div className={`form-input ${className}`}>
         {label && (
@@ -21,7 +20,7 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
         )}
         <input
           ref={ref}
-          className={`form-input__input ${error ? 'form-input__input--error' : ''}`}
+          className={`form-input__input ${error ? "form-input__input--error" : ""}`}
           {...props}
         />
         {error && <span className="form-input__error">{error}</span>}
@@ -30,8 +29,8 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
-FormInput.displayName = 'FormInput';
+FormInput.displayName = "FormInput";
 export default FormInput;

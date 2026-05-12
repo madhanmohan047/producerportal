@@ -19,16 +19,12 @@ export default {
         title: "Quotes",
         path: "/quotes",
         showNavbar: true,
-        showHeader: true,
-        showSubHeader: true,
         component: Quotes,
       },
       {
         title: "Account Details",
         path: "/accountDetails",
         showNavbar: false,
-        showHeader: true,
-        showSubHeader: true,
         component: AccountDetails,
       },
       {
