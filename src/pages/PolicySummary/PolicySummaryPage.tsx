@@ -58,9 +58,9 @@ export const PolicySummaryPage: React.FC = () => {
               <div className={styles.section}>
                 <div className={styles.grid}>
                   <Field label="Name" value={insuredName} />
-                  <Field label="Email" value={policy.primaryInsured?.email} />
-                  <Field label="Phone" value={policy.primaryInsured?.phone} />
-                  <Field label="Type" value={policy.primaryInsured?.type} />
+                  <Field label="Email" value={policy.primaryInsured?.emailAddress} />
+                  <Field label="Phone" value={policy.primaryInsured?.workPhone} />
+                  <Field label="Type" value={policy.primaryInsured?.type?.name} />
                 </div>
               </div>
             </AccordionCard>
@@ -116,7 +116,7 @@ export const PolicySummaryPage: React.FC = () => {
                             <td>{job.jobStatus?.name || "—"}</td>
                             <td>{job.product?.name || "—"}</td>
                             <td>{job.baseState?.name || "—"}</td>
-                            <td>{fmt(job.effectiveDate)}</td>
+                            <td>{fmt(job.effectiveDate?.toString())}</td>
                           </tr>
                         ))}
                       </tbody>
