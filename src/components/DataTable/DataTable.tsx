@@ -56,6 +56,7 @@ const DataTable = ({ columns, data, defaultSortField }: TableProps) => {
   return (
     <table className={styles.table}>
       <thead>
+      <tr>
         {columns.map((col) => (
           <th
             className={col.sortable ? styles.sortable : ""}
@@ -83,6 +84,7 @@ const DataTable = ({ columns, data, defaultSortField }: TableProps) => {
             {col.label}
           </th>
         ))}
+      </tr>
       </thead>
 
       <tbody>

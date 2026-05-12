@@ -2,7 +2,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Quotes from "../pages/Quotes/Quotes";
 import { AccountDetails } from "../pages/AccountDetails/AccountDetails";
 import { PAWizard } from "../pages/PAWizard/PAWizard";
-import VehicleComponent from "../components/Vehicle/VehicleComponent";
+import { PolicySummary } from "../pages/PolicySummary/PolicySummary";
 
 export default {
   floorplanConfig: {
@@ -23,14 +23,20 @@ export default {
       },
       {
         title: "Account Details",
-        path: "/accountDetails",
+        path: "/account-details",
         showNavbar: false,
         component: AccountDetails,
       },
       {
+        title: "Policy Summary",
+        path: "/policy-summary",
+        showNavbar: false,
+        component: PolicySummary,
+      },
+      {
         title: "Wizard",
-        path: "/pawizard",
-        showNavbar: true,
+        path: "/pa-wizard",
+        showNavbar: false,
         component: PAWizard,
       },
     ],

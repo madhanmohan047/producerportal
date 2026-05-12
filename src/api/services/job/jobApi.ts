@@ -1,6 +1,5 @@
 import { transport} from "../../utils/TransportService";
 import type { Job, Driver, Vehicle, Coverage } from "./types";
-import type { ApiListResponse } from "../../utils/types";
 
 const { api } = transport;
 
@@ -9,7 +8,7 @@ const { api } = transport;
  * GET /api/jobs
  */
 export const getAllJobs = () => {
-  return api.get<ApiListResponse<Job>>("/jobs");
+  return api.get<Array<Job>>("/jobs");
 };
 
 /**

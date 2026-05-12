@@ -1,30 +1,31 @@
-import { Job } from "../../job/types";
-import { Account, Contact } from "../../account/types";
+import { Coverage, Driver, Job, Vehicle } from "../../job/types";
+import { Account, Address, Contact } from "../../account/types";
+import { TypeKeyValue } from "../../../utils/types";
 
-export interface PolicyJob extends Job {}
 
 export interface Policy {
   _id: string;
-  jobNumber?: string;
-  jobStatus?: { code: string; name: string };
-  jobType?: { code: string; name: string };
-  policyStatus?: { code: string; name: string };
-  product?: { code: string; name: string };
-  primaryInsured?: Contact;
-  account?: Account;
-  createdDate?: string;
-  effectiveDate?: string;
-  expirationDate?: string;
+  policyNumber?: string;
+  jobs: Job[]; 
+  policyStatus: TypeKeyValue;
   premiumAmount?: number;
-  vehicles?: string[];
-  drivers?: string[];
-  lineCoverages?: string[];
-  baseState: { code: string; name: string };
-  preferredCoverageCurrency: { code: string; name: string };
-  jobs: PolicyJob[];
-  totalAmount?: number;
   taxAmount?: number;
-  status: { code: string; name: string };
-  uwCompany?: { code: string; name: string };
-  issuedDate?: string;
+  totalAmount?: number;
+  issuedDate?: Date | string;
+  createdAt?: Date | string; 
+  updatedAt?: Date | string; 
+  account: Account; 
+  product: TypeKeyValue;
+  baseState: TypeKeyValue;
+  preferredCoverageCurrency: TypeKeyValue;
+  uwCompany?: TypeKeyValue; 
+  organization: string; 
+  producerCode: string; 
+  primaryAddress?: Address; 
+  primaryInsured?: Contact; 
+  drivers: Driver[]; 
+  vehicles: Vehicle[]; 
+  lineCoverages: Coverage[];
+  effectiveDate: Date | string; 
+  expirationDate: Date | string;
 }
