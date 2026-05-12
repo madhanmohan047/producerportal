@@ -9,7 +9,7 @@ import DashboardTile, {
   TileData,
 } from "../../components/DashboardTile/DashboardTile";
 import { getAllAccounts } from "../../api/services/account/accountApi";
-import { getAllPolicies, PolicyListItem } from "../../api/services/policy/policyApi";
+import { getAllPolicies } from "../../api/services/policy/policyApi";
   import { FormattedMessage, useIntl } from "react-intl";
 import type {
   Account,
@@ -149,13 +149,13 @@ const Dashboard = () => {
         const accts = accountsResult.data;
         const pols = policiesResult.data;
 
-        const quotes = pols.data.filter(
+        const quotes = pols.filter(
           (item) => item.jobType?.code === "submission",
         ).length;
-        const policyChanges = pols.data.filter(
+        const policyChanges = pols.filter(
           (item) => item.jobType?.code === "policyChange",
         ).length;
-        const cancellations = pols.data.filter(
+        const cancellations = pols.filter(
           (item) => item.jobType?.code === "cancellation",
         ).length;
         const requests = accts.length;
@@ -176,9 +176,9 @@ const Dashboard = () => {
             address: formatAddress(acct.primaryLocation),
           })),
         );
-        setPolicies(pols.data);  
+        setPolicies(pols);  
         setPolicyTableData(
-          pols.data.map((pol) => {
+          pols.map((pol) => {
             const insured = pol.primaryInsured ?? null;
             return {
               id: pol._id,

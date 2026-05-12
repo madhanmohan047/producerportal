@@ -1,12 +1,14 @@
-import axiosInstance from "../../utils/axiosInstance";
+import { transport} from "../../utils/TransportService";
 import { Account, Submission } from "./types";
+
+const { api } = transport;
 
 /**
  * Retrieve all accounts
  * GET /api/accounts
  */
 export const getAllAccounts = () => {
-  return axiosInstance.get<Account[]>("/accounts");
+  return api.get<Account[]>("/accounts");
 };
 
 /**
@@ -14,7 +16,7 @@ export const getAllAccounts = () => {
  * POST /api/accounts
  */
 export const createAccount = (accountData: Account) => {
-  return axiosInstance.post<Account>("/accounts", accountData);
+  return api.post<Account>("/accounts", accountData);
 };
 
 /**
@@ -22,7 +24,7 @@ export const createAccount = (accountData: Account) => {
  * GET /api/accounts/{id}
  */
 export const getAccountById = (id: string) => {
-  return axiosInstance.get<Account>(`/accounts/${id}`);
+  return api.get<Account>(`/accounts/${id}`);
 };
 
 /**
@@ -33,7 +35,7 @@ export const createSubmission = (
   accountId: string,
   submissionData: Submission,
 ) => {
-  return axiosInstance.post<Submission>(
+  return api.post<Submission>(
     `/accounts/${accountId}/submissions`,
     submissionData,
   );

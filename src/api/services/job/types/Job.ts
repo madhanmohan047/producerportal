@@ -18,7 +18,8 @@ export interface Job extends Base {
   preferredCoverageCurrency: TypeKeyValue;
   uwCompany?: TypeKeyValue;
   createdDate?: Date | string;
-  effectiveDate: Date | string;
+  effectiveDate?: string | Date;
+  expirationDate?: string | Date;
   organization: string | Organization; 
   producerCode: string | ProducerCode; 
   policyAddress?: string | Address; 

@@ -1,6 +1,6 @@
 import React from "react";
 import { WizardStep } from "../../../types/Wizardtype";
-import PersonalInfoStep from "./Personalinfo/PersonalInfoStep";
+import PersonalInfoStep from "./PersonalInfo/PersonalInfoStep";
 import VehicleStep from "./VehicleStep/VehicleStep";
 import DriverStep from "./DriverStep/DriverStep";
 export const PASteps: WizardStep[] = [

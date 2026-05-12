@@ -51,6 +51,15 @@ class TransportService {
       },
       (error) => Promise.reject(error)
     );
+
+    this.instance.interceptors.response.use(
+      (response) => response.data,
+      (error) => {
+        console.error("[Transport] API Error:", error);
+        return Promise.reject(error);
+      }
+    );
+
   }
 
   public get api() {
