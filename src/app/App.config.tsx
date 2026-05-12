@@ -2,7 +2,8 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Quotes from "../pages/Quotes/Quotes";
 import { AccountDetails } from "../pages/AccountDetails/AccountDetails";
 import { PolicySummaryPage } from "../pages/PolicySummary/PolicySummaryPage";
-// import { PAWizard } from "../pages/PAWizard/PAWizard";
+import { PAWizard } from "../pages/PAWizard/PAWizard";
+
 
 export default {
   floorplanConfig: {
@@ -34,15 +35,17 @@ export default {
         showHeader: false, 
         showSubHeader: false,
         component: PolicySummaryPage,
+
       },
-      // {
-      //   title: "Create PA Quote",
-      //   path: "/pa-wizard",
-      //   showNavbar: false,
-      //   showHeader: true,
-      //   showSubHeader: false,
-      //   component: PAWizard,
-      // },
+      {
+        title: "Create PA Quote",
+        path: "/pa-wizard",
+        showNavbar: false,
+        showHeader: true,
+        showSubHeader: false,
+        component: PAWizard,
+      },
+
     ],
   },
 };
