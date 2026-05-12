@@ -9,7 +9,11 @@ type ContactProps = {
   readOnly?: boolean;
 };
 
-export const Contact = ({ value, onValueChange, readOnly }: ContactProps) => {
+export const ContactComponent = ({
+  value,
+  onValueChange,
+  readOnly,
+}: ContactProps) => {
   const [contactType, setContactType] = useState<String>(
     value?.type?.code || "",
   );
@@ -43,7 +47,8 @@ export const Contact = ({ value, onValueChange, readOnly }: ContactProps) => {
               contactType === "person" ? styles.active : ""
             }`}
             onClick={() => handleToggle("person")}
-            disabled={readOnly}>
+            disabled={readOnly}
+          >
             Person
           </button>
 
@@ -52,7 +57,8 @@ export const Contact = ({ value, onValueChange, readOnly }: ContactProps) => {
               contactType === "company" ? styles.active : ""
             }`}
             onClick={() => handleToggle("company")}
-            disabled={readOnly}>
+            disabled={readOnly}
+          >
             Company
           </button>
         </div>
@@ -82,7 +88,7 @@ export const Contact = ({ value, onValueChange, readOnly }: ContactProps) => {
               <div className={styles.fullWidth}>
                 <label>Date of Birth</label>
                 <input
-                  type='date'
+                  type="date"
                   value={value?.dateOfBirth?.toString()}
                   onChange={handleChange("dateOfBirth")}
                   disabled={readOnly}

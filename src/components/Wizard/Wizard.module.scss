@@ -1,0 +1,44 @@
+/* Wizard.module.scss */
+
+.wizard-container {
+  display: flex;
+  height: 100vh;
+  background-color: #fafafa;
+  padding: 24px;
+  gap: 24px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.wizard-sidebar {
+  width: 240px;
+  background-color: #ffffff;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.wizard-step {
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border-left: 4px solid transparent;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.wizard-step:hover {
+  background-color: #f5f5f5;
+}
+
+.active-step {
+  font-weight: 600;
+  background-color: #ededed;
+  border-left: 4px solid var(--primary-color);
+}
+
+.wizard-content {
+  flex: 1;
+  height: 100%;
+}
