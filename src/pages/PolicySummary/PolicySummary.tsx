@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Accordion, { AccordionCard } from "../../components/AccordionComponent/AccordionComponent";
 import { usePolicySummary, fmt, money } from "./usePolicySummary";
-import styles from "./PolicySummaryPage.module.scss";
+import styles from "./PolicySummary.module.scss";
 
 const Field: React.FC<{ label: string; value?: string | null }> = ({ label, value }) => (
   <div className={styles.field}>
@@ -11,7 +11,7 @@ const Field: React.FC<{ label: string; value?: string | null }> = ({ label, valu
   </div>
 );
 
-export const PolicySummaryPage: React.FC = () => {
+export const PolicySummary: React.FC = () => {
   const navigate = useNavigate();
   const { policy, loading, error } = usePolicySummary();
 
@@ -47,9 +47,9 @@ export const PolicySummaryPage: React.FC = () => {
                   <Field label="Base State" value={policy.baseState?.name} />
                   <Field label="Coverage Currency" value={policy.preferredCoverageCurrency?.name} />
                   <Field label="UW Company" value={policy.uwCompany?.name} />
-                  <Field label="Effective Date" value={fmt(policy.effectiveDate)} />
-                  <Field label="Expiration Date" value={fmt(policy.expirationDate)} />
-                  <Field label="Issued Date" value={fmt(policy.issuedDate)} />
+                  <Field label="Effective Date" value={fmt(policy.effectiveDate.toString())} />
+                  <Field label="Expiration Date" value={fmt(policy.expirationDate.toString())} />
+                  <Field label="Issued Date" value={fmt(policy.issuedDate?.toString())} />
                 </div>
               </div>
             </AccordionCard>
