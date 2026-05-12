@@ -1,7 +1,8 @@
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Quotes from "../pages/Quotes/Quotes";
 import { AccountDetails } from "../pages/AccountDetails/AccountDetails";
-import VehicleComponent from "../components/Vehicle/VehicleComponent";
+import { PolicySummaryPage } from "../pages/PolicySummary/PolicySummaryPage";
+
 
 export default {
   floorplanConfig: {
@@ -27,11 +28,13 @@ export default {
         component: AccountDetails,
       },
       {
-        title: "Vehicle",
-        path: "/vehicle",
-        showNavbar: true,
-        component: VehicleComponent,
-      },
+        title: "Policy Summary",
+        path: "/policySummary",
+        showNavbar: false,
+        showHeader: false, 
+        showSubHeader: false,
+        component: PolicySummaryPage,
+      }
     ],
   },
 };
