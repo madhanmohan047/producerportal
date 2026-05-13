@@ -36,7 +36,7 @@ export default {
       {
         title: "Wizard",
         path: "/pa-wizard",
-        showNavbar: false,
+        showNavbar: true,
         component: PAWizard,
       },
     ],

@@ -28,5 +28,6 @@ type WizardPageProps = {
   handleNext?: () => void;
   handlePrevious?: () => void;
   children: React.ReactNode;
+  sidebarContent?: React.ReactNode;
 };
 export type { WizardStep, WizardPageProps, WizardProps, WizardPageConfig };

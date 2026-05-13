@@ -1,21 +1,13 @@
-import React from "react";
-import { WizardProps } from "../../types/Wizardtype";
 import { Wizard } from "../../components/Wizard/Wizard";
 import { PASteps } from "./steps/PASteps";
-import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { PAWizardProvider } from "../../context/PAWizardContext";
 
 export const PAWizard = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (location.pathname === "/pawizard") {
-      navigate("/pawizard/personalInfo", { replace: true });
-    }
-  }, [location.pathname, navigate]);
-
-  /* works also=> <Wizard {...pawizardProps} /> */
-
-  return <Wizard steps={PASteps} location={location} url={"/pawizard/"} />;
+  return (
+    <PAWizardProvider>
+      <Wizard steps={PASteps} location={location} url={"/pa-wizard/"} />
+    </PAWizardProvider>
+  );
 };

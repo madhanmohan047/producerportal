@@ -2,26 +2,40 @@
 
 .wizard-page {
   display: flex;
-  flex-direction: column;
   height: 100%;
+  overflow: hidden;
+}
+
+.wizard-page-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: #fff;
+  border-right: 1px solid #e5e7eb;
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+}
+
+.wizard-page-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .wizard-page-content {
-  flex: 0 0 80%;
-  border: 1px solid #e2e2e2;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
 }
 
 .wizard-page-actions {
-  flex: 0 0 20%;
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  padding-top: 24px;
+  padding: 1rem 2rem;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
 }
 
 .wizard-button {
@@ -36,4 +50,8 @@
 
 .wizard-button:hover {
   background-color: #e9e9e9;
+}
+
+.wizard-button--hidden {
+  visibility: hidden;
 }

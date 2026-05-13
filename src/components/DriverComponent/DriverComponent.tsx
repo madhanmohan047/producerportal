@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Driver as DriverType } from "../../api/services/job/types";
 import { Contact } from "../../api/services/account/types/Contact";
 import { addDriverToJob } from "../../api/services/job/jobApi";
+import { DEFAULT_JOB_ID, CONTACT_TYPE_PERSON, CONTACT_ROLE_DRIVER, LICENSE_STATUS_VALID } from "../../constants";
 import { FormInput } from "../common";
 import styles from "./DriverComponent.module.scss";
 
@@ -56,12 +57,12 @@ export const DriverComponent: React.FC<DriverProps> = ({ value }) => {
         dateOfBirth: driverInfo.dateOfBirth
           ? driverInfo.dateOfBirth.toISOString().split("T")[0]
           : "",
-        type: { code: "person", name: "Person" },
-        roles: [{ code: "driver", name: "Driver" }],
+        type: CONTACT_TYPE_PERSON,
+        roles: [CONTACT_ROLE_DRIVER],
       } as Contact,
       licenseNumber: driverInfo.licenseNumber,
       licenseState: driverInfo.licenseState,
-      licenseStatus: "Valid",
+      licenseStatus: LICENSE_STATUS_VALID,
       licenseYear:
         driverInfo.yearsOfExperience === ""
           ? undefined
@@ -83,7 +84,7 @@ export const DriverComponent: React.FC<DriverProps> = ({ value }) => {
 
     try {
       const { data } = await addDriverToJob(
-        "pc:437d8b43",
+        DEFAULT_JOB_ID,
         payload as DriverType,
       );
       console.log("Driver Saved:", data);
