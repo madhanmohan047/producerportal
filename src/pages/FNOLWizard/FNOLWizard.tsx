@@ -7,12 +7,15 @@ import {
 import { Wizard } from "../../components/Wizard/Wizard";
 import { FNOLWizardsteps } from "./steps/FNOLWizardsteps";
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Location } from "react-router-dom";
 import { title } from "process";
+import { FNOLWizardprovider } from "./FNOLWizardContext";
+import { formData } from "./FNOLWizardContext";
 
 export const FNOLWizard = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const sidebarItems: WizardSidebarItemProps[] = [
     {
       transformationKey: "Policy Holder",
@@ -51,12 +54,16 @@ export const FNOLWizard = () => {
   /* works also=> <Wizard {...pawizardProps} /> */
 
   return (
-    <Wizard
-      steps={FNOLWizardsteps}
-      location={location}
-      url={"/fnolwizard/"}
-      header={"Guidewire ClaimCenter Portal"}
-      wizardSidebarprops={wizardSidebarProps}
-    />
+    <FNOLWizardprovider
+      fnolFormData={{ location: location, currentStep: FNOLWizardsteps[0] }}
+    >
+      <Wizard
+        steps={FNOLWizardsteps}
+        location={location}
+        url={"/fnolwizard/"}
+        header={"Guidewire ClaimCenter Portal"}
+        wizardSidebarprops={wizardSidebarProps}
+      />
+    </FNOLWizardprovider>
   );
 };

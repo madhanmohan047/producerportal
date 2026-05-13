@@ -2,7 +2,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Quotes from "../pages/Quotes/Quotes";
 import { AccountDetails } from "../pages/AccountDetails/AccountDetails";
 import { PAWizard } from "../pages/PAWizard/PAWizard";
-import { FNOLWizard } from '../pages/FNOLWizard/FNOLWizard';
+import { FNOLWizard } from "../pages/FNOLWizard/FNOLWizard";
 import { PolicySummary } from "../pages/PolicySummary/PolicySummary";
 
 export default {
@@ -42,8 +42,8 @@ export default {
       },
       {
         title: "FNOL Wizard",
-        path: "/fnol-wizard",
-        showNavbar: false,
+        path: "/fnolwizard",
+        showNavbar: true,
         component: FNOLWizard,
       },
     ],

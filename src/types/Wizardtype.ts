@@ -1,3 +1,5 @@
+import { Location } from "react-router";
+
 type WizardStep = {
   id: string;
   type: string;
