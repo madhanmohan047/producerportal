@@ -13,6 +13,7 @@ import { useIntl } from "react-intl";
 import messages from "./VehicleComponent.messages";
 import { ComboboxOption } from "../common/Combobox/Combobox";
 import { addVehicleToJob } from "../../api/services/job/jobApi";
+import { DEFAULT_JOB_ID, DEFAULT_COUNTRY } from "../../constants";
 
 const VehicleComponent: React.FC = () => {
   const intl = useIntl();
@@ -55,7 +56,7 @@ const VehicleComponent: React.FC = () => {
 
   const handleSubmit = () => {
     console.log("Vehicle data submitted:", vehicle);
-    addVehicleToJob("pc:437d8b43", vehicle)
+    addVehicleToJob(DEFAULT_JOB_ID, vehicle)
       .then((response) => {
         console.log(response);
       })
@@ -76,10 +77,7 @@ const VehicleComponent: React.FC = () => {
       ...prev,
       garageLocation: {
         ...prev?.garageLocation,
-        country: {
-          code: "CA",
-          name: "Canada",
-        },
+        country: DEFAULT_COUNTRY,
       },
     }));
   }, []);

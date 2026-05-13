@@ -9,8 +9,8 @@ const AppRoutes = ({ routes }: { routes: RouteConfig[] }) => {
       {routes.map((route) => {
         const Component = route.component;
 
-        if (route.path === "/pawizard") {
-          return <Route path="/pawizard/*" element={<PAWizard />} />;
+        if (route.path === "/pa-wizard") {
+          return <Route path="/pa-wizard/*" element={<PAWizard />} />;
         }
 
         return (
