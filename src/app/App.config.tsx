@@ -2,8 +2,8 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Quotes from "../pages/Quotes/Quotes";
 import { AccountDetails } from "../pages/AccountDetails/AccountDetails";
 import { PAWizard } from "../pages/PAWizard/PAWizard";
-import VehicleComponent from "../components/Vehicle/VehicleComponent";
-import { FNOLWizard } from "../pages/FNOLWizard/FNOLWizard";
+import { FNOLWizard } from '../pages/FNOLWizard/FNOLWizard';
+import { PolicySummary } from "../pages/PolicySummary/PolicySummary";
 
 export default {
   floorplanConfig: {
@@ -24,20 +24,26 @@ export default {
       },
       {
         title: "Account Details",
-        path: "/accountDetails",
+        path: "/account-details",
         showNavbar: false,
         component: AccountDetails,
       },
       {
-        title: "PAWizard",
-        path: "/pawizard",
-        showNavbar: true,
+        title: "Policy Summary",
+        path: "/policy-summary",
+        showNavbar: false,
+        component: PolicySummary,
+      },
+      {
+        title: "Personal Auto Wizard",
+        path: "/pa-wizard",
+        showNavbar: false,
         component: PAWizard,
       },
       {
-        title: "FNOLWizard",
-        path: "/fnolwizard",
-        showNavbar: true,
+        title: "FNOL Wizard",
+        path: "/fnol-wizard",
+        showNavbar: false,
         component: FNOLWizard,
       },
     ],

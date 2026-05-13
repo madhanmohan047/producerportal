@@ -1,13 +1,14 @@
-import axiosInstance from "../../utils/axiosInstance";
-import { ApiListResponse } from "../../utils/types";
+import { transport} from "../../utils/TransportService";
 import type { Job, Driver, Vehicle, Coverage } from "./types";
+
+const { api } = transport;
 
 /**
  * Retrieve all jobs
  * GET /api/jobs
  */
 export const getAllJobs = () => {
-  return axiosInstance.get<ApiListResponse<Job>>("/jobs");
+  return api.get<Array<Job>>("/jobs");
 };
 
 /**
@@ -15,7 +16,7 @@ export const getAllJobs = () => {
  * GET /api/jobs/{id}
  */
 export const getJobById = (id: string) => {
-  return axiosInstance.get<Job>(`/jobs/${id}`);
+  return api.get<Job>(`/jobs/${id}`);
 };
 
 /**
@@ -23,7 +24,7 @@ export const getJobById = (id: string) => {
  * PUT /api/jobs/{jobId}
  */
 export const updateJob = (jobId: string, jobData: Job) => {
-  return axiosInstance.put<Job>(`/jobs/${jobId}`, jobData);
+  return api.put<Job>(`/jobs/${jobId}`, jobData);
 };
 
 /**
@@ -31,7 +32,7 @@ export const updateJob = (jobId: string, jobData: Job) => {
  * POST /api/jobs/{jobId}/drivers
  */
 export const addDriverToJob = (jobId: string, driverData: Driver) => {
-  return axiosInstance.post<Driver>(`/jobs/${jobId}/drivers`, driverData);
+  return api.post<Driver>(`/jobs/${jobId}/drivers`, driverData);
 };
 
 /**
@@ -39,7 +40,7 @@ export const addDriverToJob = (jobId: string, driverData: Driver) => {
  * GET /api/jobs/{jobId}/drivers
  */
 export const getJobDrivers = (jobId: string) => {
-  return axiosInstance.get<Driver[]>(`/jobs/${jobId}/drivers`);
+  return api.get<Driver[]>(`/jobs/${jobId}/drivers`);
 };
 
 /**
@@ -47,7 +48,7 @@ export const getJobDrivers = (jobId: string) => {
  * POST /api/jobs/{jobId}/vehicles
  */
 export const addVehicleToJob = (jobId: string, vehicleData: Vehicle) => {
-  return axiosInstance.post<Vehicle>(`/jobs/${jobId}/vehicles`, vehicleData);
+  return api.post<Vehicle>(`/jobs/${jobId}/vehicles`, vehicleData);
 };
 
 /**
@@ -55,7 +56,7 @@ export const addVehicleToJob = (jobId: string, vehicleData: Vehicle) => {
  * GET /api/jobs/{jobId}/vehicles
  */
 export const getJobVehicles = (jobId: string) => {
-  return axiosInstance.get<Vehicle[]>(`/jobs/${jobId}/vehicles`);
+  return api.get<Vehicle[]>(`/jobs/${jobId}/vehicles`);
 };
 
 /**
@@ -63,5 +64,5 @@ export const getJobVehicles = (jobId: string) => {
  * GET /api/jobs/{jobId}/coverages
  */
 export const getJobCoverages = (jobId: string) => {
-  return axiosInstance.get<Coverage[]>(`/jobs/${jobId}/coverages`);
+  return api.get<Coverage[]>(`/jobs/${jobId}/coverages`);
 };
