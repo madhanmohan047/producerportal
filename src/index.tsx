@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./app/App";
 import reportWebVitals from "./reportWebVitals";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import "./assets/variables.scss";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { AuthProvider } from "./context/AuthContext";
