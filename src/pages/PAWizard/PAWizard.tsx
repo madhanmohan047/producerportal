@@ -17,5 +17,12 @@ export const PAWizard = () => {
 
   /* works also=> <Wizard {...pawizardProps} /> */
 
-  return <Wizard steps={PASteps} location={location} url={"/pawizard/"} />;
+  return (
+    <Wizard
+      steps={PASteps}
+      location={location}
+      url={"/pawizard/"}
+      header={"PAWizard"}
+    />
+  );
 };

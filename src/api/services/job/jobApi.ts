@@ -1,4 +1,5 @@
 import axiosInstance from "../../utils/axiosInstance";
+import { ApiListResponse } from "../../utils/types";
 import type { Job, Driver, Vehicle, Coverage } from "./types";
 
 /**

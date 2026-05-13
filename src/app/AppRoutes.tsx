@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { RouteConfig } from "../api/utils/routeConfig";
+import { FNOLWizard } from "../pages/FNOLWizard/FNOLWizard";
 import { PAWizard } from "../pages/PAWizard/PAWizard";
 
 const AppRoutes = ({ routes }: { routes: RouteConfig[] }) => {
@@ -12,7 +13,9 @@ const AppRoutes = ({ routes }: { routes: RouteConfig[] }) => {
         if (route.path === "/pawizard") {
           return <Route path="/pawizard/*" element={<PAWizard />} />;
         }
-
+        if (route.path === "/fnolwizard") {
+          return <Route path="/fnolwizard/*" element={<FNOLWizard />} />;
+        }
         return (
           <Route key={route.path} path={route.path} element={<Component />} />
         );

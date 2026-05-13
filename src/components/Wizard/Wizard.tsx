@@ -2,15 +2,12 @@ import React, { useState } from "react";
 import { WizardProps } from "../../types/Wizardtype";
 import styles from "./Wizard.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
+import WizardHeader from "./WizardHeader/WizardHeader";
+import WizardProgressBar from "./WizardProgressBar/WizardProgressBar";
+import WizardSidebar from "./WizardSidebar/WizardSidebar";
 
 export const Wizard = (wizardProps: WizardProps) => {
   // works also=>export const Wizard = ({ steps, location }: WizardProps) => {
-
-  // const [currentIndex, setCurrentIndex] = useState(0);
-  // const [currentIndex, setCurrentIndex] = useState(() => {
-  //   const saved = localStorage.getItem("wizardStep");
-  //   return saved ? Number(saved) : 0;
-  // });
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -37,28 +34,32 @@ export const Wizard = (wizardProps: WizardProps) => {
 
   return (
     <div className={styles["wizard-container"]}>
-      <div className={styles["wizard-sidebar"]}>
+      <div className={styles["wizard-header"]}>
+        <WizardHeader headerProps={wizardProps.header} />
+      </div>
+
+      <div className={styles["wizard-progress"]}>
         {wizardProps.steps.map((step, index) => (
-          <div
-            key={step.id}
-            className={`${styles["wizard-step"]} ${
-              index === currentIndex ? styles["active-step"] : ""
-            }`}
-          >
-            {step.wizardPageConfig.title}
-          </div>
+          <WizardProgressBar
+            progressbarProps={step.wizardPageConfig}
+            index={index}
+            currentIndex={safeIndex}
+          />
         ))}
       </div>
 
-      <div className={styles["wizard-content"]}>
-        {CurrentComponent ? (
-          <CurrentComponent
-            step={currentStep}
-            location={wizardProps.location}
-            handleNext={goNext}
-            handlePrevious={goBack}
-          />
-        ) : null}
+      <div className={styles["wizard-body"]}>
+        <div className={styles["wizard-content"]}>
+          {CurrentComponent ? (
+            <CurrentComponent
+              step={currentStep}
+              location={wizardProps.location}
+              handleNext={goNext}
+              handlePrevious={goBack}
+              wizardSidebarprops={wizardProps.wizardSidebarprops}
+            />
+          ) : null}
+        </div>
       </div>
     </div>
   );

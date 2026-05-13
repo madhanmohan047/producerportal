@@ -3,6 +3,7 @@ import Quotes from "../pages/Quotes/Quotes";
 import { AccountDetails } from "../pages/AccountDetails/AccountDetails";
 import { PAWizard } from "../pages/PAWizard/PAWizard";
 import VehicleComponent from "../components/Vehicle/VehicleComponent";
+import { FNOLWizard } from "../pages/FNOLWizard/FNOLWizard";
 
 export default {
   floorplanConfig: {
@@ -28,10 +29,16 @@ export default {
         component: AccountDetails,
       },
       {
-        title: "Wizard",
+        title: "PAWizard",
         path: "/pawizard",
         showNavbar: true,
         component: PAWizard,
+      },
+      {
+        title: "FNOLWizard",
+        path: "/fnolwizard",
+        showNavbar: true,
+        component: FNOLWizard,
       },
     ],
   },

@@ -40,13 +40,15 @@ const PersonalInfoStep = (wizardPageProps: WizardPageProps) => {
     <WizardPage
       step={wizardPageProps.step}
       location={wizardPageProps.location}
-      handleNext={isProceed ? wizardPageProps.handleNext : undefined}
+      // handleNext={isProceed ? wizardPageProps.handleNext : undefined}
+      handleNext={wizardPageProps.handleNext}
       handlePrevious={wizardPageProps.handlePrevious}
+      wizardSidebarprops={wizardPageProps.wizardSidebarprops}
     >
       <div style={{ display: "flex" }}>
-        <div>{!isProceed && <div>Fix email error</div>}</div>
+        {/* <div>{!isProceed && <div>Fix email error</div>}</div> */}
 
-        <ContactComponent value={contact} onValueChange={handleValueChange} />
+        {/* <ContactComponent value={contact} onValueChange={handleValueChange} /> */}
       </div>
     </WizardPage>
   );

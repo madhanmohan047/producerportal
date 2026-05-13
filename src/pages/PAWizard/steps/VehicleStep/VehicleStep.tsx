@@ -10,6 +10,7 @@ const VehicleStep = (wizardPageProps: WizardPageProps) => {
       location={wizardPageProps.location}
       handleNext={wizardPageProps.handleNext}
       handlePrevious={wizardPageProps.handlePrevious}
+      wizardSidebarprops={wizardPageProps.wizardSidebarprops}
     >
       <div>Vehicle Step</div>
     </WizardPage>

@@ -12,6 +12,7 @@ export const PASteps: WizardStep[] = [
     wizardPageConfig: {
       title: "Personal Information",
       description: "Personal Information",
+      stepId: "1",
       buttonProps: {
         next: {
           label: "Next",
@@ -30,6 +31,7 @@ export const PASteps: WizardStep[] = [
     wizardPageConfig: {
       title: "Vehicle",
       description: "Vehicle",
+      stepId: "2",
       buttonProps: {
         next: {
           label: "Next",
@@ -48,6 +50,7 @@ export const PASteps: WizardStep[] = [
     wizardPageConfig: {
       title: "Driver",
       description: "Driver",
+      stepId: "3",
       buttonProps: {
         next: {
           label: "Submit",
