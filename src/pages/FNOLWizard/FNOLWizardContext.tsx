@@ -23,7 +23,6 @@ export const FNOLWizardprovider = ({
   children,
 }: WizardProviderProps) => {
   const [formData, setFormData] = useState(fnolFormData);
-  console.log("sidebarjomydemo1", fnolFormData.sidebarProps);
   return (
     <FNOLWizardContext.Provider
       value={{ fnolFormData: formData, setFnolFormData: setFormData }}

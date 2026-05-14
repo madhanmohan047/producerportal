@@ -3,7 +3,6 @@ import { useFNOLContext } from "../../../pages/FNOLWizard/FNOLWizardContext";
 import styles from "./WizardSidebar.module.scss";
 const WizardSidebar = () => {
   const { fnolFormData } = useFNOLContext();
-  console.log("fnolFormData", fnolFormData);
   return (
     <div className={styles["container"]}>
       <div className={styles["header"]}>

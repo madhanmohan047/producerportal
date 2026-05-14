@@ -6,13 +6,15 @@ import styles from "./Wizardpage.module.scss";
 import saveIcon from "../../../assets/images/saveIcon.png";
 import { Button } from "../../common";
 import backButton from "../../../assets/images/backButton.png";
+import { useFNOLContext } from "../../../pages/FNOLWizard/FNOLWizardContext";
 
 const WizardPage = (wizardPageProps: WizardPageProps) => {
+  const { fnolFormData } = useFNOLContext();
   return (
     <div className={styles["wizard-page"]}>
       <div className={styles["wizard-page-container"]}>
         <div className={styles["wizard-page-sidebar"]}>
-          {wizardPageProps.wizardSidebarprops && <WizardSidebar />}
+          <WizardSidebar />
         </div>
         <div className={styles["wizard-page-content"]}>
           {wizardPageProps.children}
