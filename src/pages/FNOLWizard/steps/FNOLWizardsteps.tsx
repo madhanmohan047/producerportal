@@ -18,7 +18,7 @@ export const FNOLWizardsteps: WizardStep[] = [
       stepId: "1",
       buttonProps: {
         next: {
-          label: "Next",
+          label: "Continue",
         },
         previous: {
           label: "",
@@ -40,7 +40,7 @@ export const FNOLWizardsteps: WizardStep[] = [
       stepId: "2",
       buttonProps: {
         next: {
-          label: "Next",
+          label: "Continue",
         },
         previous: {
           label: "Back",
@@ -84,7 +84,7 @@ export const FNOLWizardsteps: WizardStep[] = [
       stepId: "4",
       buttonProps: {
         next: {
-          label: "Next",
+          label: "Continue",
         },
         previous: {
           label: "Back",
@@ -106,7 +106,7 @@ export const FNOLWizardsteps: WizardStep[] = [
       stepId: "5",
       buttonProps: {
         next: {
-          label: "Next",
+          label: "Continue",
         },
         previous: {
           label: "Back",
@@ -128,7 +128,7 @@ export const FNOLWizardsteps: WizardStep[] = [
       stepId: "6",
       buttonProps: {
         next: {
-          label: "Next",
+          label: "Continue",
         },
         previous: {
           label: "Back",
@@ -152,7 +152,7 @@ export const FNOLWizardsteps: WizardStep[] = [
       hideNameInProgress: true,
       buttonProps: {
         next: {
-          label: "Submit",
+          label: "Submit Claim",
         },
         previous: {
           label: "Back",
