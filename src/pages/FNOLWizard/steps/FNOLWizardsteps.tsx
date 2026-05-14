@@ -7,6 +7,7 @@ import DocumentStep from "./DocumentsStep/DocumentStep";
 import PartyStep from "./PartyStep/PartyStep";
 import DamageStep from "./DamageStep/DamageStep";
 import ReviewStep from "./ReviewStep/ReviewStep";
+import ClaimSubmittedStep from "./ClaimSubmittedStep/ClaimSubmittedStep";
 
 export const FNOLWizardsteps: WizardStep[] = [
   {
@@ -15,8 +16,8 @@ export const FNOLWizardsteps: WizardStep[] = [
     route: "policylob",
     component: PersonalInfoStep,
     wizardPageConfig: {
-      title: "Policy & LOB",
-      description: "Policy & LOB",
+      title: "Policy Discovery",
+      description: "Policy Discovery",
       stepId: "1",
       buttonProps: {
         next: {
@@ -145,7 +146,7 @@ export const FNOLWizardsteps: WizardStep[] = [
     id: "confirmation",
     type: "wizard",
     route: "submit",
-    component: VehicleStep,
+    component: ClaimSubmittedStep,
     wizardPageConfig: {
       title: "Submit",
       description: "Submit",
