@@ -6,6 +6,7 @@ import VehicleStep from "../../PAWizard/steps/VehicleStep/VehicleStep";
 import DocumentStep from "./DocumentsStep/DocumentStep";
 import PartyStep from "./PartyStep/PartyStep";
 import DamageStep from "./DamageStep/DamageStep";
+import ReviewStep from "./ReviewStep/ReviewStep";
 
 export const FNOLWizardsteps: WizardStep[] = [
   {
@@ -122,7 +123,7 @@ export const FNOLWizardsteps: WizardStep[] = [
     id: "review",
     type: "wizard",
     route: "review",
-    component: DriverStep,
+    component: ReviewStep,
     wizardPageConfig: {
       title: "Review",
       description: "Review",
