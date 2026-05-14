@@ -3,6 +3,7 @@ import { WizardStep } from "../../../types/Wizardtype";
 import DriverStep from "../../PAWizard/steps/DriverStep/DriverStep";
 import PersonalInfoStep from "../../PAWizard/steps/Personalinfo/PersonalInfoStep";
 import VehicleStep from "../../PAWizard/steps/VehicleStep/VehicleStep";
+import DocumentStep from "./DocumentsStep/DocumentStep";
 
 export const FNOLWizardsteps: WizardStep[] = [
   {
@@ -97,7 +98,7 @@ export const FNOLWizardsteps: WizardStep[] = [
     id: "documents",
     type: "wizard",
     route: "documents",
-    component: DriverStep,
+    component: DocumentStep,
     wizardPageConfig: {
       title: "Documents",
       description: "Documents",

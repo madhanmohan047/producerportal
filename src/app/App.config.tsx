@@ -42,7 +42,7 @@ export default {
       },
       {
         title: "FNOL Wizard",
-        path: "/fnolwizard",
+        path: "/fnol-wizard",
         showNavbar: true,
         component: FNOLWizard,
       },
