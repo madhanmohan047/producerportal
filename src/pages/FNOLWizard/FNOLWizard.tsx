@@ -19,50 +19,55 @@ export const FNOLWizard = () => {
   const sidebarItems: WizardSidebarItemProps[] = [
     {
       transformationKey: "Policy Holder",
-      transformationLabel: "Sarah mitchel",
+      transformationLabel: "",
     },
     {
       transformationKey: "Policy #",
-      transformationLabel: "HO-2024-88421",
+      transformationLabel: "",
     },
     {
       transformationKey: "Line of Business",
-      transformationLabel: "Personal Property",
+      transformationLabel: "",
     },
     {
       transformationKey: "Loss Date",
-      transformationLabel: "04/15/2025",
+      transformationLabel: "",
     },
   ];
-  const [wizardSidebarProps, setWizardSidebarProps] =
-    useState<WizardSidebarProps>();
+  const wizardSidebarProps: WizardSidebarProps = {
+    title: "Claimant",
+    sidebaritems: sidebarItems,
+  };
 
   useEffect(() => {
     if (location.pathname === "/fnol-wizard") {
       navigate("/fnol-wizard/personalInfo", { replace: true });
     }
 
-    setWizardSidebarProps((prev) => {
-      return {
-        ...prev,
-        title: "Claimant",
-        sidebaritems: sidebarItems,
-      };
-    });
+    // setWizardSidebarProps((prev) => {
+    //   return {
+    //     ...prev,
+    //     title: "Claimant",
+    //     sidebaritems: sidebarItems,
+    //   };
+    // });
   }, [location.pathname, navigate]);
 
   /* works also=> <Wizard {...pawizardProps} /> */
 
   return (
     <FNOLWizardprovider
-      fnolFormData={{ location: location, currentStep: FNOLWizardsteps[0] }}
+      fnolFormData={{
+        location: location,
+        currentStep: FNOLWizardsteps[0],
+        sidebarProps: wizardSidebarProps,
+      }}
     >
       <Wizard
         steps={FNOLWizardsteps}
         location={location}
         url={"/fnol-wizard/"}
         header={"Guidewire ClaimCenter Portal"}
-        wizardSidebarprops={wizardSidebarProps}
       />
     </FNOLWizardprovider>
   );

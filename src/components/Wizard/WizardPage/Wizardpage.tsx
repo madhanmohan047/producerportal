@@ -12,11 +12,7 @@ const WizardPage = (wizardPageProps: WizardPageProps) => {
     <div className={styles["wizard-page"]}>
       <div className={styles["wizard-page-container"]}>
         <div className={styles["wizard-page-sidebar"]}>
-          {wizardPageProps.wizardSidebarprops && (
-            <WizardSidebar
-              wizardSidebarprops={wizardPageProps.wizardSidebarprops}
-            />
-          )}
+          {wizardPageProps.wizardSidebarprops && <WizardSidebar />}
         </div>
         <div className={styles["wizard-page-content"]}>
           {wizardPageProps.children}
