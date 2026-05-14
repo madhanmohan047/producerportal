@@ -1,22 +1,27 @@
 import React, { useRef, useState } from "react";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
+import { useFNOLContext } from "../../FNOLWizardContext";
 import styles from "./DocumentStep.module.scss";
 const DocumentStep = (wizardPageProps: WizardPageProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [files, setFiles] = useState<File[]>([]);
+  const { fnolFormData, setFnolFormData } = useFNOLContext();
 
   const addFiles = (fileList: FileList) => {
     const newFiles = Array.from(fileList);
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    setFnolFormData((formData) => ({
+      ...formData,
+      documentList: [...(formData.documentList || []), ...newFiles],
+    }));
+    console.log("docs", fnolFormData.documentList);
   };
-  const removeFile = (removeItemIndex: number) => {
-    setFiles((prevList) =>
-      prevList.filter(
-        (currentItem, currentIndex) => currentIndex !== removeItemIndex,
-      ),
-    );
-  };
+  // const removeFile = (removeItemIndex: number) => {
+  //   setFiles((prevList) =>
+  //     prevList.filter(
+  //       (currentItem, currentIndex) => currentIndex !== removeItemIndex,
+  //     ),
+  //   );
+  // };
   return (
     <WizardPage
       step={wizardPageProps.step}
@@ -66,7 +71,7 @@ const DocumentStep = (wizardPageProps: WizardPageProps) => {
           />
         </div>
         <div className={styles["uploadedList"]}>
-          {files.map((file) => (
+          {fnolFormData.documentList?.map((file) => (
             <div className={styles["upload-list-item"]}>
               <i className="fa-solid fa-paperclip"></i>
               <span>{file.name}</span>
