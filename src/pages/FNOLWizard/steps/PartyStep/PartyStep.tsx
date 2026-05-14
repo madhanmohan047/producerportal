@@ -2,27 +2,38 @@ import { useState } from "react";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import {
   PartyComponent,
-  Party,
+  ClaimContact,
   PrimaryClaimant,
+  ROLE_CODES,
 } from "../../../../components/PartyComponent/PartyComponent";
 import AddEditPartyDialog from "../../../../components/PartyComponent/AddEditPartyDialog";
 import { WizardPageProps } from "../../../../types/Wizardtype";
+import { TypeKeyValue } from "../../../../api/utils/types";
 
 const INITIAL_PRIMARY: PrimaryClaimant = {
   name: "Sarah Mitchell",
 };
 
-const INITIAL_PARTIES: Party[] = [
+const otherDriverRole: TypeKeyValue = {
+  code: ROLE_CODES.otherDriver,
+  name: "Third Party",
+};
+const witnessRole: TypeKeyValue = {
+  code: ROLE_CODES.witness,
+  name: "Witness",
+};
+
+const INITIAL_CONTACTS: ClaimContact[] = [
   {
-    _id: "p1",
-    type: "other-driver",
+    _id: "c1",
     name: "John Doe",
+    roles: [otherDriverRole],
     description: "Blue Honda Civic (ABC-123)",
   },
   {
-    _id: "p2",
-    type: "witness",
+    _id: "c2",
     name: "Jane Smith",
+    roles: [witnessRole],
     description: "Bystander",
   },
 ];
@@ -30,33 +41,33 @@ const INITIAL_PARTIES: Party[] = [
 type DialogState =
   | { mode: "closed" }
   | { mode: "primary" }
-  | { mode: "party-add" }
-  | { mode: "party-edit"; partyId: string };
+  | { mode: "contact-add" }
+  | { mode: "contact-edit"; contactId: string };
 
 const PartyStep = (wizardPageProps: WizardPageProps) => {
   const [primaryClaimant, setPrimaryClaimant] =
     useState<PrimaryClaimant>(INITIAL_PRIMARY);
-  const [parties, setParties] = useState<Party[]>(INITIAL_PARTIES);
+  const [contacts, setContacts] = useState<ClaimContact[]>(INITIAL_CONTACTS);
   const [dialog, setDialog] = useState<DialogState>({ mode: "closed" });
 
   const handleDelete = (id: string) => {
-    setParties((prev) => prev.filter((p) => p._id !== id));
+    setContacts((prev) => prev.filter((c) => c._id !== id));
   };
 
-  const handleAdd = () => setDialog({ mode: "party-add" });
+  const handleAdd = () => setDialog({ mode: "contact-add" });
 
-  const handleEditParty = (id: string) =>
-    setDialog({ mode: "party-edit", partyId: id });
+  const handleEditContact = (id: string) =>
+    setDialog({ mode: "contact-edit", contactId: id });
 
   const handleEditPrimary = () => setDialog({ mode: "primary" });
 
   const handleCancel = () => setDialog({ mode: "closed" });
 
-  const handleSaveParty = (saved: Party) => {
-    setParties((prev) => {
-      const exists = prev.some((p) => p._id === saved._id);
+  const handleSaveContact = (saved: ClaimContact) => {
+    setContacts((prev) => {
+      const exists = prev.some((c) => c._id === saved._id);
       return exists
-        ? prev.map((p) => (p._id === saved._id ? saved : p))
+        ? prev.map((c) => (c._id === saved._id ? saved : c))
         : [...prev, saved];
     });
     setDialog({ mode: "closed" });
@@ -67,9 +78,9 @@ const PartyStep = (wizardPageProps: WizardPageProps) => {
     setDialog({ mode: "closed" });
   };
 
-  const editingParty =
-    dialog.mode === "party-edit"
-      ? parties.find((p) => p._id === dialog.partyId)
+  const editingContact =
+    dialog.mode === "contact-edit"
+      ? contacts.find((c) => c._id === dialog.contactId)
       : undefined;
 
   return (
@@ -83,11 +94,11 @@ const PartyStep = (wizardPageProps: WizardPageProps) => {
     >
       <PartyComponent
         primaryClaimant={primaryClaimant}
-        parties={parties}
+        contacts={contacts}
         onEditPrimary={handleEditPrimary}
-        onEditParty={handleEditParty}
-        onDeleteParty={handleDelete}
-        onAddParty={handleAdd}
+        onEditContact={handleEditContact}
+        onDeleteContact={handleDelete}
+        onAddContact={handleAdd}
       />
 
       {dialog.mode === "primary" ? (
@@ -102,9 +113,9 @@ const PartyStep = (wizardPageProps: WizardPageProps) => {
         <AddEditPartyDialog
           open={dialog.mode !== "closed"}
           target="party"
-          party={editingParty}
+          contact={editingContact}
           onCancel={handleCancel}
-          onSave={handleSaveParty}
+          onSave={handleSaveContact}
         />
       )}
     </WizardPage>

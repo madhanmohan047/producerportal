@@ -1,5 +1,5 @@
 import React from "react";
-import { MessageDescriptor, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,47 +13,61 @@ import {
 import Button from "../common/Button/Button";
 import Card from "../common/Card/Card";
 import StatusBadge from "../common/StatusBadge/StatusBadge";
+import { Base, TypeKeyValue } from "../../api/utils/types";
 import { PARTY_MESSAGES } from "./PartyComponent.messages";
 import styles from "./PartyComponent.module.scss";
 
-export type PartyType = "other-driver" | "witness";
-
-export type Party = {
-  _id: string;
-  type: PartyType;
-  name: string;
+export interface ClaimContact extends Base {
+  name?: string;
+  phone?: string;
+  roles: TypeKeyValue[];
+  emailAddress?: string;
   description?: string;
-};
+}
 
 export type PrimaryClaimant = {
   name: string;
 };
 
+export const ROLE_CODES = {
+  otherDriver: "other-driver",
+  witness: "witness",
+} as const;
+
+const ROLE_ICON: Record<string, IconDefinition> = {
+  [ROLE_CODES.otherDriver]: faCar,
+  [ROLE_CODES.witness]: faUser,
+};
+
 type PartyProps = {
   primaryClaimant: PrimaryClaimant;
-  parties: Party[];
+  contacts: ClaimContact[];
   onEditPrimary?: () => void;
-  onEditParty?: (id: string) => void;
-  onDeleteParty?: (id: string) => void;
-  onAddParty?: () => void;
+  onEditContact?: (id: string) => void;
+  onDeleteContact?: (id: string) => void;
+  onAddContact?: () => void;
   readOnly?: boolean;
 };
 
-const TYPE_META: Record<
-  PartyType,
-  { label: MessageDescriptor; icon: IconDefinition }
-> = {
-  "other-driver": { label: PARTY_MESSAGES.typeOtherDriver, icon: faCar },
-  witness: { label: PARTY_MESSAGES.typeWitness, icon: faUser },
+const displayNameFor = (contact: ClaimContact): string => {
+  if (contact.name && contact.name.trim()) return contact.name;
+  if (contact.roles.length > 0) return contact.roles[0].name;
+  return "—";
 };
+
+const rolesLabelFor = (contact: ClaimContact): string =>
+  contact.roles.map((r) => r.name).join(" / ");
+
+const iconFor = (contact: ClaimContact): IconDefinition =>
+  ROLE_ICON[contact.roles[0]?.code] ?? faUser;
 
 export const PartyComponent = ({
   primaryClaimant,
-  parties,
+  contacts,
   onEditPrimary,
-  onEditParty,
-  onDeleteParty,
-  onAddParty,
+  onEditContact,
+  onDeleteContact,
+  onAddContact,
   readOnly,
 }: PartyProps) => {
   const intl = useIntl();
@@ -108,58 +122,55 @@ export const PartyComponent = ({
       </h2>
 
       <div className={styles.partyList}>
-        {parties.map((party) => {
-          const meta = TYPE_META[party.type];
-          return (
-            <Card
-              key={party._id}
-              variant="default"
-              className={styles.partyRowCard}
-            >
-              <div className={styles.partyRow}>
-                <div className={styles.partyAvatar}>
-                  <FontAwesomeIcon icon={meta.icon} />
+        {contacts.map((contact) => (
+          <Card
+            key={contact._id}
+            variant="default"
+            className={styles.partyRowCard}
+          >
+            <div className={styles.partyRow}>
+              <div className={styles.partyAvatar}>
+                <FontAwesomeIcon icon={iconFor(contact)} />
+              </div>
+              <div className={styles.partyInfo}>
+                <div className={styles.uppercaseLabel}>
+                  {rolesLabelFor(contact)}
                 </div>
-                <div className={styles.partyInfo}>
-                  <div className={styles.uppercaseLabel}>
-                    {intl.formatMessage(meta.label)}
-                  </div>
-                  <div className={styles.partyName}>
-                    {party.name}
-                    {party.description ? ` — ${party.description}` : ""}
-                  </div>
-                </div>
-                <div className={styles.partyActions}>
-                  <Button
-                    variant="secondary"
-                    size="small"
-                    onClick={() => onEditParty?.(party._id)}
-                    disabled={readOnly}
-                  >
-                    <FontAwesomeIcon icon={faPenToSquare} />
-                    {intl.formatMessage(PARTY_MESSAGES.editAction)}
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="small"
-                    onClick={() => onDeleteParty?.(party._id)}
-                    disabled={readOnly}
-                  >
-                    <FontAwesomeIcon icon={faTrashCan} />
-                    {intl.formatMessage(PARTY_MESSAGES.deleteAction)}
-                  </Button>
+                <div className={styles.partyName}>
+                  {displayNameFor(contact)}
+                  {contact.description ? ` — ${contact.description}` : ""}
                 </div>
               </div>
-            </Card>
-          );
-        })}
+              <div className={styles.partyActions}>
+                <Button
+                  variant="secondary"
+                  size="small"
+                  onClick={() => contact._id && onEditContact?.(contact._id)}
+                  disabled={readOnly || !contact._id}
+                >
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                  {intl.formatMessage(PARTY_MESSAGES.editAction)}
+                </Button>
+                <Button
+                  variant="danger"
+                  size="small"
+                  onClick={() => contact._id && onDeleteContact?.(contact._id)}
+                  disabled={readOnly || !contact._id}
+                >
+                  <FontAwesomeIcon icon={faTrashCan} />
+                  {intl.formatMessage(PARTY_MESSAGES.deleteAction)}
+                </Button>
+              </div>
+            </div>
+          </Card>
+        ))}
       </div>
 
       <Button
         variant="primary"
         size="large"
         fullWidth
-        onClick={onAddParty}
+        onClick={onAddContact}
         disabled={readOnly}
       >
         <FontAwesomeIcon icon={faPlus} />

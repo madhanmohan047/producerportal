@@ -78,6 +78,18 @@ export const PARTY_MESSAGES = defineMessages({
     id: "party.form.descriptionPlaceholder",
     defaultMessage: "e.g. Blue Honda Civic (ABC-123)",
   },
+  formPhoneLabel: {
+    id: "party.form.phoneLabel",
+    defaultMessage: "Phone",
+  },
+  formEmailLabel: {
+    id: "party.form.emailLabel",
+    defaultMessage: "Email Address",
+  },
+  formRolesLabel: {
+    id: "party.form.rolesLabel",
+    defaultMessage: "Roles",
+  },
   formCancel: {
     id: "party.form.cancel",
     defaultMessage: "Cancel",
