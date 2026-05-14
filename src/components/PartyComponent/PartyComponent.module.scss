@@ -1,0 +1,155 @@
+.page {
+  width: 100%;
+  align-self: stretch;
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 32px 40px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  color: #1f2937;
+
+  /* Prevent flex shrinking from collapsing children when content is tall. */
+  > * {
+    flex-shrink: 0;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.infoBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e3a8a;
+}
+
+.infoIcon {
+  color: #2563eb;
+  font-size: 16px;
+}
+
+.uppercaseLabel {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+/* Override Card's default content padding so our internal header
+   (gray bar) can span edge-to-edge. */
+.primaryCard {
+  :global(.card__content) {
+    padding: 0;
+  }
+}
+
+.primaryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.primaryTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.primaryBody {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+}
+
+.primaryName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.sectionHeading {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 4px 0 0;
+}
+
+.partyList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.partyRowCard {
+  :global(.card__content) {
+    padding: 0;
+  }
+}
+
+.partyRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+}
+
+.partyAvatar {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.partyInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.partyName {
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.partyActions {
+  display: flex;
+  gap: 10px;
+}
