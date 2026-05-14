@@ -1,8 +1,10 @@
 import React from "react";
 import { WizardStep } from "../../../types/Wizardtype";
 import DriverStep from "../../PAWizard/steps/DriverStep/DriverStep";
-import PersonalInfoStep from "../../PAWizard/steps/Personalinfo/PersonalInfoStep";
+import PersonalInfoStep from "../../PAWizard/steps/PersonalInfo/PersonalInfoStep";
 import VehicleStep from "../../PAWizard/steps/VehicleStep/VehicleStep";
+import PartyStep from "./PartyStep/PartyStep";
+import DamageStep from "./DamageStep/DamageStep";
 
 export const FNOLWizardsteps: WizardStep[] = [
   {
@@ -53,14 +55,14 @@ export const FNOLWizardsteps: WizardStep[] = [
     id: "parties",
     type: "wizard",
     route: "parties",
-    component: DriverStep,
+    component: PartyStep,
     wizardPageConfig: {
       title: "Parties",
       description: "Parties",
       stepId: "3",
       buttonProps: {
         next: {
-          label: "Next",
+          label: "Continue",
         },
         previous: {
           label: "Back",
@@ -75,7 +77,7 @@ export const FNOLWizardsteps: WizardStep[] = [
     id: "damage",
     type: "wizard",
     route: "damage",
-    component: DriverStep,
+    component: DamageStep,
     wizardPageConfig: {
       title: "Damage",
       description: "Damage",
