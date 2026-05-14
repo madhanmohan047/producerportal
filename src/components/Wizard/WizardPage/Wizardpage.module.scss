@@ -25,8 +25,6 @@
   flex: 1;
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .wizard-page-actions {
@@ -41,8 +39,8 @@
 .wizard-button {
   min-width: 100px;
   padding: 10px 18px;
-  border: 1px solid #cfcfcf;
-  background-color: #f5f5f5;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.05);
   cursor: pointer;
   font-size: 14px;
 }

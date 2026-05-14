@@ -13,8 +13,8 @@ const AppRoutes = ({ routes }: { routes: RouteConfig[] }) => {
         if (route.path === "/pawizard") {
           return <Route path="/pawizard/*" element={<PAWizard />} />;
         }
-        if (route.path === "/fnolwizard") {
-          return <Route path="/fnolwizard/*" element={<FNOLWizard />} />;
+        if (route.path === "/fnol-wizard") {
+          return <Route path="/fnol-wizard/*" element={<FNOLWizard />} />;
         }
         return (
           <Route key={route.path} path={route.path} element={<Component />} />

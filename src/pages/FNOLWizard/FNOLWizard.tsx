@@ -38,8 +38,8 @@ export const FNOLWizard = () => {
     useState<WizardSidebarProps>();
 
   useEffect(() => {
-    if (location.pathname === "/fnolwizard") {
-      navigate("/fnolwizard/personalInfo", { replace: true });
+    if (location.pathname === "/fnol-wizard") {
+      navigate("/fnol-wizard/personalInfo", { replace: true });
     }
 
     setWizardSidebarProps((prev) => {
@@ -60,7 +60,7 @@ export const FNOLWizard = () => {
       <Wizard
         steps={FNOLWizardsteps}
         location={location}
-        url={"/fnolwizard/"}
+        url={"/fnol-wizard/"}
         header={"Guidewire ClaimCenter Portal"}
         wizardSidebarprops={wizardSidebarProps}
       />
