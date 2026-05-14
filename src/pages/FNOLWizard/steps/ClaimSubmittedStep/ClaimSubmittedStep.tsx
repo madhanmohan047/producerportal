@@ -12,7 +12,7 @@ const ClaimSubmittedStep = (
   const navigate = useNavigate();
 
   const handleFileAnotherClaim = () => {
-    navigate(`/fnolwizard/${FNOLWizardsteps[0].route}`);
+    navigate(`/fnol-wizard/${FNOLWizardsteps[0].route}`);
   };
 
   const handleViewDashboard = () => {
