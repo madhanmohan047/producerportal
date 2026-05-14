@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Contact } from "../../../../api/services";
 import { TypeKeyValue } from "../../../../api/utils/types";
 import { ContactComponent } from "../../../../components/ContactComponent/ContactComponent";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
+import { useFNOLContext } from "../../../FNOLWizard/FNOLWizardContext";
 
 const PersonalInfoStep = (wizardPageProps: WizardPageProps) => {
   const [isProceed, setIsProceed] = useState(false);
+  const { fnolFormData, setFnolFormData } = useFNOLContext();
   const [contact, setContact] = useState<Contact>({
     _id: "",
     roles: [],
@@ -36,6 +38,31 @@ const PersonalInfoStep = (wizardPageProps: WizardPageProps) => {
       [path]: value,
     }));
   };
+  useEffect(() => {
+    //  setFnolFormData((formData) => ({
+    //    ...formData,
+    //    sidebarProps: {
+    //      ...formData.sidebarProps,
+    //      title: formData.sidebarProps?.title ?? "",
+    //      sidebaritems: [...(formData.sidebarProps?.sidebaritems ?? []), newItem],
+    //    },
+    //  }));
+    // setFnolFormData((formData) => ({
+    //   ...formData,
+    //   sidebarProps: {
+    //     title: formData.sidebarProps?.title ?? "",
+    //     sidebaritems:
+    //       formData.sidebarProps?.sidebaritems?.map((item) =>
+    //         item.transformationKey === "Policy Holder"
+    //           ? {
+    //               ...item,
+    //               transformationLabel: "John Doe",
+    //             }
+    //           : item,
+    //       ) ?? [],
+    //   },
+    // }));
+  }, []);
   return (
     <WizardPage
       step={wizardPageProps.step}

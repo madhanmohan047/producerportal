@@ -1,15 +1,12 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
-import { WizardStep } from "../../types/Wizardtype";
+import { WizardSidebarProps, WizardStep } from "../../types/Wizardtype";
 import { Location } from "react-router-dom";
 
-type FileData = {
-  name: string;
-  size: string;
-};
 export type formData = {
   currentStep: WizardStep;
   location: Location;
   documentList?: File[];
+  sidebarProps?: WizardSidebarProps;
 };
 type FNOLContextType = {
   fnolFormData: formData;

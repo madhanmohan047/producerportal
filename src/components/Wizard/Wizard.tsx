@@ -4,7 +4,6 @@ import styles from "./Wizard.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import WizardHeader from "./WizardHeader/WizardHeader";
 import WizardProgressBar from "./WizardProgressBar/WizardProgressBar";
-import WizardSidebar from "./WizardSidebar/WizardSidebar";
 
 export const Wizard = (wizardProps: WizardProps) => {
   // works also=>export const Wizard = ({ steps, location }: WizardProps) => {
@@ -17,7 +16,6 @@ export const Wizard = (wizardProps: WizardProps) => {
   const safeIndex = currentIndex === -1 ? 0 : currentIndex;
   const currentStep = wizardProps.steps[safeIndex];
   const CurrentComponent = currentStep.component;
-
   const goNext = () => {
     if (currentIndex < wizardProps.steps.length - 1) {
       const next = wizardProps.steps[currentIndex + 1];
@@ -56,7 +54,6 @@ export const Wizard = (wizardProps: WizardProps) => {
               location={wizardProps.location}
               handleNext={goNext}
               handlePrevious={goBack}
-              wizardSidebarprops={wizardProps.wizardSidebarprops}
             />
           ) : null}
         </div>

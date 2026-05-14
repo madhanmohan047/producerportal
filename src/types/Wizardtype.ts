@@ -48,7 +48,7 @@ type WizardSidebarItemProps = {
 type WizardSidebarProps = {
   title: string;
   additionalData?: React.ComponentType<any>;
-  sidebaritems: WizardSidebarItemProps[];
+  sidebaritems?: WizardSidebarItemProps[];
 };
 
 export type {
