@@ -23,6 +23,7 @@ const WizardPage = (wizardPageProps: WizardPageProps) => {
         </div>
       </div>
 
+      {!wizardPageProps?.step?.wizardPageConfig?.isSubmission && (
       <div className={styles["wizard-page-actions"]}>
         {wizardPageProps?.step?.wizardPageConfig?.buttonProps?.previous.label
           .length > 0 && (
@@ -60,6 +61,7 @@ const WizardPage = (wizardPageProps: WizardPageProps) => {
           {wizardPageProps?.step?.wizardPageConfig?.buttonProps?.next.label}
         </Button>
       </div>
+      )}
     </div>
   );
 };
