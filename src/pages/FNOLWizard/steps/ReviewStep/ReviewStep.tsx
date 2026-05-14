@@ -10,6 +10,7 @@ const ReviewStep = (wizardPageProps: WizardPageProps) => {
     if (isAuthorize && isCertify) {
       setIsShowError(false);
       //todo post api
+      wizardPageProps.handleNext?.();
     } else {
       setIsShowError(true);
     }
