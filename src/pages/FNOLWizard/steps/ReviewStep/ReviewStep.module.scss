@@ -61,3 +61,14 @@
   gap: 12px;
   line-height: 1.5;
 }
+.error {
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  color: red;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  display: flex;
+  gap: 12px;
+  line-height: 1.5;
+}

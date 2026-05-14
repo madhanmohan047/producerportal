@@ -130,7 +130,7 @@ export const FNOLWizardsteps: WizardStep[] = [
       stepId: "6",
       buttonProps: {
         next: {
-          label: "Continue",
+          label: "Submit Claim",
         },
         previous: {
           label: "Back",
