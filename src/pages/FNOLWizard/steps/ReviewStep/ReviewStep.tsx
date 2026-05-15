@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
 import styles from "./ReviewStep.module.scss";
+import { useFNOLContext } from "../../FNOLWizardContext";
 const ReviewStep = (wizardPageProps: WizardPageProps) => {
   const [isCertify, setIsCertify] = useState(false);
   const [isAuthorize, setIsAuthorize] = useState(false);
   const [isShowError, setIsShowError] = useState(false);
+  const { fnolFormData } = useFNOLContext();
   const handleSubmit = () => {
     if (isAuthorize && isCertify) {
       setIsShowError(false);
@@ -15,6 +17,7 @@ const ReviewStep = (wizardPageProps: WizardPageProps) => {
       setIsShowError(true);
     }
   };
+  console.log("reviewfnol", fnolFormData);
   useEffect(() => {
     if (isShowError && isCertify && isAuthorize) {
       setIsShowError(false);
@@ -38,27 +41,43 @@ const ReviewStep = (wizardPageProps: WizardPageProps) => {
           <div className={styles["summary-table"]}>
             <div className={styles["summary-row"]}>
               <span className={styles["summary-label"]}>Policy Number</span>
-              <span className={styles["summary-val"]}></span>
+              <span className={styles["summary-val"]}>
+                {fnolFormData.policyNumber}
+              </span>
             </div>
             <div className={styles["summary-row"]}>
               <span className={styles["summary-label"]}>Line of Business</span>
-              <span className={styles["summary-val"]}></span>
+              <span className={styles["summary-val"]}>
+                {fnolFormData.lineOfBusiness}
+              </span>
             </div>
             <div className={styles["summary-row"]}>
               <span className={styles["summary-label"]}>Date of Loss</span>
-              <span className={styles["summary-val"]}></span>
+              <span className={styles["summary-val"]}>
+                {fnolFormData.dateOfLoss}
+              </span>
             </div>
             <div className={styles["summary-row"]}>
               <span className={styles["summary-label"]}>Injuries Reported</span>
-              <span className={styles["summary-val"]}></span>
+              <span className={styles["summary-val"]}>
+                {fnolFormData.injured ? "Yes" : "No"}
+              </span>
             </div>
             <div className={styles["summary-row"]}>
               <span className={styles["summary-label"]}>Police Report</span>
-              <span className={styles["summary-val"]}></span>
+              <span className={styles["summary-val"]}>
+                {fnolFormData.policeReport ? "Yes" : "No"}
+              </span>
             </div>
             <div className={styles["summary-row"]}>
               <span className={styles["summary-label"]}>Damage Areas</span>
-              <span className={styles["summary-val"]}></span>
+              <div className={styles["summary-val"]}>
+                <span className={styles["summary-val"]}>
+                  {fnolFormData.damagedAreas
+                    ?.map((damagedArea) => damagedArea.label)
+                    .join(", ")}
+                </span>
+              </div>{" "}
             </div>
           </div>
           <div className={styles.confirmcontainer}>

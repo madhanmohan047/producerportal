@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from "react";
-import AddressSection from "../../components/AddressComponent/AddressComponent";
-import { Address } from "../../api/services";
+// import AddressSection from "../../components/AddressComponent/AddressComponent";
+// import { Address } from "../../api/services";
 import { useLocation } from "react-router-dom";
+import { Address } from "../../../../api/services";
+import { WizardPageProps } from "../../../../types/Wizardtype";
+import { useFNOLContext } from "../../FNOLWizardContext";
+import { getPolicyById } from "../../../../api/services/policy/policyApi";
+import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 
-import YesNoToggle from "../../components/common/YesNoToggle/YesNoToggle";
-import WizardPage from "../../components/Wizard/WizardPage/Wizardpage";
-import { WizardPageProps } from "../../types/Wizardtype";
+// import YesNoToggle from "../../components/common/YesNoToggle/YesNoToggle";
+// import WizardPage from "../../components/Wizard/WizardPage/Wizardpage";
+// import { WizardPageProps } from "../../types/Wizardtype";
 import styles from "../LossDetails/LossDetails.module.scss";
-import { getPolicyById } from "../../api/services/policy/policyApi";
-import { useFNOLContext } from "../FNOLWizard/FNOLWizardContext";
+import AddressSection from "../../../../components/AddressComponent/AddressComponent";
+import YesNoToggle from "../../../../components/common/YesNoToggle/YesNoToggle";
+// import { getPolicyById } from "../../api/services/policy/policyApi";
+// import { useFNOLContext } from "../FNOLWizard/FNOLWizardContext";
 
 const emptyAddress: Address = {
   _id: "",
@@ -53,17 +60,17 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
         console.log("policy details fetched:", data);
 
         // optionally preload FNOL data
-        setFnolFormData((prev) => ({
-          ...prev,
-          policyNumber: data?.policyNumber,
-        }));
+        // setFnolFormData((prev) => ({
+        //   ...prev,
+        //   policyNumber: data?.policyNumber,
+        // }));
       } catch (error) {
         console.error("Error fetching policy:", error);
       }
     };
 
     if (policyId) fetchData();
-  }, [policyId, setFnolFormData]);
+  }, []);
 
   useEffect(() => {
     console.log("FNOL UPDATED:", fnolFormData);

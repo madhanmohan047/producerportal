@@ -1,6 +1,7 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { WizardSidebarProps, WizardStep } from "../../types/Wizardtype";
 import { Location } from "react-router-dom";
+import { DamageAreaOption } from "../../components/DamageComponent/DamageComponent";
 
 export type formData = {
   currentStep: WizardStep;
@@ -17,6 +18,7 @@ export type formData = {
   injured?: boolean | null;
   policeReport?: boolean | null;
   description?: string;
+  damagedAreas?: DamageAreaOption[];
   documentList?: File[];
   sidebarProps?: WizardSidebarProps;
 };
