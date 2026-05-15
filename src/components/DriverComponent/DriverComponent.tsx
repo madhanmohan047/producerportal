@@ -5,185 +5,189 @@ import { addDriverToJob } from "../../api/services/job/jobApi";
 import { FormInput } from "../common";
 import styles from "./DriverComponent.module.scss";
 
-type DriverProps = {
-  value?: DriverType;
+type PersonMode = "new" | "existing";
+
+type DriverComponentProps = {
+  jobId: string;
+  onDriverAdded?: (driver: DriverType) => void;
 };
 
-type DriverFormState = {
+type FormState = {
+  personMode: PersonMode;
   firstName: string;
   lastName: string;
-  dateOfBirth: Date | undefined;
+  emailAddress: string;
+  personId: string;
   licenseNumber: string;
   licenseState: string;
   yearsOfExperience: number | "";
-  numberOfAccidents: number | "";
-  numberOfViolations: number | "";
-  violations: string[];
+  numAccidents: number | "";
+  numViolations: number | "";
 };
 
-const initialFormState: DriverFormState = {
+const initialForm: FormState = {
+  personMode: "new",
   firstName: "",
   lastName: "",
-  dateOfBirth: undefined,
+  emailAddress: "",
+  personId: "",
   licenseNumber: "",
   licenseState: "",
   yearsOfExperience: "",
-  numberOfAccidents: "",
-  numberOfViolations: "",
-  violations: [],
+  numAccidents: "",
+  numViolations: "",
 };
 
-export const DriverComponent: React.FC<DriverProps> = ({ value }) => {
-  const [isReadOnly, setIsReadOnly] = useState(false);
+export const DriverComponent: React.FC<DriverComponentProps> = ({ jobId, onDriverAdded }) => {
+  const [form, setForm] = useState<FormState>(initialForm);
   const [isLoading, setIsLoading] = useState(false);
-  const [driverInfo, setDriverInfo] =
-    useState<DriverFormState>(initialFormState);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (
-    field: keyof DriverFormState,
-    value: string | number | Date,
-  ) => {
-    setDriverInfo((prev) => ({ ...prev, [field]: value }));
-  };
+  const set = (field: keyof FormState, value: any) =>
+    setForm((prev) => ({ ...prev, [field]: value }));
 
   const handleSubmit = async () => {
-    setIsLoading(true);
+    setError(null);
+
+    if (form.personMode === "new") {
+      if (!form.firstName.trim() || !form.lastName.trim() || !form.emailAddress.trim()) {
+        setError("First name, last name, and email are required.");
+        return;
+      }
+    } else if (!form.personId.trim()) {
+      setError("Person ID is required.");
+      return;
+    }
+
+    const person: string | Contact =
+      form.personMode === "existing"
+        ? form.personId.trim()
+        : ({
+            firstName: form.firstName.trim(),
+            lastName: form.lastName.trim(),
+            emailAddress: form.emailAddress.trim(),
+            type: { code: "person", name: "Person" },
+            roles: [{ code: "driver", name: "Driver" }],
+          } as Contact);
 
     const payload: Partial<DriverType> = {
-      person: {
-        firstName: driverInfo.firstName,
-        lastName: driverInfo.lastName,
-        dateOfBirth: driverInfo.dateOfBirth
-          ? driverInfo.dateOfBirth.toISOString().split("T")[0]
-          : "",
-        type: { code: "person", name: "Person" },
-        roles: [{ code: "driver", name: "Driver" }],
-      } as Contact,
-      licenseNumber: driverInfo.licenseNumber,
-      licenseState: driverInfo.licenseState,
+      person,
+      licenseNumber: form.licenseNumber.trim() || undefined,
+      licenseState: form.licenseState.trim() || undefined,
       licenseStatus: "Valid",
-      licenseYear:
-        driverInfo.yearsOfExperience === ""
-          ? undefined
-          : driverInfo.yearsOfExperience,
-      yearsOfExperience:
-        driverInfo.yearsOfExperience === ""
-          ? undefined
-          : driverInfo.yearsOfExperience,
-      numAccidents:
-        driverInfo.numberOfAccidents === ""
-          ? undefined
-          : driverInfo.numberOfAccidents,
-      numViolations:
-        driverInfo.numberOfViolations === ""
-          ? undefined
-          : driverInfo.numberOfViolations,
-      violations: driverInfo.violations,
+      yearsOfExperience: form.yearsOfExperience === "" ? undefined : form.yearsOfExperience,
+      numAccidents: form.numAccidents === "" ? undefined : form.numAccidents,
+      numViolations: form.numViolations === "" ? undefined : form.numViolations,
+      violations: [],
     };
 
+    setIsLoading(true);
     try {
-      const { data } = await addDriverToJob(
-        "pc:437d8b43",
-        payload as DriverType,
-      );
-      console.log("Driver Saved:", data);
-      setDriverInfo(initialFormState);
-    } catch (error) {
-      console.error("Error saving driver:", error);
+      const { data: saved } = await addDriverToJob(jobId, payload as DriverType);
+      onDriverAdded?.(saved);
+      setForm(initialForm);
+    } catch (err: any) {
+      setError(err?.message ?? "Failed to add driver. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className={styles.page}>
-      <div className={styles.card}>
-        <h2 className={styles.heading}>Driver Information</h2>
+    <div className={styles.card}>
+      <h2 className={styles.heading}>Driver Information</h2>
 
-        <div className={styles.grid}>
+      <div className={styles.modeToggle}>
+        <button
+          type="button"
+          className={`${styles.modeBtn} ${form.personMode === "new" ? styles.modeBtnActive : ""}`}
+          onClick={() => set("personMode", "new")}
+        >
+          New Person
+        </button>
+        <button
+          type="button"
+          className={`${styles.modeBtn} ${form.personMode === "existing" ? styles.modeBtnActive : ""}`}
+          onClick={() => set("personMode", "existing")}
+        >
+          Existing Person
+        </button>
+      </div>
+
+      <div className={styles.grid}>
+        {form.personMode === "new" ? (
+          <>
+            <FormInput
+              label="First Name"
+              value={form.firstName}
+              onChange={(e) => set("firstName", e.target.value)}
+            />
+            <FormInput
+              label="Last Name"
+              value={form.lastName}
+              onChange={(e) => set("lastName", e.target.value)}
+            />
+            <FormInput
+              label="Email Address"
+              type="email"
+              value={form.emailAddress}
+              onChange={(e) => set("emailAddress", e.target.value)}
+            />
+          </>
+        ) : (
           <FormInput
-            label="First Name"
-            value={driverInfo.firstName}
-            disabled={isReadOnly}
-            onChange={(e) => handleChange("firstName", e.target.value)}
+            label="Person ID"
+            value={form.personId}
+            onChange={(e) => set("personId", e.target.value)}
           />
+        )}
 
-          <FormInput
-            label="Last Name"
-            value={driverInfo.lastName}
-            disabled={isReadOnly}
-            onChange={(e) => handleChange("lastName", e.target.value)}
-          />
+        <FormInput
+          label="License Number"
+          value={form.licenseNumber}
+          onChange={(e) => set("licenseNumber", e.target.value)}
+        />
+        <FormInput
+          label="License State"
+          value={form.licenseState}
+          onChange={(e) => set("licenseState", e.target.value)}
+        />
+        <FormInput
+          label="Years of Experience"
+          type="number"
+          value={form.yearsOfExperience}
+          onChange={(e) =>
+            set("yearsOfExperience", e.target.value === "" ? "" : Number(e.target.value))
+          }
+        />
+        <FormInput
+          label="No. of Accidents"
+          type="number"
+          value={form.numAccidents}
+          onChange={(e) =>
+            set("numAccidents", e.target.value === "" ? "" : Number(e.target.value))
+          }
+        />
+        <FormInput
+          label="No. of Violations"
+          type="number"
+          value={form.numViolations}
+          onChange={(e) =>
+            set("numViolations", e.target.value === "" ? "" : Number(e.target.value))
+          }
+        />
+      </div>
 
-          <FormInput
-            label="Date Of Birth"
-            type="date"
-            value={
-              driverInfo.dateOfBirth
-                ? driverInfo.dateOfBirth.toISOString().split("T")[0]
-                : ""
-            }
-            disabled={isReadOnly}
-            onChange={(e) =>
-              handleChange("dateOfBirth", new Date(e.target.value))
-            }
-          />
+      {error && <p className={styles.errorText}>{error}</p>}
 
-          <FormInput
-            label="License Number"
-            value={driverInfo.licenseNumber}
-            disabled={isReadOnly}
-            onChange={(e) => handleChange("licenseNumber", e.target.value)}
-          />
-
-          <FormInput
-            label="License State"
-            type="select"
-            value={driverInfo.licenseState}
-            disabled={isReadOnly}
-            onChange={(e) => handleChange("licenseState", e.target.value)}
-          />
-
-          <FormInput
-            label="Years of Experience"
-            type="number"
-            value={driverInfo.yearsOfExperience}
-            disabled={isReadOnly}
-            onChange={(e) =>
-              handleChange("yearsOfExperience", Number(e.target.value))
-            }
-          />
-
-          <FormInput
-            label="No. of Accidents"
-            type="number"
-            value={driverInfo.numberOfAccidents}
-            disabled={isReadOnly}
-            onChange={(e) =>
-              handleChange("numberOfAccidents", Number(e.target.value))
-            }
-          />
-
-          <FormInput
-            label="No. of Violations"
-            type="number"
-            value={driverInfo.numberOfViolations}
-            disabled={isReadOnly}
-            onChange={(e) =>
-              handleChange("numberOfViolations", Number(e.target.value))
-            }
-          />
-        </div>
-
-        <div className={styles.buttonContainer}>
-          <button
-            onClick={handleSubmit}
-            disabled={isReadOnly || isLoading}
-            className={`${styles.submitButton} ${isReadOnly || isLoading ? styles.disabled : ""}`}
-          >
-            {isLoading ? "Saving..." : "ADD DRIVER"}
-          </button>
-        </div>
+      <div className={styles.buttonContainer}>
+        <button
+          onClick={handleSubmit}
+          disabled={isLoading}
+          className={`${styles.submitButton} ${isLoading ? styles.disabled : ""}`}
+        >
+          {isLoading ? "Saving..." : "Add Driver"}
+        </button>
       </div>
     </div>
   );

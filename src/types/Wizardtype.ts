@@ -31,6 +31,7 @@ type WizardProps = {
   url: string;
   location: any;
   wizardSidebarprops?: WizardSidebarProps;
+  SidebarComponent?: React.ComponentType<any>;
 };
 type WizardPageProps = {
   step: WizardStep;
@@ -40,6 +41,7 @@ type WizardPageProps = {
   handleSaveDraft?: () => void;
   wizardSidebarprops?: WizardSidebarProps;
   children?: React.ReactNode;
+  SidebarComponent?: React.ComponentType<any>;
 };
 type WizardSidebarItemProps = {
   transformationKey: string;

@@ -14,7 +14,11 @@ import messages from "./VehicleComponent.messages";
 import { ComboboxOption } from "../common/Combobox/Combobox";
 import { addVehicleToJob } from "../../api/services/job/jobApi";
 
-const VehicleComponent: React.FC = () => {
+type VehicleComponentProps = {
+  onVehicleAdded?: (vehicle: Vehicle) => void;
+};
+
+const VehicleComponent: React.FC<VehicleComponentProps> = ({ onVehicleAdded }) => {
   const intl = useIntl();
 
   const emptyAddress: Address = {
@@ -55,6 +59,7 @@ const VehicleComponent: React.FC = () => {
 
   const handleSubmit = () => {
     console.log("Vehicle data submitted:", vehicle);
+    onVehicleAdded?.(vehicle);
     addVehicleToJob("pc:437d8b43", vehicle)
       .then((response) => {
         console.log(response);
