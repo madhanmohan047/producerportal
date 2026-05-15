@@ -11,33 +11,11 @@ import { useLocation, useNavigate, Location } from "react-router-dom";
 import { title } from "process";
 import { FNOLWizardprovider } from "./FNOLWizardContext";
 import { formData } from "./FNOLWizardContext";
+import { SideBarProps } from "./steps/FnolConstant";
 
 export const FNOLWizard = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const sidebarItems: WizardSidebarItemProps[] = [
-    {
-      transformationKey: "Policy Holder",
-      transformationLabel: "",
-    },
-    {
-      transformationKey: "Policy #",
-      transformationLabel: "",
-    },
-    {
-      transformationKey: "Line of Business",
-      transformationLabel: "",
-    },
-    {
-      transformationKey: "Loss Date",
-      transformationLabel: "",
-    },
-  ];
-  const wizardSidebarProps: WizardSidebarProps = {
-    title: "Claimant",
-    sidebaritems: sidebarItems,
-  };
 
   useEffect(() => {
     if (location.pathname === "/fnol-wizard") {
@@ -60,7 +38,6 @@ export const FNOLWizard = () => {
       fnolFormData={{
         location: location,
         currentStep: FNOLWizardsteps[0],
-        sidebarProps: wizardSidebarProps,
       }}
     >
       <Wizard
