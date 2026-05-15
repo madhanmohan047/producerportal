@@ -5,7 +5,7 @@ import {
   ClaimContact,
   PrimaryClaimant,
 } from "../../components/PartyComponent/PartyComponent";
-import { DamageInfo } from "../../components/DamageComponent/DamageComponent";
+import { DamageInfo, DamageAreaOption } from "../../components/DamageComponent/DamageComponent";
 
 export type formData = {
   currentStep: WizardStep;
@@ -22,6 +22,7 @@ export type formData = {
   injured?: boolean | null;
   policeReport?: boolean | null;
   description?: string;
+  damagedAreas?: DamageAreaOption[];
   documentList?: File[];
   primaryClaimant?: PrimaryClaimant;
   contacts?: ClaimContact[];

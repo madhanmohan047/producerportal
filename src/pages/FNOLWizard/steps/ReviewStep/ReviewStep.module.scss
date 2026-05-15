@@ -43,12 +43,14 @@
 }
 .checkboxrow {
   display: flex;
+  align-items: center;
   gap: 12px;
-  margin-bottom: 12px;
   cursor: pointer;
 }
+
 .chekboxspan {
   font-size: 13px;
+  line-height: 1.4;
 }
 .alert {
   background: #fffbeb;

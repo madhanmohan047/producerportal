@@ -15,7 +15,7 @@ export type DamageInfo = {
   safetyConcerns: boolean;
 };
 
-type DamageAreaOption = {
+export type DamageAreaOption = {
   code: string;
   label: MessageDescriptor;
 };
