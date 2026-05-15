@@ -2,6 +2,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Quotes from "../pages/Quotes/Quotes";
 import { AccountDetails } from "../pages/AccountDetails/AccountDetails";
 import { PAWizard } from "../pages/PAWizard/PAWizard";
+import { FNOLWizard } from "../pages/FNOLWizard/FNOLWizard";
 import { PolicySummary } from "../pages/PolicySummary/PolicySummary";
 
 export default {
@@ -34,10 +35,16 @@ export default {
         component: PolicySummary,
       },
       {
-        title: "Wizard",
+        title: "Personal Auto Wizard",
         path: "/pa-wizard",
         showNavbar: true,
         component: PAWizard,
+      },
+      {
+        title: "FNOL Wizard",
+        path: "/fnol-wizard",
+        showNavbar: true,
+        component: FNOLWizard,
       },
     ],
   },

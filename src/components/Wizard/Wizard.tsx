@@ -1,87 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
 import { WizardProps } from "../../types/Wizardtype";
 import styles from "./Wizard.module.scss";
-import { useLocation, useNavigate, Navigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import WizardHeader from "./WizardHeader/WizardHeader";
+import WizardProgressBar from "./WizardProgressBar/WizardProgressBar";
 
 export const Wizard = (wizardProps: WizardProps) => {
+  // works also=>export const Wizard = ({ steps, location }: WizardProps) => {
+
   const location = useLocation();
   const navigate = useNavigate();
-
   const currentIndex = wizardProps.steps.findIndex((step) =>
-    location.pathname.endsWith("/" + step.route),
+    location.pathname.includes(step.route),
   );
-
-  if (currentIndex === -1) {
-    return (
-      <Navigate
-        to={wizardProps.url + wizardProps.steps[0].route}
-        replace
-      />
-    );
-  }
-
-  const currentStep = wizardProps.steps[currentIndex];
+  const safeIndex = currentIndex === -1 ? 0 : currentIndex;
+  const currentStep = wizardProps.steps[safeIndex];
   const CurrentComponent = currentStep.component;
-
   const goNext = () => {
     if (currentIndex < wizardProps.steps.length - 1) {
-      navigate(wizardProps.url + wizardProps.steps[currentIndex + 1].route);
+      const next = wizardProps.steps[currentIndex + 1];
+      navigate(wizardProps.url + next.route);
     }
   };
 
   const goBack = () => {
     if (currentIndex > 0) {
-      navigate(wizardProps.url + wizardProps.steps[currentIndex - 1].route);
+      const prev = wizardProps.steps[currentIndex - 1];
+      navigate(wizardProps.url + prev.route);
     }
   };
 
   return (
-    <div className={styles["wizard-layout"]}>
-      <header className={styles["wizard-header"]}>
-        <div className={styles["wizard-header-title"]}>
-          Guidewire PolicyCenter — New Business
-        </div>
-        <div className={styles["wizard-header-badges"]}>
-          <span className={styles["badge"]}>Personal Auto</span>
-          <span className={styles["badge"]}>Agent: J. Okafor</span>
-          <span className={styles["badge"]}>Draft Saved</span>
-        </div>
-      </header>
+    <div className={styles["wizard-container"]}>
+      <div className={styles["wizard-header"]}>
+        <WizardHeader headerProps={wizardProps.header} />
+      </div>
 
-      <nav className={styles["wizard-step-nav"]}>
+      <div className={styles["wizard-progress"]}>
         {wizardProps.steps.map((step, index) => (
-          <React.Fragment key={step.id}>
-            <div
-              className={[
-                styles["step-item"],
-                index === currentIndex ? styles["step-active"] : "",
-                index < currentIndex ? styles["step-completed"] : "",
-              ].join(" ")}
-            >
-              <div className={styles["step-number"]}>{index + 1}</div>
-              <div className={styles["step-label"]}>
-                {step.wizardPageConfig.title}
-              </div>
-            </div>
-            {index < wizardProps.steps.length - 1 && (
-              <div
-                className={[
-                  styles["step-connector"],
-                  index < currentIndex ? styles["step-connector-completed"] : "",
-                ].join(" ")}
-              />
-            )}
-          </React.Fragment>
+          <WizardProgressBar
+            progressbarProps={step.wizardPageConfig}
+            index={index}
+            currentIndex={safeIndex}
+          />
         ))}
-      </nav>
+      </div>
 
       <div className={styles["wizard-body"]}>
-        <CurrentComponent
-          step={currentStep}
-          location={location}
-          handleNext={goNext}
-          handlePrevious={goBack}
-        />
+        <div className={styles["wizard-content"]}>
+          {CurrentComponent ? (
+            <CurrentComponent
+              step={currentStep}
+              location={wizardProps.location}
+              handleNext={goNext}
+              handlePrevious={goBack}
+            />
+          ) : null}
+        </div>
       </div>
     </div>
   );

@@ -1,42 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import { WizardPageProps } from "../../../types/Wizardtype";
+import IconButton from "../../IconButton/IconButton";
+import WizardSidebar from "../WizardSidebar/WizardSidebar";
 import styles from "./Wizardpage.module.scss";
+import saveIcon from "../../../assets/images/saveIcon.png";
+import { Button } from "../../common";
+import backButton from "../../../assets/images/backButton.png";
+import { useFNOLContext } from "../../../pages/FNOLWizard/FNOLWizardContext";
 
 const WizardPage = (wizardPageProps: WizardPageProps) => {
+  const { fnolFormData } = useFNOLContext();
   return (
     <div className={styles["wizard-page"]}>
-      {wizardPageProps.sidebarContent && (
-        <aside className={styles["wizard-page-sidebar"]}>
-          {wizardPageProps.sidebarContent}
-        </aside>
-      )}
-
-      <div className={styles["wizard-page-main"]}>
+      <div className={styles["wizard-page-container"]}>
+        <div className={styles["wizard-page-sidebar"]}>
+          <WizardSidebar />
+        </div>
         <div className={styles["wizard-page-content"]}>
           {wizardPageProps.children}
         </div>
-
-        <div className={styles["wizard-page-actions"]}>
-          <button
-            className={[
-              styles["wizard-button"],
-              wizardPageProps.step.wizardPageConfig.buttonProps.previous.label.length === 0
-                ? styles["wizard-button--hidden"]
-                : "",
-            ].join(" ")}
-            onClick={wizardPageProps.handlePrevious}
-          >
-            {wizardPageProps.step.wizardPageConfig.buttonProps.previous.label}
-          </button>
-
-          <button
-            className={styles["wizard-button"]}
-            onClick={wizardPageProps.handleNext}
-          >
-            {wizardPageProps.step.wizardPageConfig.buttonProps.next.label}
-          </button>
-        </div>
       </div>
+
+      {!wizardPageProps?.step?.wizardPageConfig?.isSubmission && (
+      <div className={styles["wizard-page-actions"]}>
+        {wizardPageProps?.step?.wizardPageConfig?.buttonProps?.previous.label
+          .length > 0 && (
+          <IconButton
+            label={
+              wizardPageProps?.step?.wizardPageConfig?.buttonProps?.previous
+                ?.label ?? ""
+            }
+            icon={<img src={backButton} alt="save" />}
+            type="button"
+            variant="transparent"
+            className={styles["icon-button"]}
+            onClick={wizardPageProps.handlePrevious}
+          />
+        )}
+        {/* {wizardPageProps?.step?.wizardPageConfig?.buttonProps?.previous.label} */}
+        {(wizardPageProps?.step?.wizardPageConfig?.buttonProps?.saveDraft?.label
+          ?.length ?? 0) > 0 && (
+          <IconButton
+            label={
+              wizardPageProps?.step?.wizardPageConfig?.buttonProps?.saveDraft
+                ?.label ?? ""
+            }
+            icon={<img src={saveIcon} alt="save" />}
+            type="button"
+            className={styles["icon-button"]}
+            onClick={wizardPageProps.handleSaveDraft}
+          />
+        )}
+        <Button
+          className={styles["wizard-button"]}
+          onClick={wizardPageProps.handleNext}
+          variant="primary"
+        >
+          {wizardPageProps?.step?.wizardPageConfig?.buttonProps?.next.label}
+        </Button>
+      </div>
+      )}
     </div>
   );
 };

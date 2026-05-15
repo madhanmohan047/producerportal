@@ -2,56 +2,52 @@
 
 .wizard-page {
   display: flex;
+  flex-direction: column;
   height: 100%;
-  overflow: hidden;
+}
+
+.wizard-page-container {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  border: 1px solid #e2e2e2;
 }
 
 .wizard-page-sidebar {
-  width: 240px;
-  flex-shrink: 0;
-  background: #fff;
-  border-right: 1px solid #e5e7eb;
-  padding: 1.5rem 1rem;
-  overflow-y: auto;
-}
-
-.wizard-page-main {
-  flex: 1;
+  flex: 0 0 20%;
+  border-right: 1px solid #e2e2e2;
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .wizard-page-content {
   flex: 1;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
   overflow-y: auto;
-  padding: 2rem;
+  overflow-x: hidden;
 }
 
 .wizard-page-actions {
-  flex-shrink: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  padding: 1rem 2rem;
-  background: #fff;
-  border-top: 1px solid #e5e7eb;
+  gap: 12px;
+  height: 10%;
+  padding: 20px;
 }
 
 .wizard-button {
   min-width: 100px;
   padding: 10px 18px;
-  border: 1px solid #cfcfcf;
-  background-color: #f5f5f5;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.05);
   cursor: pointer;
   font-size: 14px;
-  border-radius: 4px;
 }
 
 .wizard-button:hover {
   background-color: #e9e9e9;
-}
-
-.wizard-button--hidden {
-  visibility: hidden;
 }
