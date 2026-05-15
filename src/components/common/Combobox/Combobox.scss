@@ -1,31 +1,40 @@
 .combobox {
-  position: relative;
-  display: inline-block;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   font-family: inherit;
 
-  &--full-width {
-    width: 100%;
+  &__label {
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
   }
 
   &__select {
-    border: 1px solid #ced4da;
+    width: 100%;
+    padding: 10px 36px 10px 12px;
+    border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-weight: 500;
     font-family: inherit;
+    font-weight: 400;
     background-color: #fff;
     color: #212529;
+    cursor: pointer;
+    outline: none;
+
     appearance: none;
     -webkit-appearance: none;
-    padding-right: 36px;
-    width: 100%;
-    outline: none;
+
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
 
     &:focus {
       border-color: #007bff;
-      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
     }
 
     &:disabled {
@@ -37,35 +46,18 @@
     option[value="0"] {
       color: #6c757d;
     }
-
-    &--loading {
-      color: #6c757d;
-      pointer-events: none;
-    }
   }
 
-  &__chevron {
+  &__chevron,
+  &__spinner {
     position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 12px;
+    top: 38px;
     pointer-events: none;
     color: #6c757d;
-    transition: transform 0.2s ease;
-    display: flex;
-    align-items: center;
-  }
-
-  &__select:focus ~ &__chevron {
-    color: #007bff;
   }
 
   &__spinner {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
     width: 14px;
     height: 14px;
     border: 2px solid #ced4da;
@@ -73,66 +65,21 @@
     border-radius: 50%;
     animation: combobox-spin 0.6s linear infinite;
   }
-
-  &--small &__select {
-    padding: 6px 36px 6px 12px;
-    font-size: 12px;
-  }
-
-  &--medium &__select {
-    padding: 10px 36px 10px 16px;
-    font-size: 14px;
-  }
-
-  &--large &__select {
-    padding: 12px 36px 12px 24px;
-    font-size: 16px;
-  }
-
-  &--primary &__select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
-  }
-
-  &--secondary &__select:focus {
-    border-color: #6c757d;
-    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.2);
-  }
-
-  &--danger &__select:focus {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
-  }
-
-  &--success &__select:focus {
-    border-color: #28a745;
-    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
-  }
-
-  &__label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: #495057;
-    margin-bottom: 4px;
-    font-family: inherit;
-  }
 }
 
 @keyframes combobox-spin {
   to {
-    transform: translateY(-50%) rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
 @media (max-width: 768px) {
   .combobox {
-    &__select {
-      font-size: 13px;
-    }
+    margin-bottom: 12px;
 
-    &--medium &__select {
-      padding: 8px 36px 8px 14px;
+    &__select {
+      font-size: 16px;
+      padding: 12px 36px 12px 12px;
     }
   }
 }
