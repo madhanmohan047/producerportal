@@ -1,9 +1,9 @@
-import React from "react";
-import { WizardProps } from "../../types/Wizardtype";
+import { useEffect } from "react";
 import { Wizard } from "../../components/Wizard/Wizard";
 import { PASteps } from "./steps/PASteps";
-import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { PAWizardProvider, initialPAFormData } from "./PAWizardContext";
+import PAWizardSidebar from "../../components/Wizard/WizardSidebar/PAWizardSidebar";
 
 export const PAWizard = () => {
   const location = useLocation();
@@ -11,18 +11,19 @@ export const PAWizard = () => {
 
   useEffect(() => {
     if (location.pathname === "/pawizard") {
-      navigate("/pawizard/personalInfo", { replace: true });
+      navigate("/pawizard/account", { replace: true });
     }
   }, [location.pathname, navigate]);
 
-  /* works also=> <Wizard {...pawizardProps} /> */
-
   return (
-    <Wizard
-      steps={PASteps}
-      location={location}
-      url={"/pawizard/"}
-      header={"PAWizard"}
-    />
+    <PAWizardProvider paFormData={initialPAFormData}>
+      <Wizard
+        steps={PASteps}
+        location={location}
+        url={"/pawizard/"}
+        header={"New Personal Auto Policy"}
+        SidebarComponent={PAWizardSidebar}
+      />
+    </PAWizardProvider>
   );
 };

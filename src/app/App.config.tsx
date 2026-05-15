@@ -36,8 +36,8 @@ export default {
       },
       {
         title: "Personal Auto Wizard",
-        path: "/pa-wizard",
-        showNavbar: false,
+        path: "/pawizard",
+        showNavbar: true,
         component: PAWizard,
       },
       {

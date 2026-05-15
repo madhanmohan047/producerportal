@@ -54,6 +54,7 @@ export const Wizard = (wizardProps: WizardProps) => {
               location={wizardProps.location}
               handleNext={goNext}
               handlePrevious={goBack}
+              SidebarComponent={wizardProps.SidebarComponent}
             />
           ) : null}
         </div>

@@ -1,40 +1,57 @@
 .container {
   width: 100%;
   background: #f8fafc;
-  border-right: 1px solid #e2e8f0;
-  padding: 24px;
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px;
 }
+
+/* ── SECTION BLOCK (ACCOUNT, POLICY SUMMARY, etc.) ── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-header {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  padding: 0 4px;
+  margin-bottom: 2px;
+}
+
+/* ── INDIVIDUAL ITEM CARD ── */
 .sidebaritems {
-  background: var(--white);
-  border: 1px solid var(--border-color);
-  padding: 12px;
-  border-radius: 10px;
-  gap: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
-.sidebarcontainer {
-  gap: 2px;
-  width: 100%;
-}
+
 .title {
-  font-size: 11px;
-  color: #64748b;
-  margin-bottom: 4px;
+  font-size: 10px;
+  color: #94a3b8;
+  margin-bottom: 3px;
+  font-weight: 500;
 }
+
 .value {
   font-size: 13px;
   font-weight: 600;
+  color: #1e293b;
 }
+
+/* Legacy: single-header used by FNOL sidebar */
 .header {
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-color);
+  letter-spacing: 0.08em;
+  color: #94a3b8;
   font-weight: 700;
-  margin-bottom: 8px;
-}
-.container {
+  margin-bottom: 4px;
 }

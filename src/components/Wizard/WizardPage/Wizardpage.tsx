@@ -1,64 +1,76 @@
-import React, { useState } from "react";
+import { useIntl } from "react-intl";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowLeft,
+  faFloppyDisk,
+  faArrowRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { WizardPageProps } from "../../../types/Wizardtype";
-import IconButton from "../../IconButton/IconButton";
 import WizardSidebar from "../WizardSidebar/WizardSidebar";
 import styles from "./Wizardpage.module.scss";
-import saveIcon from "../../../assets/images/saveIcon.png";
-import { Button } from "../../common";
-import backButton from "../../../assets/images/backButton.png";
-import { useFNOLContext } from "../../../pages/FNOLWizard/FNOLWizardContext";
+import wizardMessages from "../Wizard.messages";
 
 const WizardPage = (wizardPageProps: WizardPageProps) => {
-  const { fnolFormData } = useFNOLContext();
+  const intl = useIntl();
+  const Sidebar = wizardPageProps.SidebarComponent ?? WizardSidebar;
+  const { step, handleNext, handlePrevious, handleSaveDraft } = wizardPageProps;
+  const { description, title, buttonProps, isSubmission } = step.wizardPageConfig;
+
+  const hasPrev = (buttonProps.previous?.label?.length ?? 0) > 0;
+  const hasSave = (buttonProps.saveDraft?.label?.length ?? 0) > 0;
+  const isFirstStep = !hasPrev;
+
   return (
     <div className={styles["wizard-page"]}>
       <div className={styles["wizard-page-container"]}>
         <div className={styles["wizard-page-sidebar"]}>
-          <WizardSidebar />
+          <Sidebar />
         </div>
+
         <div className={styles["wizard-page-content"]}>
-          {wizardPageProps.children}
+          <div className={styles["step-header"]}>
+            <h2>{description}</h2>
+            <p>{title}</p>
+          </div>
+          <div className={styles["step-body"]}>
+            {wizardPageProps.children}
+          </div>
         </div>
       </div>
 
-      {!wizardPageProps?.step?.wizardPageConfig?.isSubmission && (
-      <div className={styles["wizard-page-actions"]}>
-        {wizardPageProps?.step?.wizardPageConfig?.buttonProps?.previous.label
-          .length > 0 && (
-          <IconButton
-            label={
-              wizardPageProps?.step?.wizardPageConfig?.buttonProps?.previous
-                ?.label ?? ""
-            }
-            icon={<img src={backButton} alt="save" />}
-            type="button"
-            variant="transparent"
-            className={styles["icon-button"]}
-            onClick={wizardPageProps.handlePrevious}
-          />
-        )}
-        {/* {wizardPageProps?.step?.wizardPageConfig?.buttonProps?.previous.label} */}
-        {(wizardPageProps?.step?.wizardPageConfig?.buttonProps?.saveDraft?.label
-          ?.length ?? 0) > 0 && (
-          <IconButton
-            label={
-              wizardPageProps?.step?.wizardPageConfig?.buttonProps?.saveDraft
-                ?.label ?? ""
-            }
-            icon={<img src={saveIcon} alt="save" />}
-            type="button"
-            className={styles["icon-button"]}
-            onClick={wizardPageProps.handleSaveDraft}
-          />
-        )}
-        <Button
-          className={styles["wizard-button"]}
-          onClick={wizardPageProps.handleNext}
-          variant="primary"
-        >
-          {wizardPageProps?.step?.wizardPageConfig?.buttonProps?.next.label}
-        </Button>
-      </div>
+      {!isSubmission && (
+        <div className={styles["wizard-page-actions"]}>
+          <span className={styles["draft-status"]}>
+            {isFirstStep
+              ? intl.formatMessage(wizardMessages.startNewSubmission)
+              : intl.formatMessage(wizardMessages.draftAutoSaved)}
+          </span>
+
+          <div className={styles["action-buttons"]}>
+            {hasPrev && (
+              <button className={styles["btn-back"]} onClick={handlePrevious}>
+                <FontAwesomeIcon icon={faArrowLeft} />
+                {buttonProps.previous.label}
+              </button>
+            )}
+
+            {hasSave && (
+              <button className={styles["btn-save"]} onClick={handleSaveDraft}>
+                <FontAwesomeIcon icon={faFloppyDisk} />
+                {buttonProps.saveDraft!.label}
+              </button>
+            )}
+
+            <button
+              className={styles["btn-continue"]}
+              onClick={handleNext}
+              disabled={!handleNext}
+            >
+              {buttonProps.next.label}
+              <FontAwesomeIcon icon={faArrowRight} />
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
