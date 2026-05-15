@@ -1,0 +1,148 @@
+.loss-details-page {
+  width: 100%;
+  max-width: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+  margin-bottom: auto;
+  background: #f7f9fc;
+  min-height: 100%;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+/* ================= HEADER ================= */
+.loss-header {
+  margin-bottom: 28px;
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+  }
+
+  p {
+    font-size: 14px;
+    color: #667085;
+  }
+}
+
+/* ================= GRID LAYOUT ================= */
+.loss-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* full width rows */
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* ================= FIELD GROUP ================= */
+.field-group,
+.field-group-full-width {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 8px;
+
+  span {
+    color: #d92d20;
+  }
+}
+
+input,
+select {
+  height: 44px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 14px;
+  background: #fff;
+  color: #344054;
+  outline: none;
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: #2e90fa;
+    box-shadow: 0 0 0 3px rgba(46, 144, 250, 0.15);
+  }
+}
+
+/* ================= LOCATION DISPLAY ================= */
+.primary-address-value {
+  padding: 12px 14px;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
+  background: #f9fafb;
+  font-size: 14px;
+  color: #344054;
+  font-weight: 500;
+}
+
+/* ================= TOGGLES SECTION ================= */
+.radio-section {
+  margin-top: 28px;
+  display: flex;
+  gap: 120px;
+  align-items: flex-start;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+
+  p {
+    font-size: 14px;
+    font-weight: 600;
+    color: #101828;
+    margin-bottom: 10px;
+  }
+}
+
+/* ================= DESCRIPTION ================= */
+.description-section {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #101828;
+  }
+
+  textarea {
+    min-height: 140px;
+    resize: none;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #d0d5dd;
+    font-size: 14px;
+    outline: none;
+
+    &:focus {
+      border-color: #2e90fa;
+      box-shadow: 0 0 0 3px rgba(46, 144, 250, 0.15);
+    }
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .loss-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .radio-section {
+    flex-direction: column;
+    gap: 24px;
+  }
+}

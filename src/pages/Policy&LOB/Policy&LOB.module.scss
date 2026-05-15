@@ -1,0 +1,233 @@
+.start-claim-page {
+  width: 100%;
+  max-width: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+
+  background: #f7f9fc;
+  min-height: 100%;
+  font-family: Inter, system-ui, sans-serif;
+
+  .claim-container {
+    margin-bottom: 32px;
+
+    .title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .account-fields {
+    margin-top: 1rem;
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #374151;
+
+      span {
+        color: #ef4444;
+      }
+    }
+  }
+
+  .account-select-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+
+    select {
+      flex: 1;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+
+      &:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+      }
+    }
+  }
+
+  .account-holder-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #111827;
+    background: #f3f4f6;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+  }
+
+  .business-cards {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .business-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #fff;
+    min-width: 180px;
+
+    button {
+      all: unset;
+      display: block;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    &:hover {
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    &.active {
+      border-color: #2563eb;
+      background: #eff6ff;
+
+      h3 {
+        color: #1d4ed8;
+      }
+    }
+  }
+
+  .top-fields,
+  .bottom-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 10px;
+
+      span {
+        color: #ef4444;
+      }
+    }
+
+    .input-wrapper {
+      width: 100%;
+    }
+
+    input,
+    select {
+      width: 50%;
+      height: 48px;
+      border: 1px solid #dbe2ea;
+      border-radius: 12px;
+      padding: 0 16px;
+      font-size: 14px;
+      background: white;
+      color: #0f172a;
+      outline: none;
+      transition: all 0.2s ease;
+
+      &:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+
+      &:read-only {
+        background: #f8fafc;
+      }
+    }
+
+    input[type="date"],
+    input[type="time"] {
+      padding-right: 14px;
+    }
+  }
+
+  .policy-results {
+    margin-top: 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: white;
+    overflow: hidden;
+
+    h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e293b;
+      padding: 16px 18px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        padding: 14px 18px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 14px;
+        color: #334155;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        strong {
+          color: #0f172a;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .start-claim-page {
+    padding: 20px;
+
+    .business-cards {
+      flex-direction: column;
+    }
+
+    .top-fields,
+    .bottom-fields {
+      grid-template-columns: 1fr;
+    }
+  }
+}

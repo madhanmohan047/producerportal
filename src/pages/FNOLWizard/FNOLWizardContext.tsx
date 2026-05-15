@@ -5,6 +5,18 @@ import { Location } from "react-router-dom";
 export type formData = {
   currentStep: WizardStep;
   location: Location;
+  accountNumber?: string;
+  policyNumber?: string;
+  lineOfBusiness?: string;
+  dateOfLoss?: string;
+  timeOfLoss?: string;
+  causeOfLoss?: string;
+  vehicleInvolved?: string;
+  locationType?: string;
+  lossAddress?: any;
+  injured?: boolean | null;
+  policeReport?: boolean | null;
+  description?: string;
   documentList?: File[];
   sidebarProps?: WizardSidebarProps;
 };

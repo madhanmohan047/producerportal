@@ -8,13 +8,15 @@ import PartyStep from "./PartyStep/PartyStep";
 import DamageStep from "./DamageStep/DamageStep";
 import ReviewStep from "./ReviewStep/ReviewStep";
 import ClaimSubmittedStep from "./ClaimSubmittedStep/ClaimSubmittedStep";
+import StartClaim from "../../Policy&LOB/Policy&LOB";
+import { LossDetails } from "../../LossDetails/LossDetails";
 
 export const FNOLWizardsteps: WizardStep[] = [
   {
     id: "policylob",
     type: "wizard",
     route: "policylob",
-    component: PersonalInfoStep,
+    component: StartClaim,
     wizardPageConfig: {
       title: "Policy Discovery",
       description: "Policy Discovery",
@@ -36,7 +38,7 @@ export const FNOLWizardsteps: WizardStep[] = [
     id: "lossdetails",
     type: "wizard",
     route: "lossdetails",
-    component: VehicleStep,
+    component: LossDetails,
     wizardPageConfig: {
       title: "Loss Details",
       description: "Loss Details",
