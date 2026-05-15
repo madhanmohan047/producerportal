@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import {
   DamageComponent,
@@ -6,6 +5,7 @@ import {
   LineOfBusiness,
 } from "../../../../components/DamageComponent/DamageComponent";
 import { WizardPageProps } from "../../../../types/Wizardtype";
+import { useFNOLContext } from "../../FNOLWizardContext";
 
 const EMPTY_DAMAGE: DamageInfo = {
   damageAreas: [],
@@ -17,11 +17,15 @@ type DamageStepProps = WizardPageProps & {
 };
 
 const DamageStep = (wizardPageProps: DamageStepProps) => {
-  const [damage, setDamage] = useState<DamageInfo>(EMPTY_DAMAGE);
+  const { fnolFormData, setFnolFormData } = useFNOLContext();
+  const damage = fnolFormData.damage ?? EMPTY_DAMAGE;
   const lob = wizardPageProps.lineOfBusiness ?? "auto";
 
   const handleValueChange = (value: any, path: string) => {
-    setDamage((prev) => ({ ...prev, [path]: value }));
+    setFnolFormData((prev) => ({
+      ...prev,
+      damage: { ...(prev.damage ?? EMPTY_DAMAGE), [path]: value },
+    }));
   };
 
   return (
