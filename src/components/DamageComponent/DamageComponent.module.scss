@@ -1,0 +1,115 @@
+.page {
+  width: 100%;
+  align-self: stretch;
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 32px 40px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  color: #1f2937;
+
+  /* Prevent flex shrinking from collapsing children when content is tall. */
+  > * {
+    flex-shrink: 0;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.sectionLabel {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin-bottom: 12px;
+}
+
+.tileGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 12px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+
+  &:hover:not(:disabled) {
+    border-color: #cbd5e1;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.tileActive {
+  border-color: #2563eb;
+  background: #eff6ff;
+
+  .tileIcon {
+    color: #2563eb;
+  }
+
+  .tileLabel {
+    color: #1d4ed8;
+  }
+}
+
+.tileIcon {
+  font-size: 22px;
+  color: #94a3b8;
+}
+
+.tileLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+  text-align: center;
+}
+
+.bottomRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+
+  /* FormInput ships with margin-bottom; cancel it so its bottom edge
+     aligns with the YesNoToggle in the adjacent column. */
+  :global(.form-input) {
+    margin-bottom: 0;
+  }
+}

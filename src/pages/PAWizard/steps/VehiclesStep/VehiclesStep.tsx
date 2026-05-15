@@ -1,6 +1,7 @@
 import { WizardPageProps } from "../../../../types/Wizardtype";
-import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
+import WizardPage from "../../../../components/Wizard/BaseWizardPage/BaseWizardpage";
 import SideBar from "../../../../components/SideBar/SideBar";
+import VehicleComponent from "../../../../components/Vehicle/VehicleComponent";
 
 const VehiclesStep = (props: WizardPageProps) => (
   <WizardPage
@@ -10,8 +11,7 @@ const VehiclesStep = (props: WizardPageProps) => (
     handlePrevious={props.handlePrevious}
     sidebarContent={<SideBar />}
   >
-    <h2>Vehicles</h2>
-    <p>Add and manage vehicles covered under this policy.</p>
+    <VehicleComponent />
   </WizardPage>
 );
 

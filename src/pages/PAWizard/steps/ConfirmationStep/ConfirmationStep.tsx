@@ -1,5 +1,5 @@
 import { WizardPageProps } from "../../../../types/Wizardtype";
-import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
+import WizardPage from "../../../../components/Wizard/BaseWizardPage/BaseWizardpage";
 import SideBar from "../../../../components/SideBar/SideBar";
 
 const ConfirmationStep = (props: WizardPageProps) => (

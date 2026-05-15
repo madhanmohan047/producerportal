@@ -1,33 +1,52 @@
-type WizardStep = {
+import { Location } from "react-router";
+
+export type WizardSidebarItemProps = {
+  transformationKey: string;
+  transformationLabel: string;
+};
+
+export type WizardSidebarProps = {
+  title: string;
+  sidebaritems: WizardSidebarItemProps[];
+};
+
+export type WizardStep = {
   id: string;
   type: string;
   route: string;
   component: React.ComponentType<any>;
   wizardPageConfig: WizardPageConfig;
 };
-type WizardPageConfig = {
+
+export type WizardPageConfig = {
   title: string;
   description: string;
+  stepId?: string;
+  hideNameInProgress?: boolean;
+  isSubmission?: boolean;
   buttonProps: {
-    next: {
-      label: string;
-    };
-    previous: {
-      label: string;
-    };
+    next: { label: string };
+    previous: { label: string };
+    save?: { show?: boolean; label?: string };
+    saveDraft?: { label?: string };
   };
 };
-type WizardProps = {
+
+export type WizardProps = {
   steps: WizardStep[];
+  header?: string;
   url: string;
-  location: any;
+  location?: any;
+  wizardSidebarprops?: WizardSidebarProps;
 };
-type WizardPageProps = {
+
+export type WizardPageProps = {
   step: WizardStep;
-  location: any;
+  location?: any;
   handleNext?: () => void;
   handlePrevious?: () => void;
+  handleSaveDraft?: () => void;
+  wizardSidebarprops?: WizardSidebarProps;
   children: React.ReactNode;
   sidebarContent?: React.ReactNode;
 };
-export type { WizardStep, WizardPageProps, WizardProps, WizardPageConfig };

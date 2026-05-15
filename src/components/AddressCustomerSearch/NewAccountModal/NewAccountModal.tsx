@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./NewAccountModal.module.scss";
 import FormInput from "../../common/FormInput/FormInput";
 import Combobox, { ComboboxOption } from "../../common/Combobox/Combobox";
-import { getUser, createAccount } from "../../../api/services";
+import { getAllUsers, createAccount } from "../../../api/services";
 import { getTypeList } from "../../../api/services/typelist/typelistApi";
 import { User } from "../../../api/services/admin/types";
 
@@ -67,7 +67,7 @@ export const NewAccountModal = ({
   useEffect(() => {
     if (!isOpen) return;
 
-    Promise.all([getUser(), getTypeList("ContactRole")])
+    Promise.all([getAllUsers(), getTypeList("ContactRole")])
       .then(([userResponse, contactRoleRes]) => {
         const userData = unwrapApiData<User[] | User>(userResponse as any);
         const contactRoles = unwrapApiData<ComboboxOption[]>(

@@ -1,4 +1,4 @@
-import { Wizard } from "../../components/Wizard/Wizard";
+import { Wizard } from "../../components/Wizard/BaseWizard";
 import { PASteps } from "./steps/PASteps";
 import { useLocation } from "react-router-dom";
 import { PAWizardProvider } from "../../context/PAWizardContext";

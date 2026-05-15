@@ -11,6 +11,10 @@ type PAWizardContextType = {
   setEffectiveDate: (date: string) => void;
   totalPremium: number | null;
   setTotalPremium: (premium: number | null) => void;
+  driverCount: number;
+  setDriverCount: (count: number) => void;
+  vehicleCount: number;
+  setVehicleCount: (count: number) => void;
 };
 
 const PAWizardContext = createContext<PAWizardContextType | null>(null);
@@ -20,6 +24,8 @@ export const PAWizardProvider = ({ children }: { children: ReactNode }) => {
   const [lob, setLob] = useState("");
   const [effectiveDate, setEffectiveDate] = useState("");
   const [totalPremium, setTotalPremium] = useState<number | null>(null);
+  const [driverCount, setDriverCount] = useState(0);
+  const [vehicleCount, setVehicleCount] = useState(0);
 
   const accountHolderName = useMemo(() => {
     if (!selectedAccount) return "";
@@ -44,6 +50,10 @@ export const PAWizardProvider = ({ children }: { children: ReactNode }) => {
         setEffectiveDate,
         totalPremium,
         setTotalPremium,
+        driverCount,
+        setDriverCount,
+        vehicleCount,
+        setVehicleCount,
       }}
     >
       {children}
