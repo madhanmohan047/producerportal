@@ -1,7 +1,11 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { WizardSidebarProps, WizardStep } from "../../types/Wizardtype";
 import { Location } from "react-router-dom";
-import { DamageAreaOption } from "../../components/DamageComponent/DamageComponent";
+import {
+  ClaimContact,
+  PrimaryClaimant,
+} from "../../components/PartyComponent/PartyComponent";
+import { DamageInfo, DamageAreaOption } from "../../components/DamageComponent/DamageComponent";
 
 export type formData = {
   currentStep: WizardStep;
@@ -20,6 +24,12 @@ export type formData = {
   description?: string;
   damagedAreas?: DamageAreaOption[];
   documentList?: File[];
+  primaryClaimant?: PrimaryClaimant;
+  contacts?: ClaimContact[];
+  damage?: DamageInfo;
+  claimNumber?: string;
+  submittedDate?: string;
+  emailAddress?: string;
   sidebarProps?: WizardSidebarProps;
 };
 type FNOLContextType = {

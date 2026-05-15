@@ -9,6 +9,7 @@ import {
 import AddEditPartyDialog from "../../../../components/PartyComponent/AddEditPartyDialog";
 import { WizardPageProps } from "../../../../types/Wizardtype";
 import { TypeKeyValue } from "../../../../api/utils/types";
+import { useFNOLContext } from "../../FNOLWizardContext";
 
 const INITIAL_PRIMARY: PrimaryClaimant = {
   name: "Sarah Mitchell",
@@ -45,13 +46,21 @@ type DialogState =
   | { mode: "contact-edit"; contactId: string };
 
 const PartyStep = (wizardPageProps: WizardPageProps) => {
-  const [primaryClaimant, setPrimaryClaimant] =
-    useState<PrimaryClaimant>(INITIAL_PRIMARY);
-  const [contacts, setContacts] = useState<ClaimContact[]>(INITIAL_CONTACTS);
+  const { fnolFormData, setFnolFormData } = useFNOLContext();
+  const primaryClaimant = fnolFormData.primaryClaimant ?? INITIAL_PRIMARY;
+  const contacts = fnolFormData.contacts ?? INITIAL_CONTACTS;
   const [dialog, setDialog] = useState<DialogState>({ mode: "closed" });
 
+  const updateContacts = (next: ClaimContact[]) => {
+    setFnolFormData((prev) => ({ ...prev, contacts: next }));
+  };
+
+  const updatePrimary = (next: PrimaryClaimant) => {
+    setFnolFormData((prev) => ({ ...prev, primaryClaimant: next }));
+  };
+
   const handleDelete = (id: string) => {
-    setContacts((prev) => prev.filter((c) => c._id !== id));
+    updateContacts(contacts.filter((c) => c._id !== id));
   };
 
   const handleAdd = () => setDialog({ mode: "contact-add" });
@@ -64,17 +73,16 @@ const PartyStep = (wizardPageProps: WizardPageProps) => {
   const handleCancel = () => setDialog({ mode: "closed" });
 
   const handleSaveContact = (saved: ClaimContact) => {
-    setContacts((prev) => {
-      const exists = prev.some((c) => c._id === saved._id);
-      return exists
-        ? prev.map((c) => (c._id === saved._id ? saved : c))
-        : [...prev, saved];
-    });
+    const exists = contacts.some((c) => c._id === saved._id);
+    const next = exists
+      ? contacts.map((c) => (c._id === saved._id ? saved : c))
+      : [...contacts, saved];
+    updateContacts(next);
     setDialog({ mode: "closed" });
   };
 
   const handleSavePrimary = (saved: PrimaryClaimant) => {
-    setPrimaryClaimant(saved);
+    updatePrimary(saved);
     setDialog({ mode: "closed" });
   };
 

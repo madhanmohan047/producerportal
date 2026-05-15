@@ -136,7 +136,7 @@ export const DamageComponent = ({
           )} (USD)`}
           type="number"
           min={0}
-          step="0.01"
+          step="1.00"
           placeholder={intl.formatMessage(
             DAMAGE_MESSAGES.estimatedLossAmountPlaceholder,
           )}
