@@ -1,0 +1,152 @@
+.page {
+  width: 100%;
+  min-height: 100vh;
+  background: #f6f8fb;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  box-sizing: border-box;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #061b36;
+}
+
+.subtitle {
+  margin: 6px 0 28px;
+  font-size: 16px;
+  color: #506580;
+}
+
+.successBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 52px;
+  padding: 0 20px;
+  margin-bottom: 20px;
+  border: 1px solid #b7df8a;
+  border-radius: 8px;
+  background: #edf8e3;
+  color: #0f5f00;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+.successText {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.gridTwo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.gridThree {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  select {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    border: 1px solid #1683e8;
+    border-radius: 8px;
+    background: #eef6ff;
+    font-size: 16px;
+    color: #061b36;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  label {
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #55708f;
+
+    span {
+      margin-left: 3px;
+      color: #e63737;
+    }
+  }
+
+  input {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    border: 1px solid #1683e8;
+    border-radius: 8px;
+    background: #eef6ff;
+    font-size: 16px;
+    color: #061b36;
+    outline: none;
+    box-sizing: border-box;
+  }
+}
+
+.sectionTitle {
+  margin: 24px 0 24px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #8a9ab1;
+  text-transform: uppercase;
+}
+
+.warningBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 0 20px;
+  border: 1px solid #ffba4c;
+  border-radius: 8px;
+  background: #fff2dc;
+  color: #7a3d00;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.warningIcon {
+  font-size: 16px;
+}
+
+@media (max-width: 900px) {
+  .gridTwo,
+  .gridThree {
+    grid-template-columns: 1fr;
+  }
+
+  .container {
+    padding: 24px;
+  }
+}
