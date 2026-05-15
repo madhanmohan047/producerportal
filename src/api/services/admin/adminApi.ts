@@ -129,6 +129,14 @@ export const getAllUsers = () => {
 };
 
 /**
+ * Retrieve current user
+ * GET /api/user
+ */
+export const getUser = () => {
+  return api.get<User[]>("/admin/user");
+};
+
+/**
  * Create a user
  * POST /api/users
  */
