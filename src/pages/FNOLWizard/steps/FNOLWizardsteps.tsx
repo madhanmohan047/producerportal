@@ -8,8 +8,8 @@ import PartyStep from "./PartyStep/PartyStep";
 import DamageStep from "./DamageStep/DamageStep";
 import ReviewStep from "./ReviewStep/ReviewStep";
 import ClaimSubmittedStep from "./ClaimSubmittedStep/ClaimSubmittedStep";
-import StartClaim from "../../Policy&LOB/Policy&LOB";
-import { LossDetails } from "../../LossDetails/LossDetails";
+import StartClaim from "./Policy&LOB/Policy&LOB";
+import { LossDetails } from "./LossDetails/LossDetails";
 
 export const FNOLWizardsteps: WizardStep[] = [
   {

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllPolicies } from "../../api/services/policy/policyApi";
-import { getAllAccounts } from "../../api/services/account/accountApi";
-import WizardPage from "../../components/Wizard/WizardPage/Wizardpage";
-import "../../components/Wizard/Wizard.module.scss";
-import { WizardPageProps } from "../../types/Wizardtype";
-import { useFNOLContext } from "../FNOLWizard/FNOLWizardContext";
+import { getAllPolicies } from "../../../../api/services/policy/policyApi";
+import { getAllAccounts } from "../../../../api/services/account/accountApi";
+import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
+
+import { WizardPageProps } from "../../../../types/Wizardtype";
+import { useFNOLContext } from "../../FNOLWizardContext";
 import styles from "./Policy&LOB.module.scss";
+import { SideBarProps } from "../FnolConstant";
 
 const StartClaim = (wizardPageProps: WizardPageProps) => {
   const navigate = useNavigate();
@@ -115,12 +116,30 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
   useEffect(() => {
     setFnolFormData((prev) => ({
       ...prev,
-      accountNumber: selectedAccount,
       accountHolderName: selectedAccountDetails?.accountHolderName || "",
-      lineOfBusiness: LOB,
-      policyNumber: selectedPolicy,
-      dateOfLoss: selectedDate,
       timeOfLoss: timeOfLoss,
+      sidebarProps: {
+        ...prev.sidebarProps,
+        title: prev.sidebarProps?.title || "",
+        sidebaritems: [
+          {
+            transformationKey: SideBarProps.Account,
+            transformationLabel: selectedAccount,
+          },
+          {
+            transformationKey: SideBarProps.PolicyNumber,
+            transformationLabel: selectedPolicy,
+          },
+          {
+            transformationKey: SideBarProps.LineOfBusiness,
+            transformationLabel: LOB,
+          },
+          {
+            transformationKey: SideBarProps.LossDate,
+            transformationLabel: selectedDate,
+          },
+        ],
+      },
     }));
   }, [
     selectedAccount,
