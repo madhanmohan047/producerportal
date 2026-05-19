@@ -8,6 +8,7 @@ import { WizardPageProps } from "../../../../types/Wizardtype";
 import { useFNOLContext } from "../../FNOLWizardContext";
 import styles from "./Policy&LOB.module.scss";
 import { SideBarProps } from "../FnolConstant";
+import { Policy } from "../../../../api/services/policy/types";
 
 const StartClaim = (wizardPageProps: WizardPageProps) => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
     fnolFormData?.lineOfBusiness || "Personal Auto",
   );
 
-  const [policies, setPolicies] = useState<any[]>([]);
+  const [policies, setPolicies] = useState<Policy[]>([]);
   const [accounts, setAccounts] = useState<any[]>([]);
 
   const [filteredPolicies, setFilteredPolicies] = useState<any[]>([]);
@@ -112,6 +113,19 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
 
     // reset selected policy when account changes
     setSelectedPolicy("");
+  };
+  const handlePolicyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
+
+    setSelectedPolicy(selectedValue);
+
+    const matchedPolicy = policies.find(
+      (policy) => policy._id === selectedValue,
+    );
+    setFnolFormData((prev) => ({
+      ...prev,
+      vehicleInvolved: matchedPolicy?.vehicles,
+    }));
   };
 
   useEffect(() => {
@@ -250,7 +264,7 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
             <div className={styles["input-wrapper"]}>
               <select
                 value={selectedPolicy}
-                onChange={(e) => setSelectedPolicy(e.target.value)}
+                onChange={(e) => handlePolicyChange(e)}
                 disabled={!selectedAccount}
               >
                 <option value="">

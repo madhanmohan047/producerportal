@@ -5,7 +5,11 @@ import {
   ClaimContact,
   PrimaryClaimant,
 } from "../../components/PartyComponent/PartyComponent";
-import { DamageInfo, DamageAreaOption } from "../../components/DamageComponent/DamageComponent";
+import {
+  DamageInfo,
+  DamageAreaOption,
+} from "../../components/DamageComponent/DamageComponent";
+import { Vehicle } from "../../api/services";
 
 export type formData = {
   currentStep: WizardStep;
@@ -16,7 +20,8 @@ export type formData = {
   dateOfLoss?: string;
   timeOfLoss?: string;
   causeOfLoss?: string;
-  vehicleInvolved?: string;
+  vehicleInvolved?: Vehicle[];
+  selectedVehicle: string;
   locationType?: string;
   lossAddress?: any;
   injured?: boolean | null;

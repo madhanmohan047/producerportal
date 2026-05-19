@@ -40,6 +40,9 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
   const [policyDetails, setPolicyDetails] = useState<any>(null);
   // const [losscause, setlosscause] = useState<TypeList[]>([]);
   const [losscause, setlosscause] = useState<ComboboxOption[]>([]);
+  const [vehiclesInvolved, setVehiclesInvolved] = useState<ComboboxOption[]>(
+    [],
+  );
 
   const { search } = useLocation();
   const params = new URLSearchParams(search);
@@ -56,6 +59,12 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
     getTypeList("LossCause").then((response) => {
       setlosscause(response);
     });
+    setVehiclesInvolved(
+      fnolFormData?.vehicleInvolved?.map((vehicle) => ({
+        code: vehicle._id || "",
+        name: `${vehicle.make}  ${vehicle.model}`,
+      })) || [],
+    );
   }, []);
 
   return (
@@ -108,12 +117,27 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
             <label>
               Vehicle Involved <span>*</span>
             </label>
-
-            <input
+            {/* <input
               type="text"
               value={fnolFormData.vehicleInvolved || ""}
               onChange={(e) => updateField("vehicleInvolved", e.target.value)}
-            />
+            /> */}
+            <Combobox
+              label={"Vehicle Involved"}
+              required
+              options={vehiclesInvolved}
+              value={vehiclesInvolved.find(
+                (selectedVehicle) =>
+                  selectedVehicle.code === fnolFormData.selectedVehicle,
+              )}
+              onChange={(option) => {
+                setFnolFormData((prev) => ({
+                  ...prev,
+                  selectedVehicle: option.code,
+                }));
+              }}
+              disabled={false}
+            />{" "}
           </div>
 
           {/* Loss Location */}
