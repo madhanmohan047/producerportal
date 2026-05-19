@@ -1,5 +1,5 @@
-import { transport} from "../../utils/TransportService";
-import { TypeList } from './../../utils/types'
+import { transport } from "../../utils/TransportService";
+import { TypeList } from "./../../utils/types";
 
 const { api } = transport;
 

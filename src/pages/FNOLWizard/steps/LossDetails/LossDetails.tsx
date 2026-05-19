@@ -14,6 +14,11 @@ import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import styles from "../LossDetails/LossDetails.module.scss";
 import AddressSection from "../../../../components/AddressComponent/AddressComponent";
 import YesNoToggle from "../../../../components/common/YesNoToggle/YesNoToggle";
+import { getTypeList } from "../../../../api/services/typelist/typelistApi";
+import { TypeList } from "../../../../api/utils/types";
+import Combobox, {
+  ComboboxOption,
+} from "../../../../components/common/Combobox/Combobox";
 // import { getPolicyById } from "../../api/services/policy/policyApi";
 // import { useFNOLContext } from "../FNOLWizard/FNOLWizardContext";
 
@@ -30,16 +35,12 @@ const emptyAddress: Address = {
 };
 
 export const LossDetails = (wizardPageProps: WizardPageProps) => {
-  // const [lossAddress, setLossAddress] = useState<Address>(emptyAddress);
   const { fnolFormData, setFnolFormData } = useFNOLContext();
-  // const [causeOfLoss, setCauseOfLoss] = useState("");
-  // const [vehicleInvolved, setVehicleInvolved] = useState("2021 Honda Accord");
 
-  // const [locationType, setLocationType] = useState<string>("");
-  // const [showPrimaryLocation, setshowPrimaryLocation] = useState(false);
-  // const [showCustomLocation, setShowCustomLocation] = useState(false);
-  // const [selectedLocationType, setSelectedLocationType] = useState("");
   const [policyDetails, setPolicyDetails] = useState<any>(null);
+  // const [losscause, setlosscause] = useState<TypeList[]>([]);
+  const [losscause, setlosscause] = useState<ComboboxOption[]>([]);
+
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const policyId = params.get("id");
@@ -52,34 +53,10 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await getPolicyById(policyId || "");
-        const data = res.data;
-
-        console.log("policy details fetched:", data);
-
-        // optionally preload FNOL data
-        // setFnolFormData((prev) => ({
-        //   ...prev,
-        //   policyNumber: data?.policyNumber,
-        // }));
-      } catch (error) {
-        console.error("Error fetching policy:", error);
-      }
-    };
-
-    if (policyId) fetchData();
+    getTypeList("LossCause").then((response) => {
+      setlosscause(response);
+    });
   }, []);
-
-  useEffect(() => {
-    console.log("FNOL UPDATED:", fnolFormData);
-  }, [fnolFormData]);
-
-  // const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const value = e.target.value;
-  //   setSelectedLocationType(value);
-  // };
 
   return (
     <WizardPage
@@ -108,26 +85,22 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
               Cause of Loss <span>*</span>
             </label>
 
-            <select
-              value={fnolFormData.causeOfLoss || ""}
-              onChange={(e) => updateField("causeOfLoss", e.target.value)}
-            >
-              <option value="">Select cause...</option>
-
-              <option value="Fire">Fire</option>
-
-              <option value="Accident">Accident</option>
-
-              <option value="Vandalism">Vandalism</option>
-
-              <option value="Weather-related damage">
-                Weather-related damage
-              </option>
-
-              <option value="Flood">Flood</option>
-
-              <option value="Theft">Theft</option>
-            </select>
+            <Combobox
+              label={"Loss Cause"}
+              required
+              options={losscause}
+              value={losscause.find(
+                (selectedCause) =>
+                  selectedCause.code === fnolFormData.causeOfLoss,
+              )}
+              onChange={(option) => {
+                setFnolFormData((prev) => ({
+                  ...prev,
+                  causeOfLoss: option.code,
+                }));
+              }}
+              disabled={false}
+            />
           </div>
 
           {/* Vehicle Involved */}

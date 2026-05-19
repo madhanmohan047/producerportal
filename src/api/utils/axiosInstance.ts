@@ -19,8 +19,8 @@ export const setAuthToken = (token: string | null) => {
 axiosInstance.interceptors.request.use(
   async (config) => {
     if (AUTH_MODE != "JWT") {
-      const username = process.env.REACT_APP_BASIC_USER || "admin";
-      const password = process.env.REACT_APP_BASIC_PASS || "password";
+      const username = process.env.REACT_APP_BASIC_USER || "su";
+      const password = process.env.REACT_APP_BASIC_PASS || "gw";
       const encoded = btoa(`${username}:${password}`);
       config.headers.Authorization = `Basic ${encoded}`;
     } else {
@@ -37,7 +37,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 export default axiosInstance;

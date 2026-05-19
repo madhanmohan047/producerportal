@@ -94,6 +94,7 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
     });
 
     setFilteredPolicies(filtered);
+    console.log("filteredpolicy", policies);
   }, [selectedAccount, LOB, policies]);
 
   const selectedAccountDetails = useMemo(() => {
@@ -154,10 +155,6 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
     timeOfLoss,
     setFnolFormData,
   ]);
-
-  useEffect(() => {
-    console.log("Updated FNOL Form Data:", fnolFormData);
-  }, [fnolFormData]);
 
   return (
     <WizardPage
@@ -262,9 +259,9 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
                     : "Select an account first"}
                 </option>
 
-                {filteredPolicies.map((policy) => (
-                  <option key={policy.policyNumber} value={policy.policyNumber}>
-                    {policy.policyNumber}
+                {policies.map((policy) => (
+                  <option key={policy._id} value={policy._id}>
+                    {policy._id}
                   </option>
                 ))}
               </select>
