@@ -26,6 +26,7 @@ const DocumentStep = (wizardPageProps: WizardPageProps) => {
     <WizardPage
       step={wizardPageProps.step}
       location={wizardPageProps.location}
+      showPageheader={false}
       handleNext={wizardPageProps.handleNext}
       handlePrevious={wizardPageProps.handlePrevious}
       wizardSidebarprops={wizardPageProps.wizardSidebarprops}

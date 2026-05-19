@@ -98,6 +98,7 @@ const PartyStep = (wizardPageProps: WizardPageProps) => {
       handleNext={wizardPageProps.handleNext}
       handlePrevious={wizardPageProps.handlePrevious}
       handleSaveDraft={wizardPageProps.handleSaveDraft}
+      showPageheader={false}
       wizardSidebarprops={wizardPageProps.wizardSidebarprops}
     >
       <PartyComponent

@@ -21,7 +21,7 @@ export type formData = {
   timeOfLoss?: string;
   causeOfLoss?: string;
   vehicleInvolved?: Vehicle[];
-  selectedVehicle: string;
+  selectedVehicle?: string;
   locationType?: string;
   lossAddress?: any;
   injured?: boolean | null;

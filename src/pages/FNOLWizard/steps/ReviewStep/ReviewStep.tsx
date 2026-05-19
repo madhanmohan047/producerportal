@@ -28,6 +28,7 @@ const ReviewStep = (wizardPageProps: WizardPageProps) => {
       step={wizardPageProps.step}
       location={wizardPageProps.location}
       handleNext={handleSubmit}
+      showPageheader={false}
       handlePrevious={wizardPageProps.handlePrevious}
       wizardSidebarprops={wizardPageProps.wizardSidebarprops}
     >

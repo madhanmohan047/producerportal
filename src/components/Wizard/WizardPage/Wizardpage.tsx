@@ -12,9 +12,11 @@ import wizardMessages from "../Wizard.messages";
 
 const WizardPage = (wizardPageProps: WizardPageProps) => {
   const intl = useIntl();
+  const showPageheader = wizardPageProps.showPageheader ?? true;
   const Sidebar = wizardPageProps.SidebarComponent ?? WizardSidebar;
   const { step, handleNext, handlePrevious, handleSaveDraft } = wizardPageProps;
-  const { description, title, buttonProps, isSubmission } = step.wizardPageConfig;
+  const { description, title, buttonProps, isSubmission } =
+    step.wizardPageConfig;
 
   const hasPrev = (buttonProps.previous?.label?.length ?? 0) > 0;
   const hasSave = (buttonProps.saveDraft?.label?.length ?? 0) > 0;
@@ -28,13 +30,13 @@ const WizardPage = (wizardPageProps: WizardPageProps) => {
         </div>
 
         <div className={styles["wizard-page-content"]}>
-          <div className={styles["step-header"]}>
-            <h2>{description}</h2>
-            <p>{title}</p>
-          </div>
-          <div className={styles["step-body"]}>
-            {wizardPageProps.children}
-          </div>
+          {showPageheader && (
+            <div className={styles["step-header"]}>
+              <h2>{description}</h2>
+              <p>{title}</p>
+            </div>
+          )}
+          <div className={styles["step-body"]}>{wizardPageProps.children}</div>
         </div>
       </div>
 

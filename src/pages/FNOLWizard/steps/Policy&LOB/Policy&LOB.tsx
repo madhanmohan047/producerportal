@@ -176,6 +176,7 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
       location={wizardPageProps.location}
       handleNext={wizardPageProps.handleNext}
       handlePrevious={wizardPageProps.handlePrevious}
+      showPageheader={false}
       wizardSidebarprops={wizardPageProps.wizardSidebarprops}
     >
       <div className={styles["start-claim-page"]}>

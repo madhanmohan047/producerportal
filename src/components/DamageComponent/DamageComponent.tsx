@@ -28,29 +28,29 @@ type DamageProps = {
   readOnly?: boolean;
 };
 
-export const AUTO_DAMAGE_AREAS: DamageAreaOption[] = [
-  { code: "FRONT_BUMPER", label: DAMAGE_MESSAGES.areaFrontBumper },
-  { code: "HOOD", label: DAMAGE_MESSAGES.areaHood },
-  { code: "WINDSHIELD", label: DAMAGE_MESSAGES.areaWindshield },
-  { code: "DRIVER_DOOR", label: DAMAGE_MESSAGES.areaDriverDoor },
-  { code: "PASSENGER_DOOR", label: DAMAGE_MESSAGES.areaPassengerDoor },
-  { code: "REAR_BUMPER", label: DAMAGE_MESSAGES.areaRearBumper },
-  { code: "ROOF", label: DAMAGE_MESSAGES.areaRoof },
-  { code: "TRUNK", label: DAMAGE_MESSAGES.areaTrunk },
-  { code: "UNDERBODY", label: DAMAGE_MESSAGES.areaUnderbody },
-  { code: "TIRES", label: DAMAGE_MESSAGES.areaTires },
-];
+// export const AUTO_DAMAGE_AREAS: DamageAreaOption[] = [
+//   { code: "FRONT_BUMPER", label: DAMAGE_MESSAGES.areaFrontBumper },
+//   { code: "HOOD", label: DAMAGE_MESSAGES.areaHood },
+//   { code: "WINDSHIELD", label: DAMAGE_MESSAGES.areaWindshield },
+//   { code: "DRIVER_DOOR", label: DAMAGE_MESSAGES.areaDriverDoor },
+//   { code: "PASSENGER_DOOR", label: DAMAGE_MESSAGES.areaPassengerDoor },
+//   { code: "REAR_BUMPER", label: DAMAGE_MESSAGES.areaRearBumper },
+//   { code: "ROOF", label: DAMAGE_MESSAGES.areaRoof },
+//   { code: "TRUNK", label: DAMAGE_MESSAGES.areaTrunk },
+//   { code: "UNDERBODY", label: DAMAGE_MESSAGES.areaUnderbody },
+//   { code: "TIRES", label: DAMAGE_MESSAGES.areaTires },
+// ];
 
-export const PROPERTY_DAMAGE_AREAS: DamageAreaOption[] = [
-  { code: "ROOF", label: DAMAGE_MESSAGES.areaRoof },
-  { code: "PLUMBING", label: DAMAGE_MESSAGES.areaPlumbing },
-  { code: "HVAC", label: DAMAGE_MESSAGES.areaHvac },
-  { code: "ELECTRICAL", label: DAMAGE_MESSAGES.areaElectrical },
-  { code: "WALLS", label: DAMAGE_MESSAGES.areaWalls },
-  { code: "FLOORING", label: DAMAGE_MESSAGES.areaFlooring },
-  { code: "FOUNDATION", label: DAMAGE_MESSAGES.areaFoundation },
-  { code: "WINDOWS", label: DAMAGE_MESSAGES.areaWindows },
-];
+// export const PROPERTY_DAMAGE_AREAS: DamageAreaOption[] = [
+//   { code: "ROOF", label: DAMAGE_MESSAGES.areaRoof },
+//   { code: "PLUMBING", label: DAMAGE_MESSAGES.areaPlumbing },
+//   { code: "HVAC", label: DAMAGE_MESSAGES.areaHvac },
+//   { code: "ELECTRICAL", label: DAMAGE_MESSAGES.areaElectrical },
+//   { code: "WALLS", label: DAMAGE_MESSAGES.areaWalls },
+//   { code: "FLOORING", label: DAMAGE_MESSAGES.areaFlooring },
+//   { code: "FOUNDATION", label: DAMAGE_MESSAGES.areaFoundation },
+//   { code: "WINDOWS", label: DAMAGE_MESSAGES.areaWindows },
+// ];
 
 export const DamageComponent = ({
   value,
