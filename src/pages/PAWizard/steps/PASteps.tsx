@@ -1,6 +1,6 @@
 import { WizardStep } from "../../../types/Wizardtype";
-import AccountSearchStep from "./AccountStep/AccountSearchStep";
-import PolicyLobStep from "./PolicyLobStep/PolicyLobStep";
+import { AccountCustomerSearch } from "./AccountCustomerSearch/AccountCustomerSearch";
+import { PolicyLobSelection } from "./PolicyLobSelection/PolicyLobSelection";
 import DriversStep from "./DriversStep/DriversStep";
 import VehiclesStep from "./VehiclesStep/VehiclesStep";
 import RiskInfoStep from "./RiskInfoStep/RiskInfoStep";
@@ -16,26 +16,34 @@ export const PASteps: WizardStep[] = [
     id: "account",
     type: "wizard",
     route: "account",
-    component: AccountSearchStep,
+    component: AccountCustomerSearch,
     wizardPageConfig: {
       title: "Account",
       description: "Account & Customer Search",
       stepId: "1",
 
-      buttonProps: { next: { label: "Continue" }, previous: { label: "" }, ...saveDraft },
+      buttonProps: {
+        next: { label: "Continue" },
+        previous: { label: "" },
+        ...saveDraft,
+      },
     },
   },
   {
     id: "policyLob",
     type: "wizard",
     route: "policyLob",
-    component: PolicyLobStep,
+    component: PolicyLobSelection,
     wizardPageConfig: {
       title: "Policy & LOB",
       description: "Policy & LOB Selection",
       stepId: "2",
 
-      buttonProps: { next: { label: "Continue" }, previous: { label: "Back" }, ...saveDraft },
+      buttonProps: {
+        next: { label: "Continue" },
+        previous: { label: "Back" },
+        ...saveDraft,
+      },
     },
   },
   {
@@ -48,7 +56,11 @@ export const PASteps: WizardStep[] = [
       description: "Driver Information",
       stepId: "3",
 
-      buttonProps: { next: { label: "Continue" }, previous: { label: "Back" }, ...saveDraft },
+      buttonProps: {
+        next: { label: "Continue" },
+        previous: { label: "Back" },
+        ...saveDraft,
+      },
     },
   },
   {
@@ -61,7 +73,11 @@ export const PASteps: WizardStep[] = [
       description: "Vehicle Information",
       stepId: "4",
 
-      buttonProps: { next: { label: "Continue" }, previous: { label: "Back" }, ...saveDraft },
+      buttonProps: {
+        next: { label: "Continue" },
+        previous: { label: "Back" },
+        ...saveDraft,
+      },
     },
   },
   {
@@ -74,7 +90,11 @@ export const PASteps: WizardStep[] = [
       description: "Risk Information",
       stepId: "5",
 
-      buttonProps: { next: { label: "Continue" }, previous: { label: "Back" }, ...saveDraft },
+      buttonProps: {
+        next: { label: "Continue" },
+        previous: { label: "Back" },
+        ...saveDraft,
+      },
     },
   },
   {
@@ -87,7 +107,11 @@ export const PASteps: WizardStep[] = [
       description: "Quote Selection",
       stepId: "6",
 
-      buttonProps: { next: { label: "Continue" }, previous: { label: "Back" }, ...saveDraft },
+      buttonProps: {
+        next: { label: "Continue" },
+        previous: { label: "Back" },
+        ...saveDraft,
+      },
     },
   },
   {
@@ -100,7 +124,11 @@ export const PASteps: WizardStep[] = [
       description: "Policy Documents",
       stepId: "7",
 
-      buttonProps: { next: { label: "Continue" }, previous: { label: "Back" }, ...saveDraft },
+      buttonProps: {
+        next: { label: "Continue" },
+        previous: { label: "Back" },
+        ...saveDraft,
+      },
     },
   },
   {
@@ -113,7 +141,11 @@ export const PASteps: WizardStep[] = [
       description: "Review & Bind Policy",
       stepId: "8",
 
-      buttonProps: { next: { label: "Bind Policy" }, previous: { label: "Back" }, ...saveDraft },
+      buttonProps: {
+        next: { label: "Bind Policy" },
+        previous: { label: "Back" },
+        ...saveDraft,
+      },
     },
   },
   {
