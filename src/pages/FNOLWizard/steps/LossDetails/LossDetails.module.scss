@@ -203,6 +203,28 @@ select {
   font-weight: 600;
 }
 
+.saved-address-preview {
+  margin-top: 12px;
+  padding: 14px;
+
+  border-radius: 8px;
+  background: #f5f7fa;
+  border: 1px solid #dbe3ec;
+
+  p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #1f2937;
+  }
+}
+.saved-address-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #101828;
+
+  margin-bottom: 10px;
+}
+
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
   .loss-form-grid {

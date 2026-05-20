@@ -1,17 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { getAllPolicies } from "../../../../api/services/policy/policyApi";
 import { getAllAccounts } from "../../../../api/services/account/accountApi";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 
 import { WizardPageProps } from "../../../../types/Wizardtype";
 import { useFNOLContext } from "../../FNOLWizardContext";
-import styles from "./Policy&LOB.module.scss";
 import { SideBarProps } from "../FnolConstant";
+import styles from "./Policy&LOB.module.scss";
 
 const StartClaim = (wizardPageProps: WizardPageProps) => {
-  const navigate = useNavigate();
-  const today = new Date().toISOString().split("T")[0];
   const { fnolFormData, setFnolFormData } = useFNOLContext();
 
   const [LOB, setLOB] = useState(
@@ -35,7 +32,7 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
   const [selectedDate, setSelectedDate] = useState(
     fnolFormData?.dateOfLoss || new Date().toISOString().split("T")[0],
   );
-
+  const today = new Date().toISOString().split("T")[0];
   const currentTime = new Date().toLocaleTimeString("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
@@ -63,17 +60,6 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
       });
   }, []);
 
-  // const loadPolicies = async (): Promise<ComboboxOption[]> => {
-  //     const res = await fetch(`/api/accounts/${accountId}/policies`);
-  //     const data = await res.json();
-  //     return data.map((p: any) => ({ id: p.id, value: p.name }));
-  //   };
-
-  /**
-   * Filter policies based on:
-   * 1. Selected account
-   * 2. Selected LOB
-   */
   useEffect(() => {
     if (!selectedAccount) {
       setFilteredPolicies([]);
@@ -82,11 +68,6 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
 
     const filtered = policies.filter((policy) => {
       const matchesLOB = policy?.product?.name === LOB;
-
-      // Adjust this based on your API structure
-      // Example:
-      // policy.accountNumber
-      // OR policy.account.accountNumber
 
       const matchesAccount =
         policy?.accountNumber === selectedAccount ||
@@ -111,7 +92,6 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
   const handleAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedAccount(e.target.value);
 
-    // reset selected policy when account changes
     setSelectedPolicy("");
   };
 

@@ -1,21 +1,13 @@
-import React, { useState, useEffect } from "react";
-// import AddressSection from "../../components/AddressComponent/AddressComponent";
-// import { Address } from "../../api/services";
+import React, { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { Address } from "../../../../api/services";
 import { WizardPageProps } from "../../../../types/Wizardtype";
 import { useFNOLContext } from "../../FNOLWizardContext";
 import { getPolicyById } from "../../../../api/services/policy/policyApi";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
-
-// import YesNoToggle from "../../components/common/YesNoToggle/YesNoToggle";
-// import WizardPage from "../../components/Wizard/WizardPage/Wizardpage";
-// import { WizardPageProps } from "../../types/Wizardtype";
-import styles from "../LossDetails/LossDetails.module.scss";
 import AddressSection from "../../../../components/AddressComponent/AddressComponent";
 import YesNoToggle from "../../../../components/common/YesNoToggle/YesNoToggle";
-// import { getPolicyById } from "../../api/services/policy/policyApi";
-// import { useFNOLContext } from "../FNOLWizard/FNOLWizardContext";
+import styles from "../LossDetails/LossDetails.module.scss";
 
 const emptyAddress: Address = {
   _id: "",
@@ -30,57 +22,83 @@ const emptyAddress: Address = {
 };
 
 export const LossDetails = (wizardPageProps: WizardPageProps) => {
-  // const [lossAddress, setLossAddress] = useState<Address>(emptyAddress);
   const { fnolFormData, setFnolFormData } = useFNOLContext();
-  // const [causeOfLoss, setCauseOfLoss] = useState("");
-  // const [vehicleInvolved, setVehicleInvolved] = useState("2021 Honda Accord");
-
-  // const [locationType, setLocationType] = useState<string>("");
-  // const [showPrimaryLocation, setshowPrimaryLocation] = useState(false);
-  // const [showCustomLocation, setShowCustomLocation] = useState(false);
-  // const [selectedLocationType, setSelectedLocationType] = useState("");
   const [policyDetails, setPolicyDetails] = useState<any>(null);
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const policyId = params.get("id");
   const [showAddressModal, setShowAddressModal] = useState(false);
+  const [tempAddress, setTempAddress] = useState<Address>(emptyAddress);
 
-  const updateField = (key: string, value: any) => {
-    setFnolFormData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+  const updateField = useCallback(
+    (key: string, value: any) => {
+      setFnolFormData((prev) => ({
+        ...prev,
+        [key]: value,
+      }));
+    },
+    [setFnolFormData],
+  );
+
+  const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+
+    updateField("locationType", value);
+
+    if (value === "Add New Location") {
+      setShowAddressModal(true);
+    }
   };
 
+  const handleCloseModal = () => {
+    setShowAddressModal(false);
+
+    // clear modal fields
+    setTempAddress(emptyAddress);
+  };
+
+  const handleSaveAddress = () => {
+    updateField("lossAddress", tempAddress);
+
+    setShowAddressModal(false);
+
+    // clear modal after save
+    setTempAddress(emptyAddress);
+  };
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await getPolicyById(policyId || "");
+  //       const data = res.data;
+  //       // console.log("policy details fetched:", data);
+  //     } catch (error) {
+  //       console.error("Error fetching policy:", error);
+  //     }
+  //   };
+
+  //   if (policyId) fetchData();
+  // }, []);
+
   useEffect(() => {
-    const fetchData = async () => {
+    if (!policyId) return;
+
+    const fetchPolicyDetails = async () => {
       try {
-        const res = await getPolicyById(policyId || "");
-        const data = res.data;
+        const res = await getPolicyById(policyId);
 
-        console.log("policy details fetched:", data);
-
-        // optionally preload FNOL data
-        // setFnolFormData((prev) => ({
-        //   ...prev,
-        //   policyNumber: data?.policyNumber,
-        // }));
+        setPolicyDetails(res.data);
       } catch (error) {
         console.error("Error fetching policy:", error);
       }
     };
 
-    if (policyId) fetchData();
-  }, []);
+    fetchPolicyDetails();
+  }, [policyId]);
 
   useEffect(() => {
     console.log("FNOL UPDATED:", fnolFormData);
   }, [fnolFormData]);
-
-  // const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const value = e.target.value;
-  //   setSelectedLocationType(value);
-  // };
 
   return (
     <WizardPage
@@ -152,15 +170,7 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
 
             <select
               value={fnolFormData.locationType || ""}
-              onChange={(e) => {
-                const value = e.target.value;
-
-                updateField("locationType", value);
-
-                if (value === "Add New Location") {
-                  setShowAddressModal(true);
-                }
-              }}
+              onChange={handleLocationChange}
             >
               <option value="Read Only">
                 Enter address or intersection...
@@ -189,41 +199,28 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
             </div>
           )}
 
-          {showAddressModal && (
-            <div className={styles["modal-overlay"]}>
-              <div className={styles["modal-container"]}>
-                <div className={styles["modal-header"]}>
-                  <h2>Add New Loss Location</h2>
+          {fnolFormData.locationType === "Add New Location" &&
+            fnolFormData.lossAddress && (
+              <div className={styles["full-width"]}>
+                <div className={styles["saved-address-preview"]}>
+                  <h4 className={styles["saved-address-title"]}>New Address</h4>
 
-                  <button
-                    type="button"
-                    onClick={() => setShowAddressModal(false)}
-                    className={styles["close-button"]}
-                  >
-                    ✕
-                  </button>
-                </div>
+                  <p>{fnolFormData.lossAddress.addressLine1}</p>
 
-                <div className={styles["modal-body"]}>
-                  <AddressSection
-                    readOnly={false}
-                    address={fnolFormData.lossAddress || emptyAddress}
-                    onAddressChange={(addr) => updateField("lossAddress", addr)}
-                  />
-                </div>
+                  {fnolFormData.lossAddress.addressLine2 && (
+                    <p>{fnolFormData.lossAddress.addressLine2}</p>
+                  )}
 
-                <div className={styles["modal-footer"]}>
-                  <button
-                    type="button"
-                    className={styles["save-button"]}
-                    onClick={() => setShowAddressModal(false)}
-                  >
-                    Save Address
-                  </button>
+                  <p>
+                    {fnolFormData.lossAddress.city},{" "}
+                    {fnolFormData.lossAddress.state?.name}{" "}
+                    {fnolFormData.lossAddress.postalCode}
+                  </p>
+
+                  <p>{fnolFormData.lossAddress.country?.name}</p>
                 </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
 
         {/* TOGGLES */}
@@ -260,6 +257,41 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
           />
         </div>
       </div>
+      {showAddressModal && (
+        <div className={styles["modal-overlay"]}>
+          <div className={styles["modal-container"]}>
+            <div className={styles["modal-header"]}>
+              <h2>Add New Loss Location</h2>
+
+              <button
+                type="button"
+                onClick={handleCloseModal}
+                className={styles["close-button"]}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className={styles["modal-body"]}>
+              <AddressSection
+                readOnly={false}
+                address={tempAddress}
+                onAddressChange={(addr) => setTempAddress(addr)}
+              />
+            </div>
+
+            <div className={styles["modal-footer"]}>
+              <button
+                type="button"
+                className={styles["save-button"]}
+                onClick={handleSaveAddress}
+              >
+                Save Address
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </WizardPage>
   );
 };
