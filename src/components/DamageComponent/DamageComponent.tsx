@@ -6,6 +6,9 @@ import FormInput from "../common/FormInput/FormInput";
 import YesNoToggle from "../common/YesNoToggle/YesNoToggle";
 import { DAMAGE_MESSAGES } from "./DamageComponent.messages";
 import styles from "./DamageComponent.module.scss";
+import { CombinedCodeActions } from "typescript";
+import { ComboboxOption } from "../common/Combobox/Combobox";
+import IconText from "../common/IconText/IconText";
 
 export type LineOfBusiness = "auto" | "property";
 
@@ -17,7 +20,9 @@ export type DamageInfo = {
 
 export type DamageAreaOption = {
   code: string;
-  label: MessageDescriptor;
+  label: string;
+  img: string;
+  active: boolean;
 };
 
 type DamageProps = {
@@ -28,30 +33,6 @@ type DamageProps = {
   readOnly?: boolean;
 };
 
-// export const AUTO_DAMAGE_AREAS: DamageAreaOption[] = [
-//   { code: "FRONT_BUMPER", label: DAMAGE_MESSAGES.areaFrontBumper },
-//   { code: "HOOD", label: DAMAGE_MESSAGES.areaHood },
-//   { code: "WINDSHIELD", label: DAMAGE_MESSAGES.areaWindshield },
-//   { code: "DRIVER_DOOR", label: DAMAGE_MESSAGES.areaDriverDoor },
-//   { code: "PASSENGER_DOOR", label: DAMAGE_MESSAGES.areaPassengerDoor },
-//   { code: "REAR_BUMPER", label: DAMAGE_MESSAGES.areaRearBumper },
-//   { code: "ROOF", label: DAMAGE_MESSAGES.areaRoof },
-//   { code: "TRUNK", label: DAMAGE_MESSAGES.areaTrunk },
-//   { code: "UNDERBODY", label: DAMAGE_MESSAGES.areaUnderbody },
-//   { code: "TIRES", label: DAMAGE_MESSAGES.areaTires },
-// ];
-
-// export const PROPERTY_DAMAGE_AREAS: DamageAreaOption[] = [
-//   { code: "ROOF", label: DAMAGE_MESSAGES.areaRoof },
-//   { code: "PLUMBING", label: DAMAGE_MESSAGES.areaPlumbing },
-//   { code: "HVAC", label: DAMAGE_MESSAGES.areaHvac },
-//   { code: "ELECTRICAL", label: DAMAGE_MESSAGES.areaElectrical },
-//   { code: "WALLS", label: DAMAGE_MESSAGES.areaWalls },
-//   { code: "FLOORING", label: DAMAGE_MESSAGES.areaFlooring },
-//   { code: "FOUNDATION", label: DAMAGE_MESSAGES.areaFoundation },
-//   { code: "WINDOWS", label: DAMAGE_MESSAGES.areaWindows },
-// ];
-
 export const DamageComponent = ({
   value,
   onValueChange,
@@ -61,20 +42,6 @@ export const DamageComponent = ({
 }: DamageProps) => {
   const intl = useIntl();
   const selectedAreas = value?.damageAreas ?? [];
-  const areas =
-    damageAreaOptions ??
-    (lineOfBusiness === "property" ? PROPERTY_DAMAGE_AREAS : AUTO_DAMAGE_AREAS);
-
-  const toggleArea = useCallback(
-    (code: string) => {
-      if (readOnly) return;
-      const next = selectedAreas.includes(code)
-        ? selectedAreas.filter((a) => a !== code)
-        : [...selectedAreas, code];
-      onValueChange(next, "damageAreas");
-    },
-    [readOnly, selectedAreas, onValueChange],
-  );
 
   const handleAmountChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +58,18 @@ export const DamageComponent = ({
     },
     [readOnly, onValueChange],
   );
+  const handleAreaToggle = useCallback(
+    (code: string) => {
+      if (readOnly) return;
 
+      const updatedAreas = selectedAreas.includes(code)
+        ? selectedAreas.filter((item) => item !== code)
+        : [...selectedAreas, code];
+
+      onValueChange(updatedAreas, "damageAreas");
+    },
+    [selectedAreas, onValueChange, readOnly],
+  );
   return (
     <div className={styles.page}>
       <header className={styles.header}>
@@ -108,24 +86,15 @@ export const DamageComponent = ({
           {intl.formatMessage(DAMAGE_MESSAGES.affectedAreasLabel)}
         </div>
         <div className={styles.tileGrid}>
-          {areas.map((area) => {
-            const selected = selectedAreas.includes(area.code);
-            return (
-              <button
-                key={area.code}
-                type="button"
-                className={`${styles.tile} ${selected ? styles.tileActive : ""}`}
-                onClick={() => toggleArea(area.code)}
-                disabled={readOnly}
-                aria-pressed={selected}
-              >
-                <FontAwesomeIcon icon={faCarSide} className={styles.tileIcon} />
-                <span className={styles.tileLabel}>
-                  {intl.formatMessage(area.label)}
-                </span>
-              </button>
-            );
-          })}
+          {damageAreaOptions?.map((area) => (
+            <IconText
+              option={{
+                ...area,
+                active: selectedAreas.includes(area.code),
+              }}
+              onClick={() => handleAreaToggle(area.code)}
+            />
+          ))}
         </div>
       </section>
 

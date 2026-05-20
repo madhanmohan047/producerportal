@@ -73,7 +73,6 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
       location={wizardPageProps.location}
       handleNext={wizardPageProps.handleNext}
       handlePrevious={wizardPageProps.handlePrevious}
-      showPageheader={false}
       wizardSidebarprops={wizardPageProps.wizardSidebarprops}
     >
       <div className={styles["loss-details-page"]}>
@@ -91,9 +90,9 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
         <div className={styles["loss-form-grid"]}>
           {/* Cause of Loss */}
           <div className={styles["field-group"]}>
-            {/* <label>
+            <label>
               Cause of Loss <span>*</span>
-            </label> */}
+            </label>
 
             <Combobox
               label={"Loss Cause"}
@@ -115,21 +114,21 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
 
           {/* Vehicle Involved */}
           <div className={styles["field-group"]}>
-            {/* <label>
+            <label>
               Vehicle Involved <span>*</span>
-            </label> */}
+            </label>
             {/* <input
               type="text"
               value={fnolFormData.vehicleInvolved || ""}
               onChange={(e) => updateField("vehicleInvolved", e.target.value)}
             /> */}
             <Combobox
-              label={"Vehicle Involved"}
+              label={"Loss Cause"}
               required
               options={vehiclesInvolved}
               value={vehiclesInvolved.find(
-                (selectedVehicle) =>
-                  selectedVehicle.code === fnolFormData.selectedVehicle,
+                (selectedCause) =>
+                  selectedCause.code === fnolFormData.selectedVehicle,
               )}
               onChange={(option) => {
                 setFnolFormData((prev) => ({

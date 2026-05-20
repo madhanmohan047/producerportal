@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import {
+  DamageAreaOption,
   DamageComponent,
   DamageInfo,
   LineOfBusiness,
@@ -23,22 +24,32 @@ const DamageStep = (wizardPageProps: DamageStepProps) => {
   const { fnolFormData, setFnolFormData } = useFNOLContext();
   const damage = fnolFormData.damage ?? EMPTY_DAMAGE;
   const lob = wizardPageProps.lineOfBusiness ?? "auto";
-  const [affectedAreas, setAffectedAreas] = useState<ComboboxOption[]>([]);
+  const [affectedAreas, setAffectedAreas] = useState<DamageAreaOption[]>([]);
 
   const handleValueChange = (value: any, path: string) => {
     setFnolFormData((prev) => ({
       ...prev,
-      damage: { ...(prev.damage ?? EMPTY_DAMAGE), [path]: value },
+      damage: {
+        ...(prev.damage ?? EMPTY_DAMAGE),
+        [path]: value,
+      },
     }));
   };
   useEffect(() => {
+    console.log("FNOL Form Data Updated:", fnolFormData);
+  }, [fnolFormData]);
+  useEffect(() => {
     getTypeList("AffectedAreas").then((response) => {
-      setAffectedAreas(response);
+      const mappedAreas: DamageAreaOption[] = response.map((item: any) => ({
+        code: item.code,
+        label: item.name,
+        img: item.img ?? "",
+        active: false,
+      }));
+
+      setAffectedAreas(mappedAreas);
     });
   }, []);
-  // useEffect(() => {
-  //   console.log("affectedAreas", affectedAreas);
-  // }, [affectedAreas]);
   return (
     <WizardPage
       step={wizardPageProps.step}
@@ -53,6 +64,7 @@ const DamageStep = (wizardPageProps: DamageStepProps) => {
         value={damage}
         onValueChange={handleValueChange}
         lineOfBusiness={lob}
+        damageAreaOptions={affectedAreas}
       />
     </WizardPage>
   );

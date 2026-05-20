@@ -74,8 +74,8 @@ const ReviewStep = (wizardPageProps: WizardPageProps) => {
               <span className={styles["summary-label"]}>Damage Areas</span>
               <div className={styles["summary-val"]}>
                 <span className={styles["summary-val"]}>
-                  {fnolFormData.damagedAreas
-                    ?.map((damagedArea) => damagedArea.label)
+                  {fnolFormData.damage?.damageAreas
+                    ?.map((damagedArea) => damagedArea)
                     .join(", ")}
                 </span>
               </div>{" "}
