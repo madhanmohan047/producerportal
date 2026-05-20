@@ -36,13 +36,15 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
     fnolFormData?.dateOfLoss || new Date().toISOString().split("T")[0],
   );
 
-  const [timeOfLoss, setTimeOfLoss] = useState(fnolFormData?.timeOfLoss || "");
-
   const currentTime = new Date().toLocaleTimeString("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
   });
+
+  const [timeOfLoss, setTimeOfLoss] = useState(
+    fnolFormData?.timeOfLoss || currentTime,
+  );
 
   useEffect(() => {
     Promise.all([getAllAccounts(), getAllPolicies()])
@@ -112,6 +114,12 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
     // reset selected policy when account changes
     setSelectedPolicy("");
   };
+
+  useEffect(() => {
+    if (selectedDate === today && timeOfLoss > currentTime) {
+      setTimeOfLoss(currentTime);
+    }
+  }, [selectedDate, timeOfLoss, currentTime, today]);
 
   useEffect(() => {
     setFnolFormData((prev) => ({
@@ -298,8 +306,10 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
             <input
               type="date"
               value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              max={new Date().toISOString().split("T")[0]}
+              onChange={(e) => {
+                setSelectedDate(e.target.value);
+              }}
+              max={today}
             />
           </div>
 
@@ -310,6 +320,7 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
               type="time"
               value={timeOfLoss}
               onChange={(e) => setTimeOfLoss(e.target.value)}
+              disabled={!selectedDate}
               max={selectedDate === today ? currentTime : undefined}
             />
           </div>

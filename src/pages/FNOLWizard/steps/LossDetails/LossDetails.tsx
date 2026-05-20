@@ -43,6 +43,7 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const policyId = params.get("id");
+  const [showAddressModal, setShowAddressModal] = useState(false);
 
   const updateField = (key: string, value: any) => {
     setFnolFormData((prev) => ({
@@ -151,7 +152,15 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
 
             <select
               value={fnolFormData.locationType || ""}
-              onChange={(e) => updateField("locationType", e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+
+                updateField("locationType", value);
+
+                if (value === "Add New Location") {
+                  setShowAddressModal(true);
+                }
+              }}
             >
               <option value="Read Only">
                 Enter address or intersection...
@@ -180,13 +189,39 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
             </div>
           )}
 
-          {fnolFormData.locationType === "Add New Location" && (
-            <div className={styles["full-width"]}>
-              <AddressSection
-                readOnly={false}
-                address={fnolFormData.lossAddress || emptyAddress}
-                onAddressChange={(addr) => updateField("lossAddress", addr)}
-              />
+          {showAddressModal && (
+            <div className={styles["modal-overlay"]}>
+              <div className={styles["modal-container"]}>
+                <div className={styles["modal-header"]}>
+                  <h2>Add New Loss Location</h2>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowAddressModal(false)}
+                    className={styles["close-button"]}
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className={styles["modal-body"]}>
+                  <AddressSection
+                    readOnly={false}
+                    address={fnolFormData.lossAddress || emptyAddress}
+                    onAddressChange={(addr) => updateField("lossAddress", addr)}
+                  />
+                </div>
+
+                <div className={styles["modal-footer"]}>
+                  <button
+                    type="button"
+                    className={styles["save-button"]}
+                    onClick={() => setShowAddressModal(false)}
+                  >
+                    Save Address
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
