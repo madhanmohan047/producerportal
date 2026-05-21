@@ -5,43 +5,79 @@ const PAWizardSidebar = () => {
   const { paFormData } = usePAContext();
 
   const contact = paFormData.primaryContact;
-  const customerName = contact
+  const accountHolder = contact
     ? [contact.firstName, contact.lastName].filter(Boolean).join(" ")
-    : "";
+    : "—";
+  const accountNumber = paFormData.accountNumber ?? "—";
 
-  const accountItems = [
-    { label: "Customer", value: customerName || "—" },
-    { label: "LOB", value: "Personal Auto" },
-    { label: "Effective Date", value: paFormData.effectiveDate || "—" },
-  ];
+  const effectiveDate = paFormData.effectiveDate;
+  const hasPolicy = !!effectiveDate;
 
-  const stepSection = paFormData.sidebarProps;
+  const hasAccount = !!paFormData.accountId;
+
+  // Named Insured always counts as 1 driver once account is selected
+  const apiDriverCount = paFormData.drivers?.length ?? 0;
+  const driverCount = hasAccount ? apiDriverCount + 1 : 0;
+
+  const vehicleCount = paFormData.vehicles?.length ?? 0;
 
   return (
     <div className={styles["container"]}>
-      {/* ACCOUNT section — always visible */}
+
+      {/* ACCOUNT — always visible */}
       <div className={styles["section"]}>
         <div className={styles["section-header"]}>Account</div>
-        {accountItems.map((item) => (
-          <div key={item.label} className={styles["sidebaritems"]}>
-            <div className={styles["title"]}>{item.label}</div>
-            <div className={styles["value"]}>{item.value}</div>
-          </div>
-        ))}
+        <div className={styles["sidebaritems"]}>
+          <div className={styles["title"]}>Account Holder</div>
+          <div className={styles["value"]}>{accountHolder}</div>
+        </div>
+        <div className={styles["sidebaritems"]}>
+          <div className={styles["title"]}>Account #</div>
+          <div className={styles["value"]}>{accountNumber}</div>
+        </div>
       </div>
 
-      {/* Step-specific section */}
-      {stepSection && (stepSection.sidebaritems?.length ?? 0) > 0 && (
+      {/* POLICY DETAILS — after step 2 saves effective date */}
+      {hasPolicy && (
         <div className={styles["section"]}>
-          <div className={styles["section-header"]}>{stepSection.title}</div>
-          {stepSection.sidebaritems?.map((item, i) => (
-            <div key={i} className={styles["sidebaritems"]}>
-              <div className={styles["title"]}>{item.transformationKey}</div>
-              <div className={styles["value"]}>{item.transformationLabel}</div>
-            </div>
-          ))}
+          <div className={styles["section-header"]}>Policy Details</div>
+          <div className={styles["sidebaritems"]}>
+            <div className={styles["title"]}>Line of Business</div>
+            <div className={styles["value"]}>Personal Auto</div>
+          </div>
+          <div className={styles["sidebaritems"]}>
+            <div className={styles["title"]}>Effective Date</div>
+            <div className={styles["value"]}>{effectiveDate}</div>
+          </div>
         </div>
       )}
+
+      {/* DRIVERS — visible once account is selected (Named Insured pre-populated) */}
+      {hasAccount && (
+        <div className={styles["section"]}>
+          <div className={styles["section-header"]}>Drivers</div>
+          <div className={styles["sidebaritems"]}>
+            <div className={styles["title"]}>Listed</div>
+            <div className={styles["value"]}>
+              {driverCount} {driverCount === 1 ? "driver" : "drivers"}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* VEHICLES — visible once at least one vehicle is added */}
+      {vehicleCount > 0 && (
+        <div className={styles["section"]}>
+          <div className={styles["section-header"]}>Vehicles</div>
+          <div className={styles["sidebaritems"]}>
+            <div className={styles["title"]}>Listed</div>
+            <div className={styles["value"]}>
+              {vehicleCount} {vehicleCount === 1 ? "vehicle" : "vehicles"}
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

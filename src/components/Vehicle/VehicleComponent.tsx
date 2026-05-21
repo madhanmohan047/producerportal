@@ -1,252 +1,235 @@
 import React, { useEffect, useState } from "react";
-import { Button, FormInput } from "../common";
-import AddressComponent from "../AddressComponent/AddressComponent";
-import { Vehicle } from "../../api/services/job/types/Vehicle";
-import { TypeKeyValue } from "../../api/utils/types";
-import { Address } from "../../api/services/account/types/Address";
-import styles from "./VehicleComponent.module.scss";
-import { getTypeList } from "../../api/services/typelist/typelistApi";
-import { TypeList } from "../../api/utils/types";
-import Combobox from "../common/Combobox/Combobox";
-
 import { useIntl } from "react-intl";
-import messages from "./VehicleComponent.messages";
-import { ComboboxOption } from "../common/Combobox/Combobox";
+import { FormInput } from "../common";
+import Combobox, { ComboboxOption } from "../common/Combobox/Combobox";
+import { Vehicle } from "../../api/services/job/types/Vehicle";
+import { Address } from "../../api/services/account/types/Address";
 import { addVehicleToJob } from "../../api/services/job/jobApi";
+import { getTypeList } from "../../api/services/typelist/typelistApi";
+import messages from "./VehicleComponent.messages";
+import styles from "./VehicleComponent.module.scss";
 
-type VehicleComponentProps = {
-  onVehicleAdded?: (vehicle: Vehicle) => void;
+type VehicleFormState = {
+  _id?: string;
+  make: string;
+  model: string;
+  year: string;
+  vin: string;
+  color: string;
+  licensePlate: string;
+  annualMileage: string;
+  costNew: string;
+  bodyType: ComboboxOption | undefined;
+  licenseState: ComboboxOption | undefined;
+  garageLocation?: Address;
 };
 
-const VehicleComponent: React.FC<VehicleComponentProps> = ({ onVehicleAdded }) => {
+export type VehicleComponentProps = {
+  jobId?: string;
+  mode?: "add" | "edit";
+  initialValues?: Partial<VehicleFormState>;
+  onSaved?: (vehicle: Vehicle) => void;
+  onCancel?: () => void;
+};
+
+const emptyAddress: Address = {
+  addressLine1: "",
+  addressLine2: "",
+  city: "",
+  county: "",
+  postalCode: "",
+  state: { code: "", name: "" },
+  country: { code: "", name: "" },
+  addressType: { code: "", name: "" },
+} as Address;
+
+const emptyForm = (): VehicleFormState => ({
+  make: "",
+  model: "",
+  year: "",
+  vin: "",
+  color: "",
+  licensePlate: "",
+  annualMileage: "",
+  costNew: "",
+  bodyType: undefined,
+  licenseState: undefined,
+});
+
+const VehicleComponent: React.FC<VehicleComponentProps> = ({
+  jobId,
+  mode = "add",
+  initialValues,
+  onSaved,
+  onCancel,
+}) => {
   const intl = useIntl();
-
-  const emptyAddress: Address = {
-    _id: "",
-    addressLine1: "",
-    addressLine2: "",
-    city: "",
-    county: "",
-    postalCode: "",
-    state: { code: "", name: "" },
-    country: { code: "", name: "" },
-    addressType: { code: "", name: "" },
-  } as Address;
-  const emptyVehicle = {
-    make: "Toyota",
-    model: "Camry",
-    vin: "V4435GY",
-    color: "RED",
-    year: 0,
-    licensePlate: "ONTTHS",
-    annualMileage: 10000,
-    costNew: 0,
-    bodyType: { code: "", name: "" },
-    licenseState: { code: "", name: "" },
-    garageLocation: emptyAddress,
-    vehicleDrivers: [],
-  } as Vehicle;
-
-  const [vehicle, setVehicle] = useState<Vehicle>(emptyVehicle);
-  const [isReadOnly, setIsReadOnly] = useState(false);
-  const [bodyTypes, setBodyTypes] = useState<TypeList[]>([]);
-  const [states, setStates] = useState<TypeList[]>([]);
-
-  const clearForm = () => {
-    setIsReadOnly(true);
-    setVehicle(emptyVehicle);
-  };
-
-  const handleSubmit = () => {
-    console.log("Vehicle data submitted:", vehicle);
-    onVehicleAdded?.(vehicle);
-    addVehicleToJob("pc:437d8b43", vehicle)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((e) => {
-        console.log("Errror from api", e);
-      });
-    clearForm();
-  };
+  const [form, setForm] = useState<VehicleFormState>(() => ({
+    ...emptyForm(),
+    ...initialValues,
+  }));
+  const [bodyTypes, setBodyTypes] = useState<ComboboxOption[]>([]);
+  const [states, setStates] = useState<ComboboxOption[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getTypeList("BodyType").then((response) => {
-      setBodyTypes(response.data);
+    getTypeList("BodyType").then((res) => {
+      const raw = res.data as any;
+      setBodyTypes(Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []));
     });
-    getTypeList("State").then((response) => {
-      setStates(response.data);
+    getTypeList("State").then((res) => {
+      const raw = res.data as any;
+      setStates(Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []));
     });
-    setVehicle((prev) => ({
-      ...prev,
-      garageLocation: {
-        ...prev?.garageLocation,
-        country: {
-          code: "CA",
-          name: "Canada",
-        },
-      },
-    }));
   }, []);
 
+  const set = <K extends keyof VehicleFormState>(field: K, value: VehicleFormState[K]) =>
+    setForm((prev) => ({ ...prev, [field]: value }));
+
+  const handleSubmit = async () => {
+    setError(null);
+
+    if (!form.make.trim() || !form.model.trim() || !form.vin.trim()) {
+      setError(intl.formatMessage(messages.errorMakeModel));
+      return;
+    }
+    const yearNum = Number(form.year);
+    if (!form.year || isNaN(yearNum) || yearNum < 1900 || yearNum > new Date().getFullYear() + 1) {
+      setError(intl.formatMessage(messages.errorYear));
+      return;
+    }
+
+    const payload: Vehicle = {
+      make: form.make.trim(),
+      model: form.model.trim(),
+      year: yearNum,
+      vin: form.vin.trim(),
+      color: form.color.trim(),
+      licensePlate: form.licensePlate.trim(),
+      annualMileage: form.annualMileage ? Number(form.annualMileage) : 0,
+      costNew: form.costNew ? Number(form.costNew) : 0,
+      bodyType: form.bodyType ?? { code: "", name: "" },
+      licenseState: form.licenseState ?? { code: "", name: "" },
+      garageLocation: form.garageLocation ?? emptyAddress,
+      vehicleDrivers: [],
+    } as Vehicle;
+
+    if (mode === "edit") {
+      onSaved?.({ ...payload, _id: form._id });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const { data: saved } = await addVehicleToJob(jobId ?? "", payload);
+      onSaved?.(saved);
+      setForm(emptyForm());
+    } catch (err: any) {
+      setError(err?.message ?? intl.formatMessage(messages.errorSave));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>{intl.formatMessage(messages.title)}</h1>
-
-      <div className={styles.formGrid}>
-        <FormInput
-          label={intl.formatMessage(messages.make)}
-          placeholder={isReadOnly ? "" : intl.formatMessage(messages.make)}
-          value={vehicle.make}
-          readOnly={isReadOnly}
-          onChange={(e) =>
-            setVehicle((prev) => ({ ...prev, make: e.target.value }))
-          }
-        />
-
-        <FormInput
-          label={intl.formatMessage(messages.model)}
-          placeholder={isReadOnly ? "" : intl.formatMessage(messages.model)}
-          value={vehicle.model}
-          readOnly={isReadOnly}
-          onChange={(e) =>
-            setVehicle((prev) => ({ ...prev, model: e.target.value }))
-          }
-        />
-        {/* <FormInput
-          label={intl.formatMessage(messages.year)}
-          placeholder={isReadOnly ? "" : intl.formatMessage(messages.year)}
-          value={vehicle.year}
-          readOnly={isReadOnly}
-          onChange={(e) =>
-            setVehicle((prev) => ({ ...prev, year: e.target.value }))
-          }
-        /> */}
-        <FormInput
-          label={intl.formatMessage(messages.year)}
-          placeholder={isReadOnly ? "" : intl.formatMessage(messages.year)}
-          value={vehicle.year}
-          readOnly={isReadOnly}
-          onChange={(e) =>
-            setVehicle((prev) => ({
-              ...prev,
-              year: parseInt(e.target.value) || 0,
-            }))
-          }
-        />
-        <FormInput
-          label={intl.formatMessage(messages.costnew)}
-          placeholder={isReadOnly ? "" : intl.formatMessage(messages.costnew)}
-          value={vehicle.costNew}
-          readOnly={isReadOnly}
-          onChange={(e) =>
-            setVehicle((prev) => ({
-              ...prev,
-              costNew: parseInt(e.target.value) || 0,
-            }))
-          }
-        />
-
-        <FormInput
-          label={intl.formatMessage(messages.vin)}
-          placeholder={isReadOnly ? "" : intl.formatMessage(messages.vin)}
-          readOnly={isReadOnly}
-          value={vehicle.vin}
-          onChange={(e) =>
-            setVehicle((prev) => ({ ...prev, vin: e.target.value }))
-          }
-        />
-
-        <FormInput
-          label={intl.formatMessage(messages.color)}
-          placeholder={isReadOnly ? "" : intl.formatMessage(messages.color)}
-          readOnly={isReadOnly}
-          value={vehicle.color}
-          onChange={(e) =>
-            setVehicle((prev) => ({ ...prev, color: e.target.value }))
-          }
-        />
-
-        <FormInput
-          label={intl.formatMessage(messages.licensePlate)}
-          placeholder={
-            isReadOnly ? "" : intl.formatMessage(messages.licensePlate)
-          }
-          readOnly={isReadOnly}
-          value={vehicle.licensePlate}
-          onChange={(e) =>
-            setVehicle((prev) => ({
-              ...prev,
-              licensePlate: e.target.value,
-            }))
-          }
-        />
-
-        <FormInput
-          label={intl.formatMessage(messages.annualMileage)}
-          placeholder={
-            isReadOnly ? "" : intl.formatMessage(messages.annualMileage)
-          }
-          value={vehicle.annualMileage}
-          readOnly={isReadOnly}
-          onChange={(e) =>
-            setVehicle((prev) => ({
-              ...prev,
-              annualMileage: parseInt(e.target.value) || 0,
-            }))
-          }
-        />
-
-        <Combobox
-          label={intl.formatMessage(messages.bodyType)}
-          required
-          options={bodyTypes}
-          value={vehicle.bodyType}
-          onChange={(option) =>
-            setVehicle((prev) => ({
-              ...prev,
-              bodyType: option,
-            }))
-          }
-          disabled={isReadOnly}
-        />
-
-        <Combobox
-          label={intl.formatMessage(messages.licenseState)}
-          placeholder={
-            isReadOnly ? "" : intl.formatMessage(messages.licenseState)
-          }
-          options={states}
-          value={vehicle.licenseState}
-          disabled={isReadOnly}
-          onChange={(option) =>
-            setVehicle((prev) => ({
-              ...prev,
-              licenseState: option,
-            }))
-          }
-        />
+    <div className={styles.form}>
+      <div>
+        <p className={styles["section-title"]}>Vehicle Info</p>
+        <div className={styles.formGrid}>
+          <FormInput
+            label={intl.formatMessage(messages.make)}
+            value={form.make}
+            onChange={(e) => set("make", e.target.value)}
+            placeholder="e.g. Toyota"
+          />
+          <FormInput
+            label={intl.formatMessage(messages.model)}
+            value={form.model}
+            onChange={(e) => set("model", e.target.value)}
+            placeholder="e.g. Camry"
+          />
+          <FormInput
+            label={intl.formatMessage(messages.year)}
+            type="number"
+            value={form.year}
+            onChange={(e) => set("year", e.target.value)}
+            placeholder="e.g. 2022"
+          />
+          <FormInput
+            label={intl.formatMessage(messages.vin)}
+            value={form.vin}
+            onChange={(e) => set("vin", e.target.value)}
+            placeholder="e.g. 1HGBH41JXMN109186"
+          />
+          <FormInput
+            label={intl.formatMessage(messages.color)}
+            value={form.color}
+            onChange={(e) => set("color", e.target.value)}
+            placeholder="e.g. White"
+          />
+          <Combobox
+            label={intl.formatMessage(messages.bodyType)}
+            options={bodyTypes}
+            value={form.bodyType}
+            onChange={(opt) => set("bodyType", opt)}
+            fullWidth
+          />
+        </div>
       </div>
 
-      <span>{intl.formatMessage(messages.garageLocation)}</span>
-
-      <div className={styles.addressSection}>
-        <AddressComponent
-          readOnly={isReadOnly}
-          address={vehicle.garageLocation}
-          onAddressChange={(updatedAddress) =>
-            setVehicle((prev) => ({
-              ...prev,
-              garageLocation: updatedAddress,
-            }))
-          }
-        />
+      <div>
+        <p className={styles["section-title"]}>Registration & Usage</p>
+        <div className={styles.formGrid}>
+          <FormInput
+            label={intl.formatMessage(messages.licensePlate)}
+            value={form.licensePlate}
+            onChange={(e) => set("licensePlate", e.target.value)}
+            placeholder="e.g. ABC-1234"
+          />
+          <Combobox
+            label={intl.formatMessage(messages.licenseState)}
+            options={states}
+            value={form.licenseState}
+            onChange={(opt) => set("licenseState", opt)}
+            fullWidth
+          />
+          <FormInput
+            label={intl.formatMessage(messages.annualMileage)}
+            type="number"
+            value={form.annualMileage}
+            onChange={(e) => set("annualMileage", e.target.value)}
+            placeholder="e.g. 12000"
+          />
+          <FormInput
+            label={intl.formatMessage(messages.costNew)}
+            type="number"
+            value={form.costNew}
+            onChange={(e) => set("costNew", e.target.value)}
+            placeholder="e.g. 25000"
+          />
+        </div>
       </div>
 
-      <div className={styles.footer}>
-        <Button onClick={handleSubmit}>
-          {intl.formatMessage(messages.submit)}
-        </Button>
+      {error && <p className={styles.errorText}>{error}</p>}
+
+      <div className={styles.actions}>
+        <button
+          onClick={handleSubmit}
+          disabled={isLoading}
+          className={`${styles.saveButton} ${isLoading ? styles.disabled : ""}`}
+        >
+          {isLoading
+            ? intl.formatMessage(messages.saving)
+            : mode === "edit"
+            ? intl.formatMessage(messages.saveChanges)
+            : intl.formatMessage(messages.addVehicle)}
+        </button>
+        {onCancel && (
+          <button onClick={onCancel} className={styles.cancelButton}>
+            {intl.formatMessage(messages.cancel)}
+          </button>
+        )}
       </div>
     </div>
   );

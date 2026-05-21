@@ -75,42 +75,50 @@
   flex-direction: column;
   width: 100%;
 
-  select {
-    width: 100%;
-    height: 46px;
-    padding: 0 14px;
-    border: 1px solid #1683e8;
-    border-radius: 8px;
-    background: #eef6ff;
-    font-size: 16px;
-    color: #061b36;
-    outline: none;
-    box-sizing: border-box;
-  }
-
   label {
-    margin-bottom: 8px;
-    font-size: 14px;
+    margin-bottom: 6px;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: #55708f;
+    color: #64748b;
+    letter-spacing: 0.01em;
 
     span {
-      margin-left: 3px;
-      color: #e63737;
+      margin-left: 2px;
+      color: #ef4444;
     }
   }
 
   input {
     width: 100%;
-    height: 46px;
-    padding: 0 14px;
-    border: 1px solid #1683e8;
+    padding: 11px 14px;
+    border: 1px solid #bfdbfe;
     border-radius: 8px;
-    background: #eef6ff;
-    font-size: 16px;
-    color: #061b36;
+    background: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #1e293b;
     outline: none;
     box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+
+    &:hover:not([readonly]):not(:disabled) {
+      border-color: #93c5fd;
+    }
+
+    &:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    }
+
+    &[readonly] {
+      background: #f8fafc;
+      color: #475569;
+      cursor: default;
+    }
   }
 }
 

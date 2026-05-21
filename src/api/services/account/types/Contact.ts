@@ -8,7 +8,7 @@ export interface Contact extends Base {
   workPhone?: string;
   homePhone?: string;
   cellPhone?: string;
-  type: TypeKeyValue;
+  type?: TypeKeyValue;
   roles: TypeKeyValue[];
   emailAddress?: string;
 }

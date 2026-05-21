@@ -25,9 +25,21 @@ export default defineMessages({
     id: "driversStep.edit",
     defaultMessage: "Edit",
   },
-  cancel: {
-    id: "driversStep.cancel",
-    defaultMessage: "Cancel",
+  remove: {
+    id: "driversStep.remove",
+    defaultMessage: "Remove",
+  },
+  relation: {
+    id: "driversStep.relation",
+    defaultMessage: "Relation",
+  },
+  primary: {
+    id: "driversStep.primary",
+    defaultMessage: "Primary",
+  },
+  setAsPrimary: {
+    id: "driversStep.setAsPrimary",
+    defaultMessage: "Set as Primary",
   },
   addAnotherDriver: {
     id: "driversStep.addAnotherDriver",

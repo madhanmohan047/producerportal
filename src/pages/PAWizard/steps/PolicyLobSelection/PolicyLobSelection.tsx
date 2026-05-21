@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react";
 import styles from "./PolicyLobSelection.module.scss";
 
 import { getTypeList } from "../../../../api/services/typelist/typelistApi";
+import { PROGRAM_PLAN_OPTIONS } from "../../../../utils/typelistConstants";
 import Combobox, {
   ComboboxOption,
 } from "../../../../components/common/Combobox/Combobox";
 import { Account } from "../../../../api/services/account/types";
 import { getUser } from "../../../../api/services";
+import { getAllJobs } from "../../../../api/services/job/jobApi";
+import { createSubmission } from "../../../../api/services/account/accountApi";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
+import { usePAContext } from "../../PAWizardContext";
 
 type Props = WizardPageProps & {
   accountName?: string;
@@ -43,8 +47,14 @@ const addMonths = (dateValue: string, months: number): string => {
 const mapToComboboxOptions = (items: any[] = []): ComboboxOption[] =>
   items.map(({ code, name }) => ({ code, name }));
 
-const getResponseData = (response: TypelistResponse): ComboboxOption[] =>
-  Array.isArray(response) ? response : response.data || [];
+// const getResponseData = (response: TypelistResponse): ComboboxOption[] => {
+//   const raw = Array.isArray(response) ? response : (response as any).data;
+//   return Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []);
+// };
+
+const getResponseData = (response: TypelistResponse): ComboboxOption[] => {
+  return Array.isArray(response) ? response: response.data || [];
+}
 
 const getStoredSelectedAccount = (): Account | undefined => {
   const account = sessionStorage.getItem("selectedAccount");
@@ -112,7 +122,11 @@ const findMatchingState = (
 };
 
 export const PolicyLobSelection = (wizardPageProps: Props) => {
-  const { accountName } = wizardPageProps;
+  const { paFormData, setPAFormData } = usePAContext();
+  const contact = paFormData.primaryContact;
+  const accountName = contact
+    ? [contact.firstName, contact.lastName].filter(Boolean).join(" ")
+    : "";
   const [productOptions, setProductOptions] = useState<ComboboxOption[]>([]);
   const [programOptions, setProgramOptions] = useState<ComboboxOption[]>([]);
   const [stateOptions, setStateOptions] = useState<ComboboxOption[]>([]);
@@ -125,6 +139,9 @@ export const PolicyLobSelection = (wizardPageProps: Props) => {
     useState<ComboboxOption>();
   const [formData, setFormData] =
     useState<PolicyLobFormData>(getInitialFormData);
+  const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const updateFormData = (field: keyof PolicyLobFormData, value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -135,20 +152,20 @@ export const PolicyLobSelection = (wizardPageProps: Props) => {
   useEffect(() => {
     const loadPolicyLobData = async () => {
       try {
-        const selectedAccount = getStoredSelectedAccount();
-        const [productResponse, programResponse, stateResponse, userResponse] =
+        const selectedAccount = paFormData.accountId
+          ? ({ primaryLocation: paFormData.mailingAddress, producerCode: paFormData.producerCodeId } as unknown as Account)
+          : getStoredSelectedAccount();
+
+        const [productResponse, stateResponse, userResponse] =
           await Promise.all([
             getTypeList("Product"),
-            getTypeList("ProgramPlan"),
             getTypeList("State"),
             getUser(),
           ]);
         const products = mapToComboboxOptions(
           getResponseData(productResponse as TypelistResponse),
         );
-        const programs = mapToComboboxOptions(
-          getResponseData(programResponse as TypelistResponse),
-        );
+        const programs = PROGRAM_PLAN_OPTIONS;
         const states = mapToComboboxOptions(
           getResponseData(stateResponse as TypelistResponse),
         );
@@ -166,12 +183,24 @@ export const PolicyLobSelection = (wizardPageProps: Props) => {
         setSelectedProgram(defaultProgram);
         setSelectedGaragingState(defaultState);
 
+        const initialEffective = paFormData.effectiveDate || formatDate(new Date());
+        const initialTermLength = formData.termLength;
+
         setFormData((prev) => ({
           ...prev,
+          effectiveDate: initialEffective,
+          expirationDate: addMonths(initialEffective, Number(initialTermLength)),
           product: defaultProduct?.code || "",
           programPlan: defaultProgram?.code || "",
           garagingState: defaultState?.code || "",
           producingAgent: getProducerName(user, selectedAccount),
+        }));
+
+        // Sync initial values to context
+        setPAFormData((prev) => ({
+          ...prev,
+          effectiveDate: initialEffective,
+          baseState: defaultState,
         }));
       } catch (error) {
         console.error("Error loading policy LOB data:", error);
@@ -201,13 +230,71 @@ export const PolicyLobSelection = (wizardPageProps: Props) => {
       effectiveDate,
       expirationDate: addMonths(effectiveDate, Number(prev.termLength)),
     }));
+
+    setPAFormData((prev) => ({ ...prev, effectiveDate }));
+  };
+
+  const handleNext = async () => {
+    if (!formData.effectiveDate) {
+      setError("Effective date is required.");
+      return;
+    }
+    if (!selectedGaragingState) {
+      setError("Garaging state is required.");
+      return;
+    }
+    if (!paFormData.accountId) {
+      setError("No account selected. Please go back to Step 1.");
+      return;
+    }
+
+    // Already have a job for this session — just advance
+    if (paFormData.jobId) {
+      wizardPageProps.handleNext?.();
+      return;
+    }
+
+    setIsCreating(true);
+    setError(null);
+    try {
+      // 1. Try to find an existing job linked to this account
+      const res = await getAllJobs();
+      const raw = res.data as any;
+      const jobs: any[] = Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []);
+      const existing = jobs.find((j) => {
+        const id = typeof j.account === "string" ? j.account : j.account?._id;
+        return id === paFormData.accountId;
+      });
+
+      if (existing?._id) {
+        setPAFormData((prev) => ({ ...prev, jobId: existing._id }));
+        wizardPageProps.handleNext?.();
+        return;
+      }
+
+      const createRes = await createSubmission(paFormData.accountId, { lobCode: "PersonalAuto" });
+      const created = createRes.data as any;
+      const jobId = created?._id ?? created?.data?._id;
+
+      if (!jobId) {
+        setError("Submission was created but returned no ID. Please try again.");
+        return;
+      }
+
+      setPAFormData((prev) => ({ ...prev, jobId }));
+      wizardPageProps.handleNext?.();
+    } catch (err: any) {
+      setError(err?.message ?? "Failed to load or create submission. Please try again.");
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   return (
     <WizardPage
       step={wizardPageProps.step}
       location={wizardPageProps.location}
-      handleNext={wizardPageProps.handleNext}
+      handleNext={handleNext}
       handlePrevious={wizardPageProps.handlePrevious}
       SidebarComponent={wizardPageProps.SidebarComponent}
     >
@@ -298,6 +385,7 @@ export const PolicyLobSelection = (wizardPageProps: Props) => {
                 onChange={(option) => {
                   setSelectedGaragingState(option);
                   updateFormData("garagingState", option.code);
+                  setPAFormData((prev) => ({ ...prev, baseState: option }));
                 }}
               />
             </div>
@@ -314,6 +402,15 @@ export const PolicyLobSelection = (wizardPageProps: Props) => {
               <input type="text" value={formData.producingAgent} readOnly />
             </div>
           </div>
+
+          {error && (
+            <p style={{ color: "#dc2626", fontSize: "0.85rem", marginTop: 12 }}>{error}</p>
+          )}
+          {isCreating && (
+            <p style={{ color: "#64748b", fontSize: "0.85rem", marginTop: 8 }}>
+              Setting up submission…
+            </p>
+          )}
         </div>
       </div>
     </WizardPage>

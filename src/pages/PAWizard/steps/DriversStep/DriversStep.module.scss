@@ -1,28 +1,112 @@
 .drivers-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
-/* ── Individual driver card ── */
-.driver-card {
+.loading-text {
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.no-job-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fef9c3;
+  border: 1px solid #fde047;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #713f12;
+}
+
+.account-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #1d4ed8;
+}
+
+.account-label {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* ── Tab bar ── */
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0;
+  flex-wrap: wrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  background: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+
+  &:hover {
+    color: #1e293b;
+    background: #f8fafc;
+  }
+}
+
+.tab-active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+  font-weight: 600;
+}
+
+/* ── Active driver panel ── */
+.driver-panel {
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 16px 20px;
+  border-radius: 0 8px 8px 8px;
+  padding: 20px;
   background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  @media (max-width: 600px) {
+    padding: 14px;
+  }
 }
 
 .driver-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .driver-name-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .driver-name {
@@ -31,7 +115,24 @@
   color: #1e293b;
 }
 
-.insured-badge {
+.relation-select {
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #1d4ed8;
+  background: #dbeafe;
+  cursor: pointer;
+  outline: none;
+
+  &:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+  }
+}
+
+.relation-badge {
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -40,6 +141,29 @@
   color: #1d4ed8;
   border-radius: 4px;
   padding: 2px 8px;
+}
+
+.primary-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: #dcfce7;
+  color: #16a34a;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+
+  @media (max-width: 600px) {
+    width: 100%;
+    justify-content: flex-end;
+  }
 }
 
 .edit-btn {
@@ -59,32 +183,78 @@
   }
 }
 
-/* ── Driver field grid ── */
+.primary-btn {
+  background: none;
+  border: 1px solid #16a34a;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: #16a34a;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+
+  &:hover {
+    background: #f0fdf4;
+  }
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+
+  &:hover {
+    background: #fef2f2;
+  }
+}
+
+/* ── Read-only field grid ── */
 .driver-fields {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .driver-field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 
   label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
     color: #94a3b8;
-    font-weight: 500;
   }
 
   input {
+    width: 100%;
+    padding: 11px 14px;
     border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    padding: 8px 10px;
-    font-size: 0.875rem;
-    color: #1e293b;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #475569;
     background: #f8fafc;
     outline: none;
+    box-sizing: border-box;
+    cursor: default;
 
     &::placeholder {
       color: #cbd5e1;
@@ -92,49 +262,27 @@
   }
 }
 
-/* ── Add form wrapper ── */
-.add-form {
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.cancel-btn {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background: #f8fafc;
-  border: none;
-  border-top: 1px solid #e2e8f0;
-  color: #64748b;
-  font-size: 0.875rem;
-  cursor: pointer;
-
-  &:hover {
-    background: #f1f5f9;
-  }
-}
-
 /* ── Add Another Driver button ── */
-.add-driver-btn {
+.add-btn {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   width: 100%;
-  padding: 14px;
-  border: 1px dashed #cbd5e1;
+  min-height: 48px;
+  padding: 12px 16px;
+  border: 1px solid #dbe3ec;
   border-radius: 8px;
-  background: #fff;
-  color: #475569;
-  font-size: 0.875rem;
-  font-weight: 500;
+  background: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition: all 0.2s ease;
 
   &:hover {
     background: #f8fafc;
-    border-color: #94a3b8;
-    color: #1e293b;
+    border-color: #cbd5e1;
   }
 }
 
