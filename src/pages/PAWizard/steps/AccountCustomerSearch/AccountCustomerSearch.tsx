@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useIntl } from "react-intl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faCheck } from "@fortawesome/free-solid-svg-icons";
 import styles from "./AccountCustomerSearch.module.scss";
@@ -10,8 +11,10 @@ import { NewAccountModal } from "./NewAccountModal/NewAccountModal";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
 import { usePAContext } from "../../PAWizardContext";
+import messages from "./AccountCustomerSearch.messages";
 
 export const AccountCustomerSearch = (wizardPageProps: WizardPageProps) => {
+  const intl = useIntl();
   const { paFormData, setPAFormData } = usePAContext();
   const [accounts, setAccounts] = React.useState<Account[]>([]);
   const [selectedAccount, setSelectedAccount] = React.useState<Account | null>(null);
@@ -30,7 +33,6 @@ export const AccountCustomerSearch = (wizardPageProps: WizardPageProps) => {
           ? raw.data
           : [];
         setAccounts(list);
-        // Restore selection if account was previously chosen
         if (paFormData.accountId) {
           const found = list.find((a) => a._id === paFormData.accountId);
           if (found) setSelectedAccount(found);
@@ -77,7 +79,7 @@ export const AccountCustomerSearch = (wizardPageProps: WizardPageProps) => {
 
   const handleNext = () => {
     if (!selectedAccount) {
-      setError("Please select an account to continue.");
+      setError(intl.formatMessage(messages.errorSelectAccount));
       return;
     }
     wizardPageProps.handleNext?.();
@@ -96,7 +98,7 @@ export const AccountCustomerSearch = (wizardPageProps: WizardPageProps) => {
           <FontAwesomeIcon icon={faMagnifyingGlass} style={{ color: "#94a3b8" }} />
           <input
             type="text"
-            placeholder="Search by name, email, phone, or account #"
+            placeholder={intl.formatMessage(messages.searchPlaceholder)}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
@@ -104,7 +106,7 @@ export const AccountCustomerSearch = (wizardPageProps: WizardPageProps) => {
         </div>
 
         <div className={styles.infoBanner}>
-          <span>Select a matching account to pre-fill applicant details.</span>
+          <span>{intl.formatMessage(messages.infoBanner)}</span>
         </div>
 
         {error && (
@@ -113,7 +115,9 @@ export const AccountCustomerSearch = (wizardPageProps: WizardPageProps) => {
 
         <div className={styles.cardContainer}>
           {filtered.length === 0 && query && (
-            <p style={{ color: "#94a3b8", fontSize: "0.875rem" }}>No accounts found.</p>
+            <p style={{ color: "#94a3b8", fontSize: "0.875rem" }}>
+              {intl.formatMessage(messages.noAccountsFound)}
+            </p>
           )}
           {filtered.map((account) => {
             const isSelected = selectedAccount?._id === account._id;
@@ -140,10 +144,14 @@ export const AccountCustomerSearch = (wizardPageProps: WizardPageProps) => {
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   {policyCount > 0 ? (
                     <div className={styles.activeBadge}>
-                      {policyCount} {policyCount === 1 ? "Policy" : "Policies"}
+                      {policyCount} {policyCount === 1
+                        ? intl.formatMessage(messages.policy)
+                        : intl.formatMessage(messages.policies)}
                     </div>
                   ) : (
-                    <div className={styles.emptyBadge}>0 Policies</div>
+                    <div className={styles.emptyBadge}>
+                      {intl.formatMessage(messages.zeroPolicies)}
+                    </div>
                   )}
                   {isSelected && (
                     <FontAwesomeIcon
@@ -161,7 +169,7 @@ export const AccountCustomerSearch = (wizardPageProps: WizardPageProps) => {
           className={styles.createButton}
           onClick={() => setShowCreateAccount(true)}
         >
-          + Create New Account
+          {intl.formatMessage(messages.createNewAccount)}
         </button>
 
         {showCreateAccount && (

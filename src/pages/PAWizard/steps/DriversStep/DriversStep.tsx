@@ -48,9 +48,6 @@ const displayDob = (dob: string): string => {
 const formatLicense = (num: string, state: string) =>
   num ? (state ? `${state.toUpperCase()}-${num}` : num) : "";
 
-const formatViolations = (v: number | "") =>
-  v === "" || v === 0 ? "None" : String(v);
-
 const toInitialValues = (card: DriverCard) => ({
   personMode: card.personId ? ("existing" as const) : ("new" as const),
   personId: card.personId ?? "",
@@ -196,8 +193,6 @@ const DriversStep = (wizardPageProps: WizardPageProps) => {
       .finally(() => setIsLoadingDrivers(false));
   }, [paFormData.jobId]);
 
-  // Sidebar reads paFormData.drivers.length directly — no sidebarProps needed here
-
   const switchToTab = (idx: number) => {
     setActiveTab(idx);
     setShowAddForm(false);
@@ -217,7 +212,6 @@ const DriversStep = (wizardPageProps: WizardPageProps) => {
     setDriverCards((prev) =>
       prev.map((card, i) => {
         if (i !== idx) return card;
-        // Patch only editable fields — preserve person identity (name, personId, id)
         return {
           ...card,
           relation,
@@ -252,6 +246,13 @@ const DriversStep = (wizardPageProps: WizardPageProps) => {
     setActiveTab((prev) => (prev >= idx ? Math.max(0, prev - 1) : prev));
   };
 
+  const getRelationLabel = (relation: Relation): string => {
+    if (relation === "Named Insured") return intl.formatMessage(messages.namedInsured);
+    if (relation === "Spouse") return intl.formatMessage(messages.spouse);
+    if (relation === "Child") return intl.formatMessage(messages.child);
+    return intl.formatMessage(messages.other);
+  };
+
   const card = driverCards[activeTab];
   const isEditing = editingIdx === activeTab;
   const isPrimary = activeTab === primaryIdx;
@@ -269,24 +270,26 @@ const DriversStep = (wizardPageProps: WizardPageProps) => {
 
         {contact && (
           <div className={styles["account-banner"]}>
-            <span className={styles["account-label"]}>Account:</span>
+            <span className={styles["account-label"]}>{intl.formatMessage(messages.accountLabel)}</span>
             {[contact.firstName, contact.lastName].filter(Boolean).join(" ")}
           </div>
         )}
 
         {!paFormData.jobId && (
           <div className={styles["no-job-banner"]}>
-            ⚠ No submission linked yet. Go back to Step 2 (Policy Info) and click Continue to create a submission before adding drivers.
+            {intl.formatMessage(messages.noJobBanner)}
           </div>
         )}
 
-        {isLoadingDrivers && <p className={styles["loading-text"]}>Loading drivers…</p>}
+        {isLoadingDrivers && (
+          <p className={styles["loading-text"]}>{intl.formatMessage(messages.loadingDrivers)}</p>
+        )}
 
-        {/* ── Tab bar ── */}
         <div className={styles.tabs}>
           {driverCards.map((c, idx) => {
             const label =
-              [c.firstName, c.lastName].filter(Boolean).join(" ") || `Driver ${idx + 1}`;
+              [c.firstName, c.lastName].filter(Boolean).join(" ") ||
+              intl.formatMessage(messages.driverNum, { num: idx + 1 });
             return (
               <button
                 key={idx}
@@ -300,19 +303,18 @@ const DriversStep = (wizardPageProps: WizardPageProps) => {
           })}
         </div>
 
-        {/* ── Add-driver form panel ── */}
         {showAddForm && (
           <div className={styles["driver-panel"]}>
             <div className={styles["driver-card-header"]}>
               <div className={styles["driver-name-row"]}>
-                <span className={styles["driver-name"]}>New Driver</span>
+                <span className={styles["driver-name"]}>{intl.formatMessage(messages.newDriver)}</span>
                 <select
                   className={styles["relation-select"]}
                   value={newDriverRelation}
                   onChange={(e) => setNewDriverRelation(e.target.value as Relation)}
                 >
                   {ADDITIONAL_RELATIONS.map((r) => (
-                    <option key={r} value={r}>{r}</option>
+                    <option key={r} value={r}>{getRelationLabel(r)}</option>
                   ))}
                 </select>
               </div>
@@ -329,13 +331,13 @@ const DriversStep = (wizardPageProps: WizardPageProps) => {
           </div>
         )}
 
-        {/* ── Active driver panel ── */}
         {!showAddForm && card && (
           <div className={styles["driver-panel"]}>
             <div className={styles["driver-card-header"]}>
               <div className={styles["driver-name-row"]}>
                 <span className={styles["driver-name"]}>
-                  {[card.firstName, card.lastName].filter(Boolean).join(" ") || `Driver ${activeTab + 1}`}
+                  {[card.firstName, card.lastName].filter(Boolean).join(" ") ||
+                    intl.formatMessage(messages.driverNum, { num: activeTab + 1 })}
                 </span>
                 {!card.isNamedInsured && isEditing ? (
                   <select
@@ -344,11 +346,11 @@ const DriversStep = (wizardPageProps: WizardPageProps) => {
                     onChange={(e) => setEditCardRelation(e.target.value as Relation)}
                   >
                     {ADDITIONAL_RELATIONS.map((r) => (
-                      <option key={r} value={r}>{r}</option>
+                      <option key={r} value={r}>{getRelationLabel(r)}</option>
                     ))}
                   </select>
                 ) : (
-                  <span className={styles["relation-badge"]}>{card.relation}</span>
+                  <span className={styles["relation-badge"]}>{getRelationLabel(card.relation)}</span>
                 )}
                 {isPrimary && (
                   <span className={styles["primary-badge"]}>
@@ -401,7 +403,14 @@ const DriversStep = (wizardPageProps: WizardPageProps) => {
                 </div>
                 <div className={styles["driver-field"]}>
                   <label>{intl.formatMessage(messages.violations)}</label>
-                  <input readOnly value={formatViolations(card.numViolations)} />
+                  <input
+                    readOnly
+                    value={
+                      card.numViolations === "" || card.numViolations === 0
+                        ? intl.formatMessage(messages.none)
+                        : String(card.numViolations)
+                    }
+                  />
                 </div>
               </div>
             )}

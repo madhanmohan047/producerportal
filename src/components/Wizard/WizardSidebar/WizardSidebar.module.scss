@@ -46,7 +46,45 @@
   color: #1e293b;
 }
 
-/* Legacy: single-header used by FNOL sidebar */
+.premium-box {
+  background: #1a2b45;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.premium-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.premium-amount {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.premium-unit {
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.7;
+  margin-left: 1px;
+}
+
+.premium-annual {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
 .header {
   font-size: 10px;
   text-transform: uppercase;

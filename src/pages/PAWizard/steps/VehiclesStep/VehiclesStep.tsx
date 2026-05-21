@@ -11,9 +11,6 @@ import { getJobVehicles } from "../../../../api/services/job/jobApi";
 import messages from "./VehiclesStep.messages";
 import styles from "./VehiclesStep.module.scss";
 
-const vehicleLabel = (v: Vehicle, idx: number) =>
-  `${v.year || ""} ${v.make || ""} ${v.model || ""}`.trim() || `Vehicle ${idx + 1}`;
-
 const toFormValues = (v: Vehicle) => ({
   _id: v._id,
   make: v.make ?? "",
@@ -26,12 +23,21 @@ const toFormValues = (v: Vehicle) => ({
   costNew: v.costNew ? String(v.costNew) : "",
   bodyType: v.bodyType?.code ? v.bodyType : undefined,
   licenseState: v.licenseState?.code ? v.licenseState : undefined,
-  garageLocation: v.garageLocation,
+  garagingStreet: v.garageLocation?.addressLine1 ?? "",
+  garagingCity: v.garageLocation?.city ?? "",
+  garagingZip: v.garageLocation?.postalCode ?? "",
+  garagingState: v.garageLocation?.state?.code ? v.garageLocation.state : undefined,
 });
 
 const VehiclesStep = (wizardPageProps: WizardPageProps) => {
   const intl = useIntl();
   const { paFormData, setPAFormData } = usePAContext();
+  console.log("[VehiclesStep] paFormData.jobId:", paFormData.jobId);
+
+  const vehicleLabel = (v: Vehicle, idx: number) => {
+    const parts = [v.year, v.make, v.model].filter(Boolean).join(" ");
+    return parts || intl.formatMessage(messages.vehicleNum, { num: idx + 1 });
+  };
 
   const [vehicles, setVehicles] = useState<Vehicle[]>(paFormData.vehicles ?? []);
   const [activeTab, setActiveTab] = useState(0);
@@ -48,7 +54,8 @@ const VehiclesStep = (wizardPageProps: WizardPageProps) => {
     if (!paFormData.jobId) return;
     getJobVehicles(paFormData.jobId).then((res) => {
       const raw = res.data as any;
-      const fetched: Vehicle[] = Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []);
+      const list = Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []);
+      const fetched: Vehicle[] = list.map((v: any) => v?.data ?? v);
       if (fetched.length > 0) setVehicles(fetched);
     });
   }, [paFormData.jobId]);
@@ -108,11 +115,10 @@ const VehiclesStep = (wizardPageProps: WizardPageProps) => {
 
         {!paFormData.jobId && (
           <div className={styles["no-job-banner"]}>
-            ⚠ No submission linked yet. Go back to Step 2 (Policy Info) and click Continue to create a submission before adding vehicles.
+            {intl.formatMessage(messages.noJobBanner)}
           </div>
         )}
 
-        {/* ── Tab bar ── */}
         <div className={styles.tabs}>
           {vehicles.map((v, idx) => (
             <button
@@ -126,7 +132,6 @@ const VehiclesStep = (wizardPageProps: WizardPageProps) => {
           ))}
         </div>
 
-        {/* ── Add-vehicle form panel ── */}
         {showAddForm && (
           <div className={styles["vehicle-panel"]}>
             <div className={styles["vehicle-card-header"]}>
@@ -144,7 +149,7 @@ const VehiclesStep = (wizardPageProps: WizardPageProps) => {
             />
           </div>
         )}
-        
+
         {!showAddForm && vehicle && (
           <div className={styles["vehicle-panel"]}>
             <div className={styles["vehicle-card-header"]}>

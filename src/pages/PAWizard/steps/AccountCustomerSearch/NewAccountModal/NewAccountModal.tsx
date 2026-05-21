@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useIntl } from "react-intl";
 import styles from "./NewAccountModal.module.scss";
 import FormInput from "../../../../../components/common/FormInput/FormInput";
-import Combobox, {
-  ComboboxOption,
-} from "../../../../../components/common/Combobox/Combobox";
+import Combobox, { ComboboxOption } from "../../../../../components/common/Combobox/Combobox";
 import { getUser, createAccount } from "../../../../../api/services";
 import { getTypeList } from "../../../../../api/services/typelist/typelistApi";
 import { User } from "../../../../../api/services/admin/types";
+import messages from "./NewAccountModal.messages";
 
 type Props = {
   isOpen: boolean;
@@ -15,14 +15,8 @@ type Props = {
 };
 
 const accountTypeOptions: ComboboxOption[] = [
-  {
-    code: "person",
-    name: "Person",
-  },
-  {
-    code: "company",
-    name: "Company",
-  },
+  { code: "person", name: "Person" },
+  { code: "company", name: "Company" },
 ];
 
 type ApiResult<T> = T | { data: T };
@@ -31,25 +25,17 @@ const unwrapApiData = <T,>(response: ApiResult<T>): T => {
   if (response && typeof response === "object" && "data" in response) {
     return (response as { data: T }).data;
   }
-
   return response as T;
 };
 
-export const NewAccountModal = ({
-  isOpen,
-  onCancel,
-  onSubmitSuccess,
-}: Props) => {
+export const NewAccountModal = ({ isOpen, onCancel, onSubmitSuccess }: Props) => {
+  const intl = useIntl();
   const [saving, setSaving] = useState(false);
 
   const [organizationId, setOrganizationId] = useState<string>("");
   const [organizationName, setOrganizationName] = useState<string>("");
-  const [producerCodeOptions, setProducerCodeOptions] = useState<
-    ComboboxOption[]
-  >([]);
-  const [selectedProducerCode, setSelectedProducerCode] = useState<
-    ComboboxOption | undefined
-  >();
+  const [producerCodeOptions, setProducerCodeOptions] = useState<ComboboxOption[]>([]);
+  const [selectedProducerCode, setSelectedProducerCode] = useState<ComboboxOption | undefined>();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -72,28 +58,20 @@ export const NewAccountModal = ({
     Promise.all([getUser(), getTypeList("ContactRole")])
       .then(([userResponse, contactRoleRes]) => {
         const userData = unwrapApiData<User[] | User>(userResponse as any);
-        const contactRoles = unwrapApiData<ComboboxOption[]>(
-          contactRoleRes as any,
-        );
-
-        console.log("User API Response:", userData);
-        console.log("Contact Roles:", contactRoles);
+        const contactRoles = unwrapApiData<ComboboxOption[]>(contactRoleRes as any);
 
         const rolesData = Array.isArray(contactRoles) ? contactRoles : [];
-        const roleOptionsMapped: ComboboxOption[] = rolesData.map((role) => ({
-          code: role.code,
-          name: role.name,
+        const roleOptionsMapped: ComboboxOption[] = rolesData.map((r) => ({
+          code: r.code,
+          name: r.name,
         }));
 
-        console.log("Role Options:", roleOptionsMapped);
         setRoleOptions(roleOptionsMapped);
 
         const userArray = Array.isArray(userData) ? userData : [userData];
-
         if (!userArray.length) return;
 
         const user = userArray[0] as User;
-
         const organization = user.organization;
 
         if (organization) {
@@ -101,7 +79,6 @@ export const NewAccountModal = ({
             typeof organization === "string"
               ? { _id: organization, name: "" }
               : (organization as any);
-
           setOrganizationId(org._id ?? "");
           setOrganizationName(org.name ?? "");
         } else {
@@ -109,40 +86,28 @@ export const NewAccountModal = ({
           setOrganizationName("");
         }
 
-        const producerCodesData =
-          user.producerCode || (user as any).producerCodes;
+        const producerCodesData = user.producerCode || (user as any).producerCodes;
 
         if (!Array.isArray(producerCodesData)) {
-          console.warn("No producer codes found");
           setProducerCodeOptions([]);
           return;
         }
 
-        const producerCodeOptions: ComboboxOption[] = producerCodesData.map(
-          (pc: any) => {
-            const codeObj =
-              typeof pc === "string" ? { code: pc, name: pc } : pc;
+        const options: ComboboxOption[] = producerCodesData.map((pc: any) => {
+          const codeObj = typeof pc === "string" ? { code: pc, name: pc } : pc;
+          const codeValue = codeObj.code || codeObj._id || "";
+          return { code: codeValue, name: codeValue };
+        });
 
-            const codeValue = codeObj.code || codeObj._id || "";
-
-            return {
-              code: codeValue,
-              name: codeValue,
-            };
-          },
-        );
-
-        setProducerCodeOptions(producerCodeOptions);
+        setProducerCodeOptions(options);
       })
       .catch((error) => {
         console.error("Failed to fetch user data or contact roles:", error);
       });
   }, [isOpen]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const resetForm = () => {
@@ -167,39 +132,39 @@ export const NewAccountModal = ({
 
   const handleSubmit = async () => {
     if (!formData.firstName.trim()) {
-      alert("First Name is required");
+      alert(intl.formatMessage(messages.errorFirstName));
       return;
     }
     if (!formData.lastName.trim()) {
-      alert("Last Name is required");
+      alert(intl.formatMessage(messages.errorLastName));
       return;
     }
     if (!formData.email.trim()) {
-      alert("Email Address is required");
+      alert(intl.formatMessage(messages.errorEmail));
       return;
     }
     if (!formData.address.trim()) {
-      alert("Address is required");
+      alert(intl.formatMessage(messages.errorAddress));
       return;
     }
     if (!formData.city.trim()) {
-      alert("City is required");
+      alert(intl.formatMessage(messages.errorCity));
       return;
     }
     if (!formData.state.trim()) {
-      alert("State is required");
+      alert(intl.formatMessage(messages.errorState));
       return;
     }
     if (!formData.postalCode.trim()) {
-      alert("Postal Code is required");
+      alert(intl.formatMessage(messages.errorPostalCode));
       return;
     }
     if (!selectedProducerCode) {
-      alert("Producer Code is required");
+      alert(intl.formatMessage(messages.errorProducerCode));
       return;
     }
     if (!role) {
-      alert("Role is required");
+      alert(intl.formatMessage(messages.errorRole));
       return;
     }
 
@@ -209,19 +174,13 @@ export const NewAccountModal = ({
       const response = await createAccount({
         organization: organizationId,
         producerCode: selectedProducerCode.code,
-        status: {
-          code: "active",
-          name: "Active",
-        },
+        status: { code: "active", name: "Active" },
         accountHolder: {
           firstName: formData.firstName,
           lastName: formData.lastName,
           emailAddress: formData.email,
           workPhone: formData.phone,
-          type: {
-            code: accountType?.code,
-            name: accountType?.name,
-          },
+          type: { code: accountType?.code, name: accountType?.name },
           ...(role ? { roles: [{ code: role.code, name: role.name }] } : {}),
         },
         primaryLocation: {
@@ -229,19 +188,10 @@ export const NewAccountModal = ({
           addressLine2: "",
           city: formData.city,
           county: "",
-          state: {
-            code: formData.state,
-            name: formData.state,
-          },
+          state: { code: formData.state, name: formData.state },
           postalCode: formData.postalCode,
-          country: {
-            code: "US",
-            name: "United States",
-          },
-          addressType: {
-            code: "primary",
-            name: "Primary",
-          },
+          country: { code: "US", name: "United States" },
+          addressType: { code: "primary", name: "Primary" },
         },
       } as any);
 
@@ -249,22 +199,16 @@ export const NewAccountModal = ({
 
       const createdAccount = {
         ...accountData,
-
         accountHolder: accountData.accountHolder || {
           firstName: formData.firstName,
-
           lastName: formData.lastName,
         },
-
         primaryLocation: accountData.primaryLocation || {
           addressLine1: formData.address,
         },
       };
 
-      //console.log("sending to parent", createdAccount);
-
       onSubmitSuccess(createdAccount);
-
       handleCancel();
     } catch (error) {
       console.error("Error creating account", error);
@@ -274,148 +218,132 @@ export const NewAccountModal = ({
   };
 
   return (
-    <div
-      className={`${styles["modal-overlay"]} ${isOpen ? styles["open"] : ""}`}
-    >
+    <div className={`${styles["modal-overlay"]} ${isOpen ? styles["open"] : ""}`}>
       <div className={styles["modal-container"]}>
         <div className={styles["modal-header"]}>
-          <h2>Create New Account</h2>
-
-          <button className={styles["close-btn"]} onClick={handleCancel}>
-            ✕
-          </button>
+          <h2>{intl.formatMessage(messages.title)}</h2>
+          <button className={styles["close-btn"]} onClick={handleCancel}>✕</button>
         </div>
 
         <div className={styles["modal-body"]}>
           <section className={styles["section"]}>
-            <h3>GENERAL INFORMATION</h3>
+            <h3>{intl.formatMessage(messages.sectionGeneral)}</h3>
             <div className={styles["grid-2"]}>
               <FormInput
-                label="Organization"
+                label={intl.formatMessage(messages.organization)}
                 name="organization"
                 value={organizationName}
                 disabled
               />
-
               <Combobox
-                label="Producer Code *"
+                label={intl.formatMessage(messages.producerCodeLabel)}
                 options={producerCodeOptions}
                 value={selectedProducerCode}
-                placeholder="Select Producer Code"
+                placeholder={intl.formatMessage(messages.producerCodePlaceholder)}
                 onChange={(opt) => setSelectedProducerCode(opt)}
               />
             </div>
           </section>
 
           <section className={styles["section"]}>
-            <h3>ACCOUNT HOLDER DETAILS</h3>
-
+            <h3>{intl.formatMessage(messages.sectionAccountHolder)}</h3>
             <div className={styles["grid-2"]}>
               <FormInput
-                label="First Name *"
+                label={intl.formatMessage(messages.firstNameRequired)}
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                placeholder="First Name"
+                placeholder={intl.formatMessage(messages.firstNamePlaceholder)}
               />
-
               <FormInput
-                label="Last Name *"
+                label={intl.formatMessage(messages.lastNameRequired)}
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                placeholder="Last Name"
+                placeholder={intl.formatMessage(messages.lastNamePlaceholder)}
               />
-
               <FormInput
-                label="Email Address *"
+                label={intl.formatMessage(messages.emailRequired)}
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="email@example.com"
+                placeholder={intl.formatMessage(messages.emailPlaceholder)}
               />
-
               <FormInput
-                label="Phone Number"
+                label={intl.formatMessage(messages.phone)}
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="e.g. (555) 123-4567"
+                placeholder={intl.formatMessage(messages.phonePlaceholder)}
               />
-
               <Combobox
-                label="Account Type"
+                label={intl.formatMessage(messages.accountType)}
                 options={accountTypeOptions}
                 value={accountType}
                 onChange={setAccountType}
-                placeholder="Select Account Type"
+                placeholder={intl.formatMessage(messages.accountTypePlaceholder)}
               />
-
               <Combobox
-                label="Role"
+                label={intl.formatMessage(messages.role)}
                 options={roleOptions}
                 value={role}
                 onChange={setRole}
-                placeholder="Select Role"
+                placeholder={intl.formatMessage(messages.rolePlaceholder)}
               />
             </div>
           </section>
 
           <section className={styles["section"]}>
-            <h3>PRIMARY LOCATION</h3>
-
+            <h3>{intl.formatMessage(messages.sectionPrimaryLocation)}</h3>
             <div className={styles["grid-1"]}>
               <FormInput
-                label="Address *"
+                label={intl.formatMessage(messages.addressRequired)}
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                placeholder="Address"
+                placeholder={intl.formatMessage(messages.addressPlaceholder)}
               />
             </div>
-
             <div className={styles["grid-3"]}>
               <FormInput
-                label="City"
+                label={intl.formatMessage(messages.city)}
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                placeholder="City"
+                placeholder={intl.formatMessage(messages.cityPlaceholder)}
               />
-
               <FormInput
-                label="State"
+                label={intl.formatMessage(messages.state)}
                 name="state"
                 value={formData.state}
                 onChange={handleChange}
-                placeholder="State"
+                placeholder={intl.formatMessage(messages.statePlaceholder)}
               />
-
               <FormInput
-                label="Postal Code"
+                label={intl.formatMessage(messages.postalCode)}
                 name="postalCode"
                 value={formData.postalCode}
                 onChange={handleChange}
-                placeholder="Postal Code"
+                placeholder={intl.formatMessage(messages.postalCodePlaceholder)}
               />
             </div>
           </section>
         </div>
+
         <div className={styles["modal-footer"]}>
           <button
             className={styles["cancel-btn"]}
             onClick={handleCancel}
             disabled={saving}
           >
-            Cancel
+            {intl.formatMessage(messages.cancel)}
           </button>
-
           <button
             className={styles["create-btn"]}
             onClick={handleSubmit}
             disabled={saving}
           >
-            {saving ? "Creating..." : "Create Account"}
+            {saving ? intl.formatMessage(messages.creating) : intl.formatMessage(messages.createAccount)}
           </button>
         </div>
       </div>

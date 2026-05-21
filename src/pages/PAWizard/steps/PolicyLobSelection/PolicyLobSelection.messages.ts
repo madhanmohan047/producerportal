@@ -1,0 +1,25 @@
+import { defineMessages } from "react-intl";
+
+export default defineMessages({
+  subtitle: { id: "policyLob.subtitle", defaultMessage: "Confirm the line of business, term, and key dates." },
+  accountLinked: { id: "policyLob.accountLinked", defaultMessage: "Account Linked" },
+  lobLabel: { id: "policyLob.lobLabel", defaultMessage: "Line of Business *" },
+  lobPlaceholder: { id: "policyLob.lobPlaceholder", defaultMessage: "Select Line of Business" },
+  programLabel: { id: "policyLob.programLabel", defaultMessage: "Program / Plan" },
+  programPlaceholder: { id: "policyLob.programPlaceholder", defaultMessage: "Select Program / Plan" },
+  termLengthLabel: { id: "policyLob.termLengthLabel", defaultMessage: "Term Length *" },
+  termLengthPlaceholder: { id: "policyLob.termLengthPlaceholder", defaultMessage: "Select Term Length" },
+  effectiveDate: { id: "policyLob.effectiveDate", defaultMessage: "Effective Date" },
+  expirationDate: { id: "policyLob.expirationDate", defaultMessage: "Expiration Date" },
+  sectionStateUnderwriting: { id: "policyLob.sectionStateUnderwriting", defaultMessage: "STATE & UNDERWRITING" },
+  garagingStateLabel: { id: "policyLob.garagingStateLabel", defaultMessage: "Garaging State *" },
+  garagingStatePlaceholder: { id: "policyLob.garagingStatePlaceholder", defaultMessage: "Select Garaging State" },
+  submissionType: { id: "policyLob.submissionType", defaultMessage: "Submission Type" },
+  producingAgent: { id: "policyLob.producingAgent", defaultMessage: "Producing Agent" },
+  errorEffectiveDate: { id: "policyLob.errorEffectiveDate", defaultMessage: "Effective date is required." },
+  errorGaragingState: { id: "policyLob.errorGaragingState", defaultMessage: "Garaging state is required." },
+  errorNoAccount: { id: "policyLob.errorNoAccount", defaultMessage: "No account selected. Please go back to Step 1." },
+  errorNoJobId: { id: "policyLob.errorNoJobId", defaultMessage: "Submission was created but returned no ID. Please try again." },
+  errorCreateSubmission: { id: "policyLob.errorCreateSubmission", defaultMessage: "Failed to load or create submission. Please try again." },
+  creatingSubmission: { id: "policyLob.creatingSubmission", defaultMessage: "Setting up submission…" },
+});

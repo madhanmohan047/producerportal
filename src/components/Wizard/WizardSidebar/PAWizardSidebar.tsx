@@ -78,6 +78,24 @@ const PAWizardSidebar = () => {
         </div>
       )}
 
+      {paFormData.monthlyPremium != null && (
+        <div className={styles["premium-box"]}>
+          <div className={styles["premium-label"]}>Est. Monthly Premium</div>
+          <div className={styles["premium-amount"]}>
+            ${Math.round(paFormData.monthlyPremium)}
+            <span className={styles["premium-unit"]}>/mo</span>
+          </div>
+          {paFormData.annualPremium != null && (
+            <div className={styles["premium-annual"]}>
+              ${Math.round(paFormData.annualPremium)}/yr
+              {paFormData.annualDiscount != null && paFormData.annualDiscount > 0 && (
+                <> &middot; saving ${paFormData.annualDiscount}/yr in discounts</>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
     </div>
   );
 };

@@ -32,15 +32,17 @@ type VehicleRiskData = {
   overnightParking: ComboboxOption | undefined;
 };
 
-const vehicleLabel = (v: { year: number; make: string; model: string }, idx: number) =>
-  `${v.year} ${v.make} ${v.model}`.trim() || `Vehicle ${idx + 1}`;
-
 const RiskInfoStep = (wizardPageProps: WizardPageProps) => {
   const intl = useIntl();
   const navigate = useNavigate();
   const { paFormData, setPAFormData } = usePAContext();
   const vehicles = paFormData.vehicles ?? [];
   const baseStateCode = (paFormData.baseState as ComboboxOption | undefined)?.code ?? "";
+
+  const vehicleLabel = (v: { year: number; make: string; model: string }, idx: number) => {
+    const parts = [v.year, v.make, v.model].filter(Boolean).join(" ");
+    return parts || intl.formatMessage(messages.vehicleNum, { num: idx + 1 });
+  };
 
   const [activeTab, setActiveTab] = useState(0);
   const [riskData, setRiskData] = useState<VehicleRiskData[]>(() =>
@@ -134,7 +136,6 @@ const RiskInfoStep = (wizardPageProps: WizardPageProps) => {
           <p className={styles["empty-state"]}>{intl.formatMessage(messages.noVehicles)}</p>
         ) : (
           <>
-            {/* ── Tab bar ── */}
             <div className={styles.tabs}>
               {vehicles.map((v, idx) => (
                 <button
@@ -148,7 +149,6 @@ const RiskInfoStep = (wizardPageProps: WizardPageProps) => {
               ))}
             </div>
 
-            {/* ── Active vehicle panel ── */}
             {(() => {
               const v = vehicles[activeTab];
               const r = riskData[activeTab];
@@ -167,7 +167,6 @@ const RiskInfoStep = (wizardPageProps: WizardPageProps) => {
 
               return (
                 <div className={styles["vehicle-panel"]}>
-                  {/* Header */}
                   <div className={styles["vehicle-header"]}>
                     <div className={styles["vehicle-name-row"]}>
                       <span className={styles["vehicle-name"]}>{vehicleLabel(v, activeTab)}</span>
@@ -183,7 +182,6 @@ const RiskInfoStep = (wizardPageProps: WizardPageProps) => {
                     </button>
                   </div>
 
-                  {/* ── Garaging Address ── */}
                   <div className={styles.section}>
                     <p className={styles["section-title"]}>
                       {intl.formatMessage(messages.sectionGaraging)}
@@ -193,13 +191,13 @@ const RiskInfoStep = (wizardPageProps: WizardPageProps) => {
                         label={intl.formatMessage(messages.street)}
                         value={r.garagingAddress.street}
                         onChange={(e) => setGaraging(activeTab, { street: e.target.value })}
-                        placeholder="123 Main St"
+                        placeholder={intl.formatMessage(messages.placeholderStreet)}
                       />
                       <FormInput
                         label={intl.formatMessage(messages.city)}
                         value={r.garagingAddress.city}
                         onChange={(e) => setGaraging(activeTab, { city: e.target.value })}
-                        placeholder="City"
+                        placeholder={intl.formatMessage(messages.placeholderCity)}
                       />
                       <Combobox
                         label={intl.formatMessage(messages.state)}
@@ -212,7 +210,7 @@ const RiskInfoStep = (wizardPageProps: WizardPageProps) => {
                         label={intl.formatMessage(messages.zip)}
                         value={r.garagingAddress.zip}
                         onChange={(e) => setGaraging(activeTab, { zip: e.target.value })}
-                        placeholder="00000"
+                        placeholder={intl.formatMessage(messages.placeholderZip)}
                       />
                     </div>
                     {stateMismatch && (
@@ -223,7 +221,6 @@ const RiskInfoStep = (wizardPageProps: WizardPageProps) => {
                     )}
                   </div>
 
-                  {/* ── Risk Details ── */}
                   <div className={styles.section}>
                     <p className={styles["section-title"]}>
                       {intl.formatMessage(messages.sectionRisk)}
@@ -273,7 +270,6 @@ const RiskInfoStep = (wizardPageProps: WizardPageProps) => {
                     </div>
                   </div>
 
-                  {/* ── Primary Use ── */}
                   <div className={styles.section}>
                     <p className={styles["section-title"]}>
                       {intl.formatMessage(messages.sectionPrimaryUse)}
@@ -288,7 +284,6 @@ const RiskInfoStep = (wizardPageProps: WizardPageProps) => {
               );
             })()}
 
-            {/* ── Discount Flag Summary ── */}
             <div className={styles["discount-card"]}>
               <p className={styles["discount-header"]}>
                 <FontAwesomeIcon icon={faTag} />{" "}
