@@ -1,101 +1,175 @@
 import React, { useState } from "react";
+import { useIntl } from "react-intl";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass, faCheck } from "@fortawesome/free-solid-svg-icons";
 import styles from "./AccountCustomerSearch.module.scss";
 import { getAllAccounts } from "../../../../api/services/account/accountApi";
 import { Account } from "../../../../api/services/account/types";
+import { Contact } from "../../../../api/services/account/types/Contact";
+import { Address } from "../../../../api/services/account/types/Address";
 import { NewAccountModal } from "./NewAccountModal/NewAccountModal";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
-//import { usePAContext } from "../../PAWizardContext";
+import { usePAContext } from "../../PAWizardContext";
+import messages from "./AccountCustomerSearch.messages";
 
 export const AccountCustomerSearch = (wizardPageProps: WizardPageProps) => {
+  const intl = useIntl();
+  const { paFormData, setPAFormData } = usePAContext();
   const [accounts, setAccounts] = React.useState<Account[]>([]);
-  const [selectedAccount, setSelectedAccount] = React.useState<Account | null>(
-    null,
-  );
+  const [selectedAccount, setSelectedAccount] = React.useState<Account | null>(null);
   const [showCreateAccount, setShowCreateAccount] = useState(false);
+  const [query, setQuery] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
   React.useEffect(() => {
     const fetchAccounts = async () => {
       try {
         const response = await getAllAccounts();
-        setAccounts(response.data);
-      } catch (error) {
-        console.error("Error fetching accounts:", error);
+        const raw = response.data as any;
+        const list: Account[] = Array.isArray(raw)
+          ? raw
+          : Array.isArray(raw?.data)
+          ? raw.data
+          : [];
+        setAccounts(list);
+        if (paFormData.accountId) {
+          const found = list.find((a) => a._id === paFormData.accountId);
+          if (found) setSelectedAccount(found);
+        }
+      } catch (err) {
+        console.error("Error fetching accounts:", err);
       }
     };
     fetchAccounts();
   }, []);
 
-  const handleSubmitSuccess = (newAccount: Account) => {
-    setAccounts((prev) => [...prev, newAccount]);
-    setSelectedAccount(newAccount);
-    sessionStorage.setItem("selectedAccount", JSON.stringify(newAccount));
-    setShowCreateAccount(false);
-  };
+  const filtered = query
+    ? accounts.filter((a) => {
+        const q = query.toLowerCase();
+        const h = a.accountHolder;
+        return (
+          (h?.firstName ?? "").toLowerCase().includes(q) ||
+          (h?.lastName ?? "").toLowerCase().includes(q) ||
+          (h?.emailAddress ?? "").toLowerCase().includes(q) ||
+          (a.accountNumber ?? "").toLowerCase().includes(q)
+        );
+      })
+    : accounts;
 
   const handleAccountSelect = (account: Account) => {
     setSelectedAccount(account);
-    sessionStorage.setItem("selectedAccount", JSON.stringify(account));
+    setError(null);
+    const holder = account.accountHolder as Contact;
+    const location = account.primaryLocation as Address;
+    setPAFormData((prev) => ({
+      ...prev,
+      accountId: account._id,
+      accountNumber: account.accountNumber,
+      primaryContact: holder,
+      mailingAddress: location,
+    }));
+  };
+
+  const handleSubmitSuccess = (newAccount: Account) => {
+    setAccounts((prev) => [...prev, newAccount]);
+    handleAccountSelect(newAccount);
+    setShowCreateAccount(false);
+  };
+
+  const handleNext = () => {
+    if (!selectedAccount) {
+      setError(intl.formatMessage(messages.errorSelectAccount));
+      return;
+    }
+    wizardPageProps.handleNext?.();
   };
 
   return (
     <WizardPage
       step={wizardPageProps.step}
       location={wizardPageProps.location}
-      handleNext={wizardPageProps.handleNext}
+      handleNext={handleNext}
       handlePrevious={wizardPageProps.handlePrevious}
       SidebarComponent={wizardPageProps.SidebarComponent}
     >
       <div className={styles.container}>
-        <div className={styles.header}>
-          <p>
-            Search for an existing account or create a new one to begin the
-            application.
-          </p>
-        </div>
         <div className={styles.searchBar}>
+          <FontAwesomeIcon icon={faMagnifyingGlass} style={{ color: "#94a3b8" }} />
           <input
             type="text"
-            placeholder="Search by name, email, phone, or account #"
+            placeholder={intl.formatMessage(messages.searchPlaceholder)}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            autoFocus
           />
         </div>
-        <div className={styles.infoBanner}>
-          <span>Select a matching account to pre-fill applicant details.</span>
-        </div>
-        <div className={styles.cardContainer}>
-          {accounts.map((account) => (
-            <div
-              key={account._id}
-              className={
-                selectedAccount?._id === account._id
-                  ? styles.selectedCard
-                  : styles.card
-              }
-              onClick={() => handleAccountSelect(account)}
-            >
-              <div className={styles.leftSection}>
-                <div className={styles.avatar}>
-                  {account.accountHolder?.firstName?.charAt(0)}
-                  {account.accountHolder?.lastName?.charAt(0)}
-                </div>
 
-                <div className={styles.accountInfo}>
-                  <h3>
-                    {account.accountHolder?.firstName}{" "}
-                    {account.accountHolder?.lastName}
-                  </h3>
-                  <p>{account.primaryLocation?.addressLine1}</p>
+        <div className={styles.infoBanner}>
+          <span>{intl.formatMessage(messages.infoBanner)}</span>
+        </div>
+
+        {error && (
+          <p style={{ color: "#dc2626", fontSize: "0.85rem", margin: 0 }}>{error}</p>
+        )}
+
+        <div className={styles.cardContainer}>
+          {filtered.length === 0 && query && (
+            <p style={{ color: "#94a3b8", fontSize: "0.875rem" }}>
+              {intl.formatMessage(messages.noAccountsFound)}
+            </p>
+          )}
+          {filtered.map((account) => {
+            const isSelected = selectedAccount?._id === account._id;
+            const holder = account.accountHolder;
+            const policyCount = (account as any).submissions?.length ?? 0;
+            return (
+              <div
+                key={account._id}
+                className={isSelected ? styles.selectedCard : styles.card}
+                onClick={() => handleAccountSelect(account)}
+              >
+                <div className={styles.leftSection}>
+                  <div className={styles.avatar}>
+                    {holder?.firstName?.charAt(0)}
+                    {holder?.lastName?.charAt(0)}
+                  </div>
+                  <div className={styles.accountInfo}>
+                    <h3>
+                      {holder?.firstName} {holder?.lastName}
+                    </h3>
+                    <p>{account.primaryLocation?.addressLine1}</p>
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  {policyCount > 0 ? (
+                    <div className={styles.activeBadge}>
+                      {policyCount} {policyCount === 1
+                        ? intl.formatMessage(messages.policy)
+                        : intl.formatMessage(messages.policies)}
+                    </div>
+                  ) : (
+                    <div className={styles.emptyBadge}>
+                      {intl.formatMessage(messages.zeroPolicies)}
+                    </div>
+                  )}
+                  {isSelected && (
+                    <FontAwesomeIcon
+                      icon={faCheck}
+                      style={{ color: "#2563eb", fontSize: "1rem" }}
+                    />
+                  )}
                 </div>
               </div>
-
-              <div className={styles.activeBadge}>2 Policies</div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+
         <button
           className={styles.createButton}
           onClick={() => setShowCreateAccount(true)}
         >
-          + Create New Account
+          {intl.formatMessage(messages.createNewAccount)}
         </button>
 
         {showCreateAccount && (

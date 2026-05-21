@@ -4,6 +4,7 @@ import { PolicyLobSelection } from "./PolicyLobSelection/PolicyLobSelection";
 import DriversStep from "./DriversStep/DriversStep";
 import VehiclesStep from "./VehiclesStep/VehiclesStep";
 import RiskInfoStep from "./RiskInfoStep/RiskInfoStep";
+import CoverageStep from "./CoverageStep/CoverageStep";
 import QuoteStep from "./QuoteStep/QuoteStep";
 import DocumentsStep from "./DocumentsStep/DocumentsStep";
 import ReviewBindStep from "./ReviewBindStep/ReviewBindStep";
@@ -98,14 +99,31 @@ export const PASteps: WizardStep[] = [
     },
   },
   {
+    id: "coverage",
+    type: "wizard",
+    route: "coverage",
+    component: CoverageStep,
+    wizardPageConfig: {
+      title: "Coverage",
+      description: "Coverage Selection",
+      stepId: "6",
+
+      buttonProps: {
+        next: { label: "Continue" },
+        previous: { label: "Back" },
+        ...saveDraft,
+      },
+    },
+  },
+  {
     id: "quote",
     type: "wizard",
     route: "quote",
     component: QuoteStep,
     wizardPageConfig: {
-      title: "Quote",
-      description: "Quote Selection",
-      stepId: "6",
+      title: "Premium",
+      description: "Premium Breakdown",
+      stepId: "7",
 
       buttonProps: {
         next: { label: "Continue" },
@@ -122,7 +140,7 @@ export const PASteps: WizardStep[] = [
     wizardPageConfig: {
       title: "Documents",
       description: "Policy Documents",
-      stepId: "7",
+      stepId: "8",
 
       buttonProps: {
         next: { label: "Continue" },
@@ -137,9 +155,9 @@ export const PASteps: WizardStep[] = [
     route: "reviewBind",
     component: ReviewBindStep,
     wizardPageConfig: {
-      title: "Review",
+      title: "Review & Bind",
       description: "Review & Bind Policy",
-      stepId: "8",
+      stepId: "9",
 
       buttonProps: {
         next: { label: "Bind Policy" },
@@ -156,7 +174,7 @@ export const PASteps: WizardStep[] = [
     wizardPageConfig: {
       title: "Confirmation",
       description: "Policy Confirmation",
-      stepId: "9",
+      stepId: "10",
 
       isSubmission: true,
       buttonProps: { next: { label: "Done" }, previous: { label: "" } },

@@ -10,5 +10,4 @@ export interface Driver extends Base {
   yearsOfExperience?: number;
   numAccidents?: number;
   numViolations?: number;
-  violations: string[];
 }

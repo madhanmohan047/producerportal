@@ -47,14 +47,6 @@ export const AccountDetails = () => {
     }));
   };
 
-  /** Static status options — swap for an API call if statuses are dynamic */
-  // const statusOptions: ComboboxOption[] = [
-  //   { id: 1, value: "Active" },
-  //   { id: 2, value: "Inactive" },
-  //   { id: 3, value: "Pending" },
-  //   { id: 4, value: "Suspended" },
-  // ];
-
   return (
     <div className={styles["account-details-page"]}>
       <div className={styles["account-details-card"]}>
