@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
 import { usePAContext } from "../../PAWizardContext";

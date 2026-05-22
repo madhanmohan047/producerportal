@@ -1,44 +1,51 @@
+import { useIntl } from "react-intl";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircleCheck,
+  faEnvelope,
+  faArrowUpRightFromSquare,
+} from "@fortawesome/free-solid-svg-icons";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
-import { createInitialPAFormData, usePAContext } from "../../PAWizardContext";
+import { usePAContext } from "../../PAWizardContext";
+import { initialPAFormData } from "../../PAWizardContext";
+import messages from "./ConfirmationStep.messages";
 import styles from "./ConfirmationStep.module.scss";
 
-const formatCurrency = (value = 0) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0,
-  }).format(value);
+const ConfirmationStep = (wizardPageProps: WizardPageProps) => {
+  const intl = useIntl();
+  const navigate = useNavigate();
+  const { paFormData, setPAFormData } = usePAContext();
 
-const formatDate = (dateValue?: string) => {
-  if (!dateValue) return "-";
+  const contact = paFormData.primaryContact;
+  const insuredName = contact
+    ? [contact.firstName, contact.lastName].filter(Boolean).join(" ")
+    : intl.formatMessage(messages.notSet);
 
-  return new Intl.DateTimeFormat("en-US", {
+  const email = contact?.emailAddress ?? intl.formatMessage(messages.notSet);
+
+  const vehicle = paFormData.vehicles?.[0];
+  const vehicleDesc = vehicle
+    ? [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(" ")
+    : intl.formatMessage(messages.notSet);
+
+  const annualPrem = paFormData.annualPremium
+    ? `$${Math.round(paFormData.annualPremium)}`
+    : intl.formatMessage(messages.notSet);
+
+  const policyNumber =
+    paFormData.policyNumber ?? intl.formatMessage(messages.notSet);
+  const effectiveDate =
+    paFormData.effectiveDate ?? intl.formatMessage(messages.notSet);
+  const bindDate = new Date().toLocaleDateString("en-US", {
     month: "2-digit",
     day: "2-digit",
     year: "numeric",
-  }).format(new Date(`${dateValue}T00:00:00`));
-};
+  });
 
-const ConfirmationStep = (wizardPageProps: WizardPageProps) => {
-  const navigate = useNavigate();
-  const { paFormData, setPAFormData } = usePAContext();
-  const contact = paFormData.primaryContact;
-  const customerName =
-    [contact?.firstName, contact?.lastName].filter(Boolean).join(" ") || "-";
-  const customerEmail = contact?.emailAddress || "the customer";
-  const policyNumber = paFormData.policyNumber ?? "Pending";
-  const premiumEstimate = paFormData.premiumEstimate;
-  const primaryVehicle = paFormData.vehicles?.[0];
-  const vehicleLabel = primaryVehicle
-    ? `${primaryVehicle.year} ${primaryVehicle.make} ${primaryVehicle.model}`.trim()
-    : "-";
-
-  const startNewSubmission = () => {
-    sessionStorage.removeItem("selectedAccount");
-    setPAFormData(createInitialPAFormData());
+  const handleNewSubmission = () => {
+    setPAFormData(initialPAFormData);
     navigate("/pawizard/account");
   };
 
@@ -48,74 +55,104 @@ const ConfirmationStep = (wizardPageProps: WizardPageProps) => {
       location={wizardPageProps.location}
       SidebarComponent={wizardPageProps.SidebarComponent}
     >
-      <div className={styles.page}>
-        <section className={styles.hero}>
-          <div className={styles.statusIcon}>
-            <i className="fa-solid fa-check" />
-          </div>
-          <p className={styles.boundText}>Policy successfully bound</p>
-          <h2>{policyNumber}</h2>
-          <p className={styles.meta}>
-            Effective {formatDate(paFormData.effectiveDate)} · Bound Today
+      <div className={styles["confirmation-container"]}>
+        <div className={styles["success-icon-wrap"]}>
+          <FontAwesomeIcon
+            icon={faCircleCheck}
+            className={styles["success-icon"]}
+          />
+        </div>
+
+        <div className={styles["policy-block"]}>
+          <p className={styles["success-label"]}>
+            {intl.formatMessage(messages.successLabel)}
           </p>
-        </section>
+          <p className={styles["policy-number"]}>{policyNumber}</p>
+          <p className={styles["policy-dates"]}>
+            {intl.formatMessage(messages.effectiveLine, {
+              effectiveDate,
+            })}
+            {" · "}
+            {"Bound "}
+            {bindDate}
+          </p>
+        </div>
 
-        <section className={styles.notice}>
-          <i className="fa-regular fa-envelope" />
+        <div className={styles["email-banner"]}>
+          <FontAwesomeIcon icon={faEnvelope} className={styles["email-icon"]} />
           <span>
-            Policy documents and ID cards sent to{" "}
-            <strong>{customerEmail}</strong>.
+            {intl.formatMessage(messages.emailBanner, {
+              email: (
+                <span key="email" className={styles["email-address"]}>
+                  {email}
+                </span>
+              ),
+            })}
           </span>
-        </section>
+        </div>
 
-        <section className={styles.tiles}>
-          <div>
-            <span>Insured</span>
-            <strong>{customerName}</strong>
+        <div className={styles["summary-cards"]}>
+          <div className={styles["summary-card"]}>
+            <span className={styles["card-label"]}>
+              {intl.formatMessage(messages.cardInsured)}
+            </span>
+            <span className={styles["card-value"]}>{insuredName}</span>
           </div>
-          <div>
-            <span>Annual Prem</span>
-            <strong>
-              {formatCurrency(premiumEstimate?.estimatedAnnualPremium)}
-            </strong>
+          <div className={styles["summary-card"]}>
+            <span className={styles["card-label"]}>
+              {intl.formatMessage(messages.cardAnnualPrem)}
+            </span>
+            <span className={styles["card-value"]}>{annualPrem}</span>
           </div>
-          <div>
-            <span>Vehicle</span>
-            <strong>{vehicleLabel}</strong>
+          <div className={styles["summary-card"]}>
+            <span className={styles["card-label"]}>
+              {intl.formatMessage(messages.cardVehicle)}
+            </span>
+            <span className={styles["card-value"]}>{vehicleDesc}</span>
           </div>
-        </section>
+        </div>
 
-        <section className={styles.checklist}>
-          <h3>Post-Bind Checklist</h3>
-          <div className={styles.checklistItem}>
-            <span>1</span>
-            <p>
-              <strong>MVR &amp; CLUE ordered:</strong> Results will arrive in 1-2
-              business days.
-            </p>
+        <div className={styles["checklist-section"]}>
+          <div className={styles["checklist-title"]}>
+            {intl.formatMessage(messages.postBindTitle)}
           </div>
-          <div className={styles.checklistItem}>
-            <span>2</span>
-            <p>
-              <strong>ID Cards issued:</strong> Digital cards are available
-              immediately.
-            </p>
+          <div className={styles["checklist-items"]}>
+            <div className={styles["checklist-item"]}>
+              <span className={styles["checklist-num"]}>1</span>
+              <span className={styles["checklist-text"]}>
+                <span className={styles["checklist-bold"]}>
+                  {intl.formatMessage(messages.checklistMvr)}
+                </span>{" "}
+                {intl.formatMessage(messages.checklistMvrDetail)}
+              </span>
+            </div>
+            <div className={styles["checklist-item"]}>
+              <span className={styles["checklist-num"]}>2</span>
+              <span className={styles["checklist-text"]}>
+                <span className={styles["checklist-bold"]}>
+                  {intl.formatMessage(messages.checklistIdCards)}
+                </span>{" "}
+                {intl.formatMessage(messages.checklistIdCardsDetail)}
+              </span>
+            </div>
           </div>
-        </section>
+        </div>
 
-        <section className={styles.actions}>
-          <button type="button" className={styles.primaryAction}>
-            Post-bind Checklist
-            <i className="fa-solid fa-arrow-up-right-from-square" />
+        <div className={styles["cta-row"]}>
+          <button
+            className={styles["btn-primary"]}
+            onClick={() => window.open("/post-bind-checklist", "_blank")}
+          >
+            {intl.formatMessage(messages.ctaPostBind)}
+            <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
           </button>
           <button
-            type="button"
-            className={styles.secondaryAction}
-            onClick={startNewSubmission}
+            className={styles["btn-secondary"]}
+            onClick={handleNewSubmission}
           >
-            New Submission
+            {intl.formatMessage(messages.ctaNewSubmission)}
           </button>
-        </section>
+        </div>
       </div>
     </WizardPage>
   );

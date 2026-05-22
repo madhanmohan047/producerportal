@@ -46,42 +46,45 @@
   color: #1e293b;
 }
 
-.premium-card {
-  margin-top: auto;
-  padding: 18px 20px;
-  border-radius: 8px;
-  background: #12385c;
-  color: #ffffff;
-  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.18);
+.premium-box {
+  background: #1a2b45;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
 }
 
 .premium-label {
-  margin-bottom: 8px;
-  color: #bed1e7;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255, 255, 255, 0.6);
 }
 
-.premium-value {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  font-size: 30px;
-  font-weight: 800;
-
-  span {
-    font-size: 15px;
-    font-weight: 600;
-  }
+.premium-amount {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
 }
 
-.premium-caption {
-  margin-top: 6px;
-  color: #bed1e7;
-  font-size: 12px;
+.premium-unit {
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.7;
+  margin-left: 1px;
 }
 
-/* Legacy: single-header used by FNOL sidebar */
+.premium-annual {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
 .header {
   font-size: 10px;
   text-transform: uppercase;

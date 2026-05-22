@@ -5,6 +5,7 @@ import { Driver } from "../../api/services/job/types/Driver";
 import { Vehicle } from "../../api/services/job/types/Vehicle";
 import { TypeKeyValue } from "../../api/utils/types";
 import { WizardSidebarProps } from "../../types/Wizardtype";
+import { CoverageLineItem } from "./steps/CoverageStep/quoteCoverageStep";
 
 export type PACoverageOption = {
   id: string;
@@ -56,11 +57,20 @@ export type PAFormData = {
   collisionDeductible?: string;
   premiumEstimate?: PAPremiumEstimate;
 
-  // Quote
+  // Coverage selections & computed premium
+  selectedCoverages?: CoverageLineItem[];
+  liabilityLimits?: string;
+  compDeductible?: string;
+  collDeductible?: string;
+  monthlyPremium?: number;
+  annualPremium?: number;
+  annualDiscount?: number;
+
   selectedQuote?: string;
 
   // Documents
   documents?: File[];
+  hasSR22?: false;
 
   // Confirmation
   policyNumber?: string;

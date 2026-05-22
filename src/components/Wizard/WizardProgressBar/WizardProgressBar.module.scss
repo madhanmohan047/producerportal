@@ -83,6 +83,14 @@
   font-weight: 600;
 }
 
+.clickable {
+  cursor: pointer;
+
+  &:hover .step-circle {
+    opacity: 0.8;
+  }
+}
+
 /*
  * CONNECTOR LINE
  * The circle is 1.75rem (28px) tall. Its center is 14px from the top of

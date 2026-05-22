@@ -1,194 +1,213 @@
-.page {
-  width: 100%;
-  max-width: 760px;
-  margin: 60px auto 0;
-  color: #061b36;
-  text-align: center;
-}
-
-.hero {
+.confirmation-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  h2 {
-    margin: 2px 0 8px;
-    color: #061b36;
-    font-size: 30px;
-    line-height: 1.1;
-  }
+  gap: 28px;
+  padding: 16px 0 32px;
+  text-align: center;
 }
 
-.statusIcon {
-  width: 80px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 22px;
+/* ── Success icon ── */
+.success-icon-wrap {
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
-  background: #eaf3d8;
-  color: #064f20;
-  font-size: 25px;
-
-  i {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid #064f20;
-    border-radius: 50%;
-  }
-}
-
-.boundText {
-  margin: 0;
-  color: #536b88;
-  font-size: 20px;
-}
-
-.meta {
-  margin: 0;
-  color: #8a9ab1;
-  font-size: 15px;
-}
-
-.notice {
-  min-height: 50px;
+  background: #f0fdf4;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin: 30px auto 38px;
-  padding: 12px 20px;
-  border: 1px solid #9fc4ff;
-  border-radius: 8px;
-  background: #e7f2ff;
-  color: #004b93;
-  font-size: 15px;
-
-  strong {
-    color: #003c7a;
-  }
 }
 
-.tiles {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 48px;
-
-  div {
-    min-height: 64px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-    padding: 10px 18px;
-    border: 1px solid #dce3ec;
-    border-radius: 8px;
-    background: #ffffff;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
-  }
-
-  span {
-    color: #55708f;
-    font-size: 12px;
-  }
-
-  strong {
-    color: #061b36;
-    font-size: 16px;
-  }
+.success-icon {
+  font-size: 2rem;
+  color: #16a34a;
 }
 
-.checklist {
+/* ── Policy number block ── */
+.policy-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.success-label {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.policy-number {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.policy-dates {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* ── Email banner ── */
+.email-banner {
   width: 100%;
-  max-width: 640px;
-  margin: 0 auto;
+  max-width: 560px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  color: #1d4ed8;
   text-align: left;
-
-  h3 {
-    margin: 0 0 14px;
-    color: #8a9ab1;
-    font-size: 14px;
-    font-weight: 800;
-    text-transform: uppercase;
-  }
 }
 
-.checklistItem {
+.email-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+.email-address {
+  font-weight: 700;
+}
+
+/* ── Summary cards ── */
+.summary-cards {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 560px;
+}
+
+.summary-card {
+  flex: 1;
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.card-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #94a3b8;
+}
+
+.card-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* ── Post-bind checklist ── */
+.checklist-section {
+  width: 100%;
+  max-width: 560px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.checklist-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+}
+
+.checklist-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checklist-item {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  margin-bottom: 14px;
-  color: #061b36;
-  font-size: 16px;
-
-  span {
-    width: 25px;
-    height: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    border-radius: 50%;
-    background: #12385c;
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 800;
-  }
-
-  p {
-    margin: 2px 0 0;
-  }
+  gap: 12px;
+  font-size: 0.875rem;
+  color: #1e293b;
 }
 
-.actions {
+.checklist-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #1e293b;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
   display: flex;
-  justify-content: center;
-  gap: 14px;
-  margin-top: 42px;
-}
-
-.primaryAction,
-.secondaryAction {
-  min-height: 42px;
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 0 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.checklist-text {
+  line-height: 1.5;
+}
+
+.checklist-bold {
+  font-weight: 700;
+}
+
+/* ── CTA buttons ── */
+.cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: #1e293b;
+  color: #fff;
+  border: none;
   border-radius: 8px;
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 0.875rem;
+  font-weight: 700;
   cursor: pointer;
-}
+  transition: background 0.15s;
 
-.primaryAction {
-  border: 1px solid #12385c;
-  background: #12385c;
-  color: #ffffff;
-}
-
-.secondaryAction {
-  border: 1px solid #d6dee9;
-  background: #ffffff;
-  color: #061b36;
-}
-
-@media (max-width: 900px) {
-  .page {
-    margin-top: 24px;
+  &:hover {
+    background: #0f172a;
   }
+}
 
-  .tiles {
-    grid-template-columns: 1fr;
-    margin-bottom: 32px;
-  }
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: #fff;
+  color: #1e293b;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
 
-  .actions {
-    flex-direction: column;
+  &:hover {
+    border-color: #94a3b8;
+    background: #f8fafc;
   }
 }

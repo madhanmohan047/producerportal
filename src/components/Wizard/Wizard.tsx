@@ -43,7 +43,7 @@ export const Wizard = (wizardProps: WizardProps) => {
             progressbarProps={step.wizardPageConfig}
             index={index}
             currentIndex={safeIndex}
-            onClick={() => navigate(wizardProps.url + step.route)}
+            onClick={index < safeIndex ? () => navigate(wizardProps.url + step.route) : undefined}
           />
         ))}
       </div>

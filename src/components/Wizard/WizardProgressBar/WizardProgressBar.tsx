@@ -18,11 +18,12 @@ const WizardProgressBar = ({
 
   return (
     <div className={styles["step-wrapper"]}>
-      <button
-        type="button"
-        className={styles["step-container"]}
+      <div
+        className={`${styles["step-container"]} ${onClick ? styles["clickable"] : ""}`}
         onClick={onClick}
-        aria-current={isActive ? "step" : undefined}
+        role={onClick ? "button" : undefined}
+        tabIndex={onClick ? 0 : undefined}
+        onKeyDown={onClick ? (e) => e.key === "Enter" && onClick() : undefined}
       >
         {isCompleted ? (
           <div className={`${styles["step-circle"]} ${styles.completed}`}>
