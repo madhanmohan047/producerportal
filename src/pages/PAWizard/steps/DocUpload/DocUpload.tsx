@@ -23,8 +23,8 @@ const PADocUploadStep = ({
     paFileInputRef.current?.click();
   };
 
-  const addPADocumentFiles = (fileList: FileList | File[]) => {
-    const newDocumentFiles = Array.from(fileList);
+  const addPADocumentFiles = (uploadedFileList: FileList | File[]) => {
+    const newDocumentFiles = Array.from(uploadedFileList);
 
     if (!newDocumentFiles.length) {
       return;
