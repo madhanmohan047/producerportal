@@ -46,6 +46,7 @@ export type PAFormData = {
 
   // Documents
   documents?: File[];
+  hasSR22?: false;
 
   // Confirmation
   policyNumber?: string;

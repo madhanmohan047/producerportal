@@ -57,7 +57,7 @@ export const NewAccountModal = ({ isOpen, onCancel, onSubmitSuccess }: Props) =>
 
     Promise.all([getUser(), getTypeList("ContactRole")])
       .then(([userResponse, contactRoleRes]) => {
-        const userData = unwrapApiData<User[] | User>(userResponse as any);
+        const userData = unwrapApiData<User[] | User>(userResponse.data as any);
         const contactRoles = unwrapApiData<ComboboxOption[]>(contactRoleRes as any);
 
         const rolesData = Array.isArray(contactRoles) ? contactRoles : [];
@@ -87,7 +87,6 @@ export const NewAccountModal = ({ isOpen, onCancel, onSubmitSuccess }: Props) =>
         }
 
         const producerCodesData = user.producerCode || (user as any).producerCodes;
-
         if (!Array.isArray(producerCodesData)) {
           setProducerCodeOptions([]);
           return;
