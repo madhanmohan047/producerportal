@@ -9,6 +9,8 @@ import { useFNOLContext } from "../../FNOLWizardContext";
 import styles from "./Policy&LOB.module.scss";
 import { SideBarProps } from "../FnolConstant";
 import { Policy } from "../../../../api/services/policy/types";
+import { createClaim } from "../../../../api/services/claim/claimApi";
+import { Claim } from "../../../../api/services/claim/types/Claim";
 
 const StartClaim = (wizardPageProps: WizardPageProps) => {
   const navigate = useNavigate();
@@ -25,6 +27,7 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
   const [filteredPolicies, setFilteredPolicies] = useState<any[]>([]);
 
   const [loading, setLoading] = useState(true);
+  const [claimNumber, setClaimNumber] = useState("");
 
   const [selectedAccount, setSelectedAccount] = useState(
     fnolFormData?.accountNumber || "",
@@ -61,18 +64,6 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
         setLoading(false);
       });
   }, []);
-
-  // const loadPolicies = async (): Promise<ComboboxOption[]> => {
-  //     const res = await fetch(`/api/accounts/${accountId}/policies`);
-  //     const data = await res.json();
-  //     return data.map((p: any) => ({ id: p.id, value: p.name }));
-  //   };
-
-  /**
-   * Filter policies based on:
-   * 1. Selected account
-   * 2. Selected LOB
-   */
   useEffect(() => {
     if (!selectedAccount) {
       setFilteredPolicies([]);
@@ -81,15 +72,7 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
 
     const filtered = policies.filter((policy) => {
       const matchesLOB = policy?.product?.name === LOB;
-
-      // Adjust this based on your API structure
-      // Example:
-      // policy.accountNumber
-      // OR policy.account.accountNumber
-
-      const matchesAccount =
-        policy?.accountNumber === selectedAccount ||
-        policy?.account?.accountNumber === selectedAccount;
+      const matchesAccount = policy?.account?.accountNumber === selectedAccount;
 
       return matchesLOB && matchesAccount;
     });
@@ -110,8 +93,6 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
 
   const handleAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedAccount(e.target.value);
-
-    // reset selected policy when account changes
     setSelectedPolicy("");
   };
   const handlePolicyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -154,8 +135,8 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
             transformationLabel: LOB,
           },
           {
-            transformationKey: SideBarProps.LossDate,
-            transformationLabel: selectedDate,
+            transformationKey: SideBarProps.ClaimNumber,
+            transformationLabel: claimNumber,
           },
         ],
       },
@@ -165,16 +146,46 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
     selectedAccountDetails,
     LOB,
     selectedPolicy,
+    claimNumber,
     selectedDate,
     timeOfLoss,
     setFnolFormData,
   ]);
+  const claim: Claim = {
+    account: fnolFormData.account?._id || undefined,
+    policy: fnolFormData.policyNumber,
+    product: {
+      code: fnolFormData.lineOfBusiness || "",
+      name: fnolFormData.lineOfBusiness || "",
+    },
+    lossDate: fnolFormData.dateOfLoss
+      ? new Date(fnolFormData.dateOfLoss)
+      : undefined,
+    lossDescription: "Minor accident reported - details to be updated later",
+    status: {
+      code: "draft",
+      name: "Draft",
+    },
+  };
+  const handleCreateClaim = () => {
+    //account, policy, product (LOB), date and time of loss, status (draft)
+    createClaim(claim).then((response) => {
+      const createdClaim = response.data;
+      setClaimNumber(createdClaim.claimNumber);
+
+      setFnolFormData((prev) => ({
+        ...prev,
+        claimNumber: createdClaim.claimNumber,
+      }));
+    });
+    wizardPageProps.handleNext?.();
+  };
 
   return (
     <WizardPage
       step={wizardPageProps.step}
       location={wizardPageProps.location}
-      handleNext={wizardPageProps.handleNext}
+      handleNext={handleCreateClaim}
       handlePrevious={wizardPageProps.handlePrevious}
       showPageheader={false}
       wizardSidebarprops={wizardPageProps.wizardSidebarprops}
@@ -203,11 +214,8 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
                 <option value="">Select Account</option>
 
                 {accounts.map((account) => (
-                  <option
-                    key={account.accountNumber}
-                    value={account.accountNumber}
-                  >
-                    {account.accountNumber}
+                  <option key={account._id} value={account._id}>
+                    {account._id}
                   </option>
                 ))}
               </select>

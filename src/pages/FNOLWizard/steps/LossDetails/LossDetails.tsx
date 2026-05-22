@@ -38,7 +38,6 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
   const { fnolFormData, setFnolFormData } = useFNOLContext();
 
   const [policyDetails, setPolicyDetails] = useState<any>(null);
-  // const [losscause, setlosscause] = useState<TypeList[]>([]);
   const [losscause, setlosscause] = useState<ComboboxOption[]>([]);
   const [vehiclesInvolved, setVehiclesInvolved] = useState<ComboboxOption[]>(
     [],
