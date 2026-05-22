@@ -1,20 +1,17 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { getAllPolicies } from "../../../../api/services/policy/policyApi";
 import { getAllAccounts } from "../../../../api/services/account/accountApi";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 
 import { WizardPageProps } from "../../../../types/Wizardtype";
 import { useFNOLContext } from "../../FNOLWizardContext";
-import styles from "./Policy&LOB.module.scss";
 import { SideBarProps } from "../FnolConstant";
 import { Policy } from "../../../../api/services/policy/types";
 import { createClaim } from "../../../../api/services/claim/claimApi";
 import { Claim } from "../../../../api/services/claim/types/Claim";
+import styles from "./Policy&LOB.module.scss";
 
 const StartClaim = (wizardPageProps: WizardPageProps) => {
-  const navigate = useNavigate();
-  const today = new Date().toISOString().split("T")[0];
   const { fnolFormData, setFnolFormData } = useFNOLContext();
 
   const [LOB, setLOB] = useState(
@@ -39,14 +36,16 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
   const [selectedDate, setSelectedDate] = useState(
     fnolFormData?.dateOfLoss || new Date().toISOString().split("T")[0],
   );
-
-  const [timeOfLoss, setTimeOfLoss] = useState(fnolFormData?.timeOfLoss || "");
-
+  const today = new Date().toISOString().split("T")[0];
   const currentTime = new Date().toLocaleTimeString("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
   });
+
+  const [timeOfLoss, setTimeOfLoss] = useState(
+    fnolFormData?.timeOfLoss || currentTime,
+  );
 
   useEffect(() => {
     Promise.all([getAllAccounts(), getAllPolicies()])
@@ -72,7 +71,10 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
 
     const filtered = policies.filter((policy) => {
       const matchesLOB = policy?.product?.name === LOB;
-      const matchesAccount = policy?.account?.accountNumber === selectedAccount;
+
+      const matchesAccount =
+        policy?.accountNumber === selectedAccount ||
+        policy?.account?.accountNumber === selectedAccount;
 
       return matchesLOB && matchesAccount;
     });
@@ -108,6 +110,12 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
       vehicleInvolved: matchedPolicy?.vehicles,
     }));
   };
+
+  useEffect(() => {
+    if (selectedDate === today && timeOfLoss > currentTime) {
+      setTimeOfLoss(currentTime);
+    }
+  }, [selectedDate, timeOfLoss, currentTime, today]);
 
   useEffect(() => {
     setFnolFormData((prev) => ({
@@ -318,8 +326,10 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
             <input
               type="date"
               value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              max={new Date().toISOString().split("T")[0]}
+              onChange={(e) => {
+                setSelectedDate(e.target.value);
+              }}
+              max={today}
             />
           </div>
 
@@ -330,6 +340,7 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
               type="time"
               value={timeOfLoss}
               onChange={(e) => setTimeOfLoss(e.target.value)}
+              disabled={!selectedDate}
               max={selectedDate === today ? currentTime : undefined}
             />
           </div>

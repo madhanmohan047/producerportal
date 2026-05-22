@@ -1,8 +1,8 @@
 import React from "react";
 import { WizardStep } from "../../../types/Wizardtype";
-import DriverStep from "../../PAWizard/steps/DriverStep/DriverStep";
+import DriverStep from "../../PAWizard/steps/DriversStep/DriversStep"
 import PersonalInfoStep from "../../PAWizard/steps/PersonalInfo/PersonalInfoStep";
-import VehicleStep from "../../PAWizard/steps/VehicleStep/VehicleStep";
+import VehicleStep from "../../PAWizard/steps/VehiclesStep/VehiclesStep";
 import DocumentStep from "./DocumentsStep/DocumentStep";
 import PartyStep from "./PartyStep/PartyStep";
 import DamageStep from "./DamageStep/DamageStep";

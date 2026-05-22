@@ -1,0 +1,233 @@
+.risk-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Tab bar (mirrors DriversStep) ── */
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0;
+  flex-wrap: wrap;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  background: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  transition: color 0.15s, border-color 0.15s;
+
+  &:hover {
+    color: #1e293b;
+    background: #f8fafc;
+  }
+}
+
+.tab-active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+  font-weight: 600;
+}
+
+/* ── Vehicle panel ── */
+.vehicle-panel {
+  border: 1px solid #e2e8f0;
+  border-radius: 0 8px 8px 8px;
+  padding: 20px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Panel header ── */
+.vehicle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vehicle-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vehicle-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+.body-type-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.edit-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: #2563eb;
+  text-decoration: underline;
+  padding: 0;
+
+  &:hover {
+    color: #1d4ed8;
+  }
+}
+
+/* ── Section block ── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+
+/* ── Garaging address: 4 fields in 2 columns ── */
+.address-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+
+  /* cancel the component's own margin so the grid gap controls spacing */
+  :global(.form-input),
+  :global(.combobox) {
+    margin-bottom: 0;
+  }
+}
+
+/* ── Risk details: 3 fields in a row ── */
+.risk-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+
+  :global(.form-input),
+  :global(.combobox) {
+    margin-bottom: 0;
+  }
+}
+
+/* ── Amber warning banner ── */
+.warning-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  color: #92400e;
+}
+
+/* ── Blue low-mileage note ── */
+.mileage-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 0.78rem;
+  color: #1d4ed8;
+}
+
+/* ── Primary use row ── */
+.primary-use-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.primary-use-value {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* ── Field-level error ── */
+.field-error {
+  font-size: 0.75rem;
+  color: #ef4444;
+  margin-top: 2px;
+}
+
+/* ── Discount summary card ── */
+.discount-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.discount-header {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #1e293b;
+}
+
+.discount-note {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.discount-flag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.no-discounts {
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+.empty-state {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  padding: 20px 0;
+  text-align: center;
+}

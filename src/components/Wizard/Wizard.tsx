@@ -39,9 +39,11 @@ export const Wizard = (wizardProps: WizardProps) => {
       <div className={styles["wizard-progress"]}>
         {wizardProps.steps.map((step, index) => (
           <WizardProgressBar
+            key={step.id}
             progressbarProps={step.wizardPageConfig}
             index={index}
             currentIndex={safeIndex}
+            onClick={index < safeIndex ? () => navigate(wizardProps.url + step.route) : undefined}
           />
         ))}
       </div>

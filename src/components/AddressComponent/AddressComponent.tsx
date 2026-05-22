@@ -6,7 +6,6 @@ import { ADDRESS_MESSAGES } from "./AddressComponent.messages";
 import styles from "./AddressComponent.module.scss";
 import Combobox, { ComboboxOption } from "../common/Combobox/Combobox";
 import { getTypeList } from "../../api/services/typelist/typelistApi";
-import { TypeList } from "../../api/utils/types";
 
 type AddressSectionProps = {
   readOnly: boolean;
@@ -39,19 +38,15 @@ export const AddressSection = ({
       });
     };
 
-  const [countries, setCountries] = useState<ComboboxOption[]>([]);
+  const [countries] = useState<ComboboxOption[]>([]);
   const [states, setStates] = useState<ComboboxOption[]>([]);
-  const [addressTypes, setAddressTypes] = useState<ComboboxOption[]>([]);
-  //   const defaultCountry: TypeList = {
-  //     code: "CANADA",
-  //     name: "CANADA",
-  //   };
-  console.log("country val in addresscomp", address.country);
+  const [addressTypes] = useState<ComboboxOption[]>([]);
 
   useEffect(() => {
     getTypeList("State").then((response) => {
-      console.log("addressstate", response.data);
-      setStates(response.data);
+      const raw = response.data as any;
+      const list = Array.isArray(raw) ? raw : (Array.isArray(raw?.data) ? raw.data : []);
+      setStates(list);
     });
   }, []);
 
