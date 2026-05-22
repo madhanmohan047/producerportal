@@ -10,9 +10,8 @@ import {
   DamageAreaOption,
 } from "../../components/DamageComponent/DamageComponent";
 import { Vehicle } from "../../api/services";
-import { Claim } from "../../api/services/claim/types/Claim";
 
-export type formData = Claim & {
+export type formData = {
   currentStep: WizardStep;
   location: Location;
   accountNumber?: string;

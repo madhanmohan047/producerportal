@@ -94,12 +94,15 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
 
   useEffect(() => {
     getTypeList("LossCause").then((response) => {
-      setlosscause(response);
+      console.log("LossCause response", response);
+
+      setlosscause(Array.isArray(response) ? response : response.data || []);
     });
+
     setVehiclesInvolved(
       fnolFormData?.vehicleInvolved?.map((vehicle) => ({
         code: vehicle._id || "",
-        name: `${vehicle.make}  ${vehicle.model}`,
+        name: `${vehicle.make} ${vehicle.model}`,
       })) || [],
     );
   }, []);
@@ -151,7 +154,7 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
               label={"Loss Cause"}
               required
               options={losscause}
-              value={losscause.find(
+              value={(Array.isArray(losscause) ? losscause : []).find(
                 (selectedCause) =>
                   selectedCause.code === fnolFormData.causeOfLoss,
               )}
