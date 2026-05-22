@@ -8,6 +8,7 @@ import VehicleComponent from "../../../../components/Vehicle/VehicleComponent";
 import { Vehicle } from "../../../../api/services/job/types/Vehicle";
 import { usePAContext } from "../../PAWizardContext";
 import { getJobVehicles } from "../../../../api/services/job/jobApi";
+import { FormInput } from "../../../../components/common";
 import messages from "./VehiclesStep.messages";
 import styles from "./VehiclesStep.module.scss";
 
@@ -32,7 +33,6 @@ const toFormValues = (v: Vehicle) => ({
 const VehiclesStep = (wizardPageProps: WizardPageProps) => {
   const intl = useIntl();
   const { paFormData, setPAFormData } = usePAContext();
-  console.log("[VehiclesStep] paFormData.jobId:", paFormData.jobId);
 
   const vehicleLabel = (v: Vehicle, idx: number) => {
     const parts = [v.year, v.make, v.model].filter(Boolean).join(" ");
@@ -206,33 +206,36 @@ const VehiclesStep = (wizardPageProps: WizardPageProps) => {
               />
             ) : (
               <div className={styles["vehicle-fields"]}>
-                <div className={styles["vehicle-field"]}>
-                  <label>{intl.formatMessage(messages.vin)}</label>
-                  <input readOnly value={vehicle.vin || "—"} />
-                </div>
-                <div className={styles["vehicle-field"]}>
-                  <label>{intl.formatMessage(messages.bodyType)}</label>
-                  <input readOnly value={vehicle.bodyType?.name || "—"} />
-                </div>
-                <div className={styles["vehicle-field"]}>
-                  <label>{intl.formatMessage(messages.color)}</label>
-                  <input readOnly value={vehicle.color || "—"} />
-                </div>
-                <div className={styles["vehicle-field"]}>
-                  <label>{intl.formatMessage(messages.licensePlate)}</label>
-                  <input readOnly value={vehicle.licensePlate || "—"} />
-                </div>
-                <div className={styles["vehicle-field"]}>
-                  <label>{intl.formatMessage(messages.annualMileage)}</label>
-                  <input
-                    readOnly
-                    value={vehicle.annualMileage ? `${vehicle.annualMileage.toLocaleString()} mi/yr` : "—"}
-                  />
-                </div>
-                <div className={styles["vehicle-field"]}>
-                  <label>{intl.formatMessage(messages.licenseState)}</label>
-                  <input readOnly value={vehicle.licenseState?.name || "—"} />
-                </div>
+                <FormInput
+                  label={intl.formatMessage(messages.vin)}
+                  readOnly
+                  value={vehicle.vin || "—"}
+                />
+                <FormInput
+                  label={intl.formatMessage(messages.bodyType)}
+                  readOnly
+                  value={vehicle.bodyType?.name || "—"}
+                />
+                <FormInput
+                  label={intl.formatMessage(messages.color)}
+                  readOnly
+                  value={vehicle.color || "—"}
+                />
+                <FormInput
+                  label={intl.formatMessage(messages.licensePlate)}
+                  readOnly
+                  value={vehicle.licensePlate || "—"}
+                />
+                <FormInput
+                  label={intl.formatMessage(messages.annualMileage)}
+                  readOnly
+                  value={vehicle.annualMileage ? `${vehicle.annualMileage.toLocaleString()} mi/yr` : "—"}
+                />
+                <FormInput
+                  label={intl.formatMessage(messages.licenseState)}
+                  readOnly
+                  value={vehicle.licenseState?.name || "—"}
+                />
               </div>
             )}
           </div>
