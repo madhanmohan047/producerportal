@@ -1,6 +1,16 @@
 import { usePAContext } from "../../../pages/PAWizard/PAWizardContext";
 import styles from "./WizardSidebar.module.scss";
 
+const formatDisplayDate = (dateValue?: string) => {
+  const date = dateValue ? new Date(`${dateValue}T00:00:00`) : new Date();
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  }).format(date);
+};
+
 const PAWizardSidebar = () => {
   const { paFormData } = usePAContext();
 
@@ -10,16 +20,19 @@ const PAWizardSidebar = () => {
     : "";
 
   const accountItems = [
-    { label: "Customer", value: customerName || "—" },
+    { label: "Customer", value: customerName || "-" },
     { label: "LOB", value: "Personal Auto" },
-    { label: "Effective Date", value: paFormData.effectiveDate || "—" },
+    {
+      label: "Effective Date",
+      value: formatDisplayDate(paFormData.effectiveDate),
+    },
   ];
 
   const stepSection = paFormData.sidebarProps;
+  const premiumEstimate = paFormData.premiumEstimate;
 
   return (
     <div className={styles["container"]}>
-      {/* ACCOUNT section — always visible */}
       <div className={styles["section"]}>
         <div className={styles["section-header"]}>Account</div>
         {accountItems.map((item) => (
@@ -30,7 +43,6 @@ const PAWizardSidebar = () => {
         ))}
       </div>
 
-      {/* Step-specific section */}
       {stepSection && (stepSection.sidebaritems?.length ?? 0) > 0 && (
         <div className={styles["section"]}>
           <div className={styles["section-header"]}>{stepSection.title}</div>
@@ -40,6 +52,21 @@ const PAWizardSidebar = () => {
               <div className={styles["value"]}>{item.transformationLabel}</div>
             </div>
           ))}
+        </div>
+      )}
+
+      {premiumEstimate && (
+        <div className={styles["premium-card"]}>
+          <div className={styles["premium-label"]}>Est. Monthly Premium</div>
+          <div className={styles["premium-value"]}>
+            ${premiumEstimate.estimatedMonthlyPremium}
+            <span>/mo</span>
+          </div>
+          <div className={styles["premium-caption"]}>
+            ${premiumEstimate.estimatedAnnualPremium}/yr
+            {premiumEstimate.discountMonthly > 0 &&
+              ` - saving $${premiumEstimate.discountMonthly}/mo in discounts`}
+          </div>
         </div>
       )}
     </div>

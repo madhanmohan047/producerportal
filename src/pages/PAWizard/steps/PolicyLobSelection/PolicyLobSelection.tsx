@@ -9,6 +9,7 @@ import { Account } from "../../../../api/services/account/types";
 import { getUser } from "../../../../api/services";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
+import { usePAContext } from "../../PAWizardContext";
 
 type Props = WizardPageProps & {
   accountName?: string;
@@ -113,6 +114,7 @@ const findMatchingState = (
 
 export const PolicyLobSelection = (wizardPageProps: Props) => {
   const { accountName } = wizardPageProps;
+  const { paFormData, setPAFormData } = usePAContext();
   const [productOptions, setProductOptions] = useState<ComboboxOption[]>([]);
   const [programOptions, setProgramOptions] = useState<ComboboxOption[]>([]);
   const [stateOptions, setStateOptions] = useState<ComboboxOption[]>([]);
@@ -123,8 +125,18 @@ export const PolicyLobSelection = (wizardPageProps: Props) => {
   );
   const [selectedGaragingState, setSelectedGaragingState] =
     useState<ComboboxOption>();
-  const [formData, setFormData] =
-    useState<PolicyLobFormData>(getInitialFormData);
+  const [formData, setFormData] = useState<PolicyLobFormData>(() => {
+    const initialData = getInitialFormData();
+    const effectiveDate = paFormData.effectiveDate ?? initialData.effectiveDate;
+
+    return {
+      ...initialData,
+      effectiveDate,
+      expirationDate:
+        paFormData.expirationDate ??
+        addMonths(effectiveDate, Number(initialData.termLength)),
+    };
+  });
   const updateFormData = (field: keyof PolicyLobFormData, value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -180,6 +192,20 @@ export const PolicyLobSelection = (wizardPageProps: Props) => {
 
     loadPolicyLobData();
   }, []);
+
+  useEffect(() => {
+    setPAFormData((prev) => ({
+      ...prev,
+      effectiveDate: formData.effectiveDate,
+      expirationDate: formData.expirationDate,
+      baseState: selectedGaragingState,
+    }));
+  }, [
+    formData.effectiveDate,
+    formData.expirationDate,
+    selectedGaragingState,
+    setPAFormData,
+  ]);
 
   const handleTermLengthChange = (option: ComboboxOption) => {
     setSelectedTermLength(option);

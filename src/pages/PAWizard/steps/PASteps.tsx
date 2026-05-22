@@ -4,8 +4,9 @@ import { PolicyLobSelection } from "./PolicyLobSelection/PolicyLobSelection";
 import DriversStep from "./DriversStep/DriversStep";
 import VehiclesStep from "./VehiclesStep/VehiclesStep";
 import RiskInfoStep from "./RiskInfoStep/RiskInfoStep";
-import QuoteStep from "./QuoteStep/QuoteStep";
-import DocumentsStep from "./DocumentsStep/DocumentsStep";
+import Coverage from "./Coverage/Coverage";
+import Premium from "./Premium/Premium";
+import DocUpload from "./DocUpload/DocUpload";
 import ReviewBindStep from "./ReviewBindStep/ReviewBindStep";
 import ConfirmationStep from "./ConfirmationStep/ConfirmationStep";
 
@@ -98,14 +99,31 @@ export const PASteps: WizardStep[] = [
     },
   },
   {
-    id: "quote",
+    id: "coverage",
     type: "wizard",
-    route: "quote",
-    component: QuoteStep,
+    route: "coverage",
+    component: Coverage,
     wizardPageConfig: {
-      title: "Quote",
-      description: "Quote Selection",
+      title: "Coverage",
+      description: "Coverage Selection",
       stepId: "6",
+
+      buttonProps: {
+        next: { label: "Continue" },
+        previous: { label: "Back" },
+        ...saveDraft,
+      },
+    },
+  },
+  {
+    id: "premium",
+    type: "wizard",
+    route: "premium",
+    component: Premium,
+    wizardPageConfig: {
+      title: "Premium",
+      description: "Premium Selection",
+      stepId: "7",
 
       buttonProps: {
         next: { label: "Continue" },
@@ -118,11 +136,11 @@ export const PASteps: WizardStep[] = [
     id: "documents",
     type: "wizard",
     route: "documents",
-    component: DocumentsStep,
+    component: DocUpload,
     wizardPageConfig: {
       title: "Documents",
       description: "Policy Documents",
-      stepId: "7",
+      stepId: "8",
 
       buttonProps: {
         next: { label: "Continue" },
@@ -137,9 +155,9 @@ export const PASteps: WizardStep[] = [
     route: "reviewBind",
     component: ReviewBindStep,
     wizardPageConfig: {
-      title: "Review",
+      title: "Review & Bind",
       description: "Review & Bind Policy",
-      stepId: "8",
+      stepId: "9",
 
       buttonProps: {
         next: { label: "Bind Policy" },
@@ -156,7 +174,7 @@ export const PASteps: WizardStep[] = [
     wizardPageConfig: {
       title: "Confirmation",
       description: "Policy Confirmation",
-      stepId: "9",
+      stepId: "10",
 
       isSubmission: true,
       buttonProps: { next: { label: "Done" }, previous: { label: "" } },

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { WizardProps } from "../../types/Wizardtype";
 import styles from "./Wizard.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -39,9 +39,11 @@ export const Wizard = (wizardProps: WizardProps) => {
       <div className={styles["wizard-progress"]}>
         {wizardProps.steps.map((step, index) => (
           <WizardProgressBar
+            key={step.id}
             progressbarProps={step.wizardPageConfig}
             index={index}
             currentIndex={safeIndex}
+            onClick={() => navigate(wizardProps.url + step.route)}
           />
         ))}
       </div>

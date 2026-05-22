@@ -1,18 +1,38 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styles from "./AccountCustomerSearch.module.scss";
 import { getAllAccounts } from "../../../../api/services/account/accountApi";
 import { Account } from "../../../../api/services/account/types";
 import { NewAccountModal } from "./NewAccountModal/NewAccountModal";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
-//import { usePAContext } from "../../PAWizardContext";
+import { createInitialPAFormData, usePAContext } from "../../PAWizardContext";
 
 export const AccountCustomerSearch = (wizardPageProps: WizardPageProps) => {
+  const { setPAFormData } = usePAContext();
   const [accounts, setAccounts] = React.useState<Account[]>([]);
-  const [selectedAccount, setSelectedAccount] = React.useState<Account | null>(
-    null,
-  );
+  const [selectedAccount, setSelectedAccount] = React.useState<Account | null>(null);
   const [showCreateAccount, setShowCreateAccount] = useState(false);
+
+  const updateSelectedAccount = useCallback((account: Account) => {
+    setSelectedAccount(account);
+    sessionStorage.setItem("selectedAccount", JSON.stringify(account));
+    setPAFormData((prev) => ({
+      ...prev,
+      accountId: account._id,
+      accountNumber: account.accountNumber,
+      organizationId:
+        typeof account.organization === "string"
+          ? account.organization
+          : account.organization?._id,
+      producerCodeId:
+        typeof account.producerCode === "string"
+          ? account.producerCode
+          : account.producerCode?._id,
+      primaryContact: account.accountHolder,
+      mailingAddress: account.primaryLocation,
+    }));
+  }, [setPAFormData]);
+
   React.useEffect(() => {
     const fetchAccounts = async () => {
       try {
@@ -25,23 +45,34 @@ export const AccountCustomerSearch = (wizardPageProps: WizardPageProps) => {
     fetchAccounts();
   }, []);
 
+  React.useEffect(() => {
+    sessionStorage.removeItem("selectedAccount");
+    setSelectedAccount(null);
+    setPAFormData(createInitialPAFormData());
+  }, [setPAFormData]);
+
   const handleSubmitSuccess = (newAccount: Account) => {
     setAccounts((prev) => [...prev, newAccount]);
-    setSelectedAccount(newAccount);
-    sessionStorage.setItem("selectedAccount", JSON.stringify(newAccount));
+    updateSelectedAccount(newAccount);
     setShowCreateAccount(false);
   };
 
   const handleAccountSelect = (account: Account) => {
-    setSelectedAccount(account);
-    sessionStorage.setItem("selectedAccount", JSON.stringify(account));
+    updateSelectedAccount(account);
   };
 
   return (
     <WizardPage
       step={wizardPageProps.step}
       location={wizardPageProps.location}
-      handleNext={wizardPageProps.handleNext}
+      handleNext={() => {
+        if (!selectedAccount) {
+          alert("Please select a customer.");
+          return;
+        }
+
+        wizardPageProps.handleNext?.();
+      }}
       handlePrevious={wizardPageProps.handlePrevious}
       SidebarComponent={wizardPageProps.SidebarComponent}
     >

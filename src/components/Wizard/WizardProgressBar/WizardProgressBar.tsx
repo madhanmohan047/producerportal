@@ -6,17 +6,24 @@ const WizardProgressBar = ({
   progressbarProps,
   index,
   currentIndex,
+  onClick,
 }: {
   progressbarProps: WizardPageConfig;
   index: number;
   currentIndex: number;
+  onClick?: () => void;
 }) => {
   const isCompleted = index < currentIndex;
   const isActive = index === currentIndex;
 
   return (
     <div className={styles["step-wrapper"]}>
-      <div className={styles["step-container"]}>
+      <button
+        type="button"
+        className={styles["step-container"]}
+        onClick={onClick}
+        aria-current={isActive ? "step" : undefined}
+      >
         {isCompleted ? (
           <div className={`${styles["step-circle"]} ${styles.completed}`}>
             <img src={checkmarkicon} alt="done" className={styles["icon"]} />
@@ -34,7 +41,7 @@ const WizardProgressBar = ({
             {progressbarProps.title}
           </div>
         )}
-      </div>
+      </button>
 
       {!progressbarProps.isSubmission && (
         <div
