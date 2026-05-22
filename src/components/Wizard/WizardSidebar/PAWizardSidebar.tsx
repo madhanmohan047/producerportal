@@ -1,6 +1,16 @@
 import { usePAContext } from "../../../pages/PAWizard/PAWizardContext";
 import styles from "./WizardSidebar.module.scss";
 
+const formatDisplayDate = (dateValue?: string) => {
+  const date = dateValue ? new Date(`${dateValue}T00:00:00`) : new Date();
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  }).format(date);
+};
+
 const PAWizardSidebar = () => {
   const { paFormData } = usePAContext();
 

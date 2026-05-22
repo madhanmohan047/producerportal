@@ -173,6 +173,20 @@ export const PolicyLobSelection = (wizardPageProps: Props) => {
     loadPolicyLobData();
   }, []);
 
+  useEffect(() => {
+    setPAFormData((prev) => ({
+      ...prev,
+      effectiveDate: formData.effectiveDate,
+      expirationDate: formData.expirationDate,
+      baseState: selectedGaragingState,
+    }));
+  }, [
+    formData.effectiveDate,
+    formData.expirationDate,
+    selectedGaragingState,
+    setPAFormData,
+  ]);
+
   const handleTermLengthChange = (option: ComboboxOption) => {
     setSelectedTermLength(option);
     setFormData((prev) => ({
