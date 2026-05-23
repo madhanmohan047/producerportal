@@ -221,44 +221,16 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 
+  :global(.form-input) {
+    margin-bottom: 0;
+  }
+
   @media (max-width: 900px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
-  }
-}
-
-.driver-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: #94a3b8;
-  }
-
-  input {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-family: inherit;
-    color: #475569;
-    background: #f8fafc;
-    outline: none;
-    box-sizing: border-box;
-    cursor: default;
-
-    &::placeholder {
-      color: #cbd5e1;
-    }
   }
 }
 

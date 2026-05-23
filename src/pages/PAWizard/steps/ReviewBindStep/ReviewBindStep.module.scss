@@ -1,0 +1,154 @@
+.page {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  color: #061b36;
+}
+
+.subtitle {
+  margin: 0 0 24px;
+  color: #506580;
+  font-size: 16px;
+}
+
+.summaryBand {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  border: 1px solid #dce3ec;
+  border-radius: 8px;
+  background: #dce3ec;
+
+  div {
+    min-height: 78px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding: 16px 18px;
+    background: #ffffff;
+  }
+
+  span {
+    color: #6c7a90;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  strong {
+    font-size: 18px;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.panel {
+  min-height: 190px;
+  padding: 20px;
+  border: 1px solid #dce3ec;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+
+  h3 {
+    margin: 0 0 16px;
+    font-size: 16px;
+  }
+
+  dl {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0;
+  }
+
+  dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  dt {
+    color: #6c7a90;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+  }
+}
+
+.coverageList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.coverageRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #edf2f7;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  span {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  small {
+    color: #6c7a90;
+    font-size: 12px;
+  }
+}
+
+.empty {
+  margin: 0;
+  color: #6c7a90;
+}
+
+.attestation {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border: 1px solid #b7df8a;
+  border-radius: 8px;
+  background: #edf8e3;
+  color: #0f5f00;
+  font-size: 14px;
+  font-weight: 600;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  input {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .summaryBand,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

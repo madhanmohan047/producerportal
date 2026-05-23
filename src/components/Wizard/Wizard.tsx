@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { WizardProps } from "../../types/Wizardtype";
 import styles from "./Wizard.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";

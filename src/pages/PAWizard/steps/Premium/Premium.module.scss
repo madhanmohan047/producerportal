@@ -1,0 +1,211 @@
+.container {
+  padding: 32px 48px;
+  color: #0b1f3a;
+}
+
+.header {
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 4px 0 0;
+    font-size: 20px;
+  }
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #dce3ec;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.cardHeader {
+  padding: 18px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  border-bottom: 1px solid #dce3ec;
+}
+
+.summaryBody {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 36px;
+  padding: 18px 24px;
+}
+
+.premiumDetails {
+  padding-right: 32px;
+  border-right: 1px solid #dce3ec;
+}
+
+.row,
+.estimatedRow,
+.savingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.row {
+  margin-bottom: 18px;
+  font-size: 15px;
+}
+
+.discount {
+  color: #168821;
+}
+
+.divider {
+  height: 1px;
+  background: #dce3ec;
+  margin: 18px 0;
+}
+
+.estimatedRow {
+  font-size: 18px;
+  font-weight: 700;
+
+  strong {
+    font-size: 26px;
+  }
+
+  span {
+    margin-left: 4px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: #7a8799;
+    font-size: 14px;
+    text-align: right;
+  }
+}
+
+.savingBox {
+  background: #f4fff5;
+  border: 1px solid #bfe8c4;
+  border-radius: 10px;
+  padding: 18px 22px;
+
+  h4 {
+    margin: 0 0 14px;
+    color: #168821;
+    font-size: 16px;
+  }
+}
+
+.savingRow {
+  padding: 14px 0;
+  border-top: 1px solid #dcefd8;
+  font-size: 15px;
+
+  strong {
+    color: #168821;
+  }
+
+  button {
+    border: none;
+    background: transparent;
+    color: #0057b8;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+.coverageList {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px;
+}
+
+.coverageRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid #edf2f7;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  span {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  small {
+    color: #7a8799;
+    font-size: 13px;
+  }
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 32px;
+  padding: 20px 20px 8px;
+}
+
+.formGroup,
+.notesGroup {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    margin-bottom: 6px;
+    color: #536179;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  select,
+  input,
+  textarea {
+    border: 1px solid #ccd6e2;
+    border-radius: 7px;
+    padding: 10px 12px;
+    font-size: 15px;
+    color: #0b1f3a;
+    background: #ffffff;
+  }
+}
+
+.infoBox {
+  margin: 16px 20px;
+  padding: 14px;
+  border: 1px solid #9fc4ff;
+  border-radius: 7px;
+  background: #eef5ff;
+  color: #0057b8;
+  font-size: 15px;
+}
+
+.notesGroup {
+  position: relative;
+  padding: 8px 20px 20px;
+
+  textarea {
+    min-height: 86px;
+    resize: none;
+  }
+
+  span {
+    position: absolute;
+    right: 34px;
+    bottom: 28px;
+    color: #7a8799;
+    font-size: 12px;
+  }
+}

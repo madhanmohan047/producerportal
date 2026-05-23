@@ -118,8 +118,8 @@ export const PASteps: WizardStep[] = [
   {
     id: "quote",
     type: "wizard",
-    route: "quote",
-    component: QuoteStep,
+    route: "coverage",
+    component: Coverage,
     wizardPageConfig: {
       title: "Premium",
       description: "Premium Breakdown",
@@ -133,10 +133,27 @@ export const PASteps: WizardStep[] = [
     },
   },
   {
+    id: "premium",
+    type: "wizard",
+    route: "premium",
+    component: Premium,
+    wizardPageConfig: {
+      title: "Premium",
+      description: "Premium Selection",
+      stepId: "7",
+
+      buttonProps: {
+        next: { label: "Continue" },
+        previous: { label: "Back" },
+        ...saveDraft,
+      },
+    },
+  },
+  {
     id: "documents",
     type: "wizard",
     route: "documents",
-    component: DocumentsStep,
+    component: DocUpload,
     wizardPageConfig: {
       title: "Documents",
       description: "Policy Documents",

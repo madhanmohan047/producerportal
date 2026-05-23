@@ -10,6 +10,7 @@ import { getJobDrivers } from "../../../../api/services/job/jobApi";
 import { usePAContext } from "../../PAWizardContext";
 import messages from "./DriversStep.messages";
 import styles from "./DriversStep.module.scss";
+import { FormInput } from "../../../../components/common";
 
 type Relation = "Named Insured" | "Spouse" | "Child" | "Other";
 
@@ -93,13 +94,17 @@ const DriversStep = (wizardPageProps: WizardPageProps) => {
   const intl = useIntl();
   const { paFormData, setPAFormData } = usePAContext();
   const contact = paFormData.primaryContact;
+  const driver = paFormData.drivers;
+  console.log("paForm", paFormData)
 
   const [driverCards, setDriverCards] = useState<DriverCard[]>(() => {
+    console.log("Contact", contact);
     const namedInsured: DriverCard = {
       personId: contact?._id,
       firstName: contact?.firstName ?? "",
       lastName: contact?.lastName ?? "",
       dateOfBirth: formatDob(contact?.dateOfBirth),
+      
       relation: "Named Insured",
       licenseNumber: "",
       licenseState: "",
@@ -389,29 +394,26 @@ const DriversStep = (wizardPageProps: WizardPageProps) => {
               />
             ) : (
               <div className={styles["driver-fields"]}>
-                <div className={styles["driver-field"]}>
-                  <label>{intl.formatMessage(messages.dob)}</label>
-                  <input readOnly value={displayDob(card.dateOfBirth)} />
-                </div>
-                <div className={styles["driver-field"]}>
-                  <label>{intl.formatMessage(messages.licenseNumber)}</label>
-                  <input
-                    readOnly
-                    value={formatLicense(card.licenseNumber, card.licenseState)}
-                    placeholder="—"
-                  />
-                </div>
-                <div className={styles["driver-field"]}>
-                  <label>{intl.formatMessage(messages.violations)}</label>
-                  <input
-                    readOnly
-                    value={
-                      card.numViolations === "" || card.numViolations === 0
-                        ? intl.formatMessage(messages.none)
-                        : String(card.numViolations)
-                    }
-                  />
-                </div>
+                <FormInput
+                  label={intl.formatMessage(messages.dob)}
+                  readOnly
+                  value={displayDob(card.dateOfBirth)}
+                />
+                <FormInput
+                  label={intl.formatMessage(messages.licenseNumber)}
+                  readOnly
+                  value={formatLicense(card.licenseNumber, card.licenseState)}
+                  placeholder="—"
+                />
+                <FormInput
+                  label={intl.formatMessage(messages.violations)}
+                  readOnly
+                  value={
+                    card.numViolations === "" || card.numViolations === 0
+                      ? intl.formatMessage(messages.none)
+                      : String(card.numViolations)
+                  }
+                />
               </div>
             )}
           </div>
