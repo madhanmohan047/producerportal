@@ -1,4 +1,4 @@
-import { Base, TypeKeyValue } from "./Shared";
+import { Base, TypeKeyValue } from "../../../utils/types";
 
 export interface ClaimContact extends Base {
   pcSystemId?: string;

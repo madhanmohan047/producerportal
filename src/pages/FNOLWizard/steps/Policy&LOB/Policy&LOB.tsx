@@ -189,11 +189,11 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
     createClaim(claim).then((response) => {
       const createdClaim = response.data?.data?.claimNumber;
 
-      console.log("createdClaim.claimNumber", createdClaim);
       setClaimNumber(createdClaim);
       setFnolFormData((prev) => ({
         ...prev,
         claimNumber: createdClaim,
+        currentClaim: response.data?.data,
       }));
     });
 

@@ -20,7 +20,7 @@ export interface Claim extends Base {
 
   vehicleInvolved?: string;
 
-  lossLocation?: Address;
+  lossLocation?: string;
 
   isInjured?: boolean;
 

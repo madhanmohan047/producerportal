@@ -10,6 +10,7 @@ import {
   DamageAreaOption,
 } from "../../components/DamageComponent/DamageComponent";
 import { Vehicle } from "../../api/services";
+import { Claim } from "../../api/services/claim/types/Claim";
 
 export type formData = {
   currentStep: WizardStep;
@@ -36,6 +37,7 @@ export type formData = {
   submittedDate?: string;
   emailAddress?: string;
   sidebarProps?: WizardSidebarProps;
+  currentClaim?: Claim;
 };
 type FNOLContextType = {
   fnolFormData: formData;

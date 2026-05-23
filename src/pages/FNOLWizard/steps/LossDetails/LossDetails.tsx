@@ -48,6 +48,7 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
         ...prev,
         [key]: value,
       }));
+      console.log("updatedfnol", fnolFormData);
     },
     [setFnolFormData],
   );
@@ -55,7 +56,13 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
 
-    updateField("locationType", value);
+    setFnolFormData((prev) => ({
+      ...prev,
+      currentClaim: {
+        ...prev.currentClaim,
+        lossLocation: value,
+      },
+    }));
 
     if (value === "Add New Location") {
       setShowAddressModal(true);
@@ -93,6 +100,8 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
   // }, []);
 
   useEffect(() => {
+    console.log("newfnol", fnolFormData);
+
     getTypeList("LossCause").then((response) => {
       console.log("LossCause response", response);
 
@@ -161,7 +170,13 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
               onChange={(option) => {
                 setFnolFormData((prev) => ({
                   ...prev,
-                  causeOfLoss: option.code,
+                  currentClaim: {
+                    ...prev.currentClaim,
+                    lossCause: {
+                      code: option.code,
+                      name: option.name,
+                    },
+                  },
                 }));
               }}
               disabled={false}
@@ -190,6 +205,10 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
                 setFnolFormData((prev) => ({
                   ...prev,
                   selectedVehicle: option.code,
+                  currentClaim: {
+                    ...prev.currentClaim,
+                    vehicleInvolved: option.code,
+                  },
                 }));
               }}
               disabled={false}
@@ -263,8 +282,17 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
             <p>Was anyone injured?</p>
 
             <YesNoToggle
-              value={fnolFormData.injured ?? undefined}
-              onChange={(val: boolean) => updateField("injured", val)}
+              value={fnolFormData.currentClaim?.isInjured ?? undefined}
+              onChange={(val: boolean) =>
+                setFnolFormData((prev) => ({
+                  ...prev,
+                  injured: val,
+                  currentClaim: {
+                    ...prev.currentClaim,
+                    isInjured: val,
+                  },
+                }))
+              }
             />
           </div>
 
@@ -272,8 +300,16 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
             <p>Police report filed?</p>
 
             <YesNoToggle
-              value={fnolFormData.policeReport ?? undefined}
-              onChange={(val: boolean) => updateField("policeReport", val)}
+              value={fnolFormData.currentClaim?.isReported ?? undefined}
+              onChange={(val: boolean) =>
+                setFnolFormData((prev) => ({
+                  ...prev,
+                  currentClaim: {
+                    ...prev.currentClaim,
+                    isReported: val,
+                  },
+                }))
+              }
             />
           </div>
         </div>
@@ -285,8 +321,16 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
           </label>
 
           <textarea
-            value={fnolFormData.description || ""}
-            onChange={(e) => updateField("description", e.target.value)}
+            value={fnolFormData.currentClaim?.lossDescription || ""}
+            onChange={(e) =>
+              setFnolFormData((prev) => ({
+                ...prev,
+                currentClaim: {
+                  ...prev.currentClaim,
+                  lossDescription: e.target.value,
+                },
+              }))
+            }
             placeholder="Describe exactly what happened..."
           />
         </div>

@@ -5,6 +5,11 @@ import { WizardPageProps } from "../../../../types/Wizardtype";
 import styles from "./ReviewStep.module.scss";
 import { useFNOLContext } from "../../FNOLWizardContext";
 import messages from "./ReviewStep.messages";
+import {
+  getClaimById,
+  updateClaim,
+} from "../../../../api/services/claim/claimApi";
+import { Claim } from "../../../../api/services/claim/types/Claim";
 
 const ReviewStep = (wizardPageProps: WizardPageProps) => {
   const intl = useIntl();
@@ -18,13 +23,24 @@ const ReviewStep = (wizardPageProps: WizardPageProps) => {
   const handleSubmit = () => {
     if (isAuthorize && isCertify) {
       setIsShowError(false);
-      //todo post api
+
       wizardPageProps.handleNext?.();
     } else {
       setIsShowError(true);
     }
   };
 
+  const updateClaimData = (claim: Claim) => {};
+  useEffect(() => {
+    getClaimById(fnolFormData?.currentClaim?.claimNumber || "").then(
+      (response) => {
+        const claim = response.data?.data;
+        updateClaimData(claim);
+        console.log("claim from api", claim);
+        console.log("claim from formdata", fnolFormData.currentClaim);
+      },
+    );
+  }, []);
   useEffect(() => {
     if (isShowError && isCertify && isAuthorize) {
       setIsShowError(false);

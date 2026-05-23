@@ -36,17 +36,19 @@ const DamageStep = (wizardPageProps: DamageStepProps) => {
     }));
   };
   useEffect(() => {
-    console.log("FNOL Form Data Updated:", fnolFormData);
-  }, [fnolFormData]);
+    console.log("FNOL Form Data Updated damage:", fnolFormData);
+  }, []);
   useEffect(() => {
     getTypeList("AffectedAreas").then((response) => {
-      const mappedAreas: DamageAreaOption[] = response.map((item: any) => ({
-        code: item.code,
-        label: item.name,
-        img: item.img ?? "",
-        active: false,
-      }));
-
+      const mappedAreas: DamageAreaOption[] = response.data.map(
+        (item: any) => ({
+          code: item.code,
+          label: item.name,
+          img: item.img ?? "",
+          active: false,
+        }),
+      );
+      console.log("responseDamageSTep", response.data);
       setAffectedAreas(mappedAreas);
     });
   }, []);
