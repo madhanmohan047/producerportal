@@ -38,11 +38,13 @@ const WizardProgressBar = ({
         )}
 
         {!progressbarProps.hideNameInProgress && (
-          <div className={`${styles["step-title"]} ${isActive ? styles["step-title--active"] : ""}`}>
+          <div
+            className={`${styles["step-title"]} ${isActive ? styles["step-title--active"] : ""}`}
+          >
             {progressbarProps.title}
           </div>
         )}
-      </button>
+      </div>
 
       {!progressbarProps.isSubmission && (
         <div

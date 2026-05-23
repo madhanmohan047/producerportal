@@ -52,7 +52,7 @@ export type PAFormData = {
   coverageType?: string;
   deductible?: string;
   selectedCoverageIds?: string[];
-  liabilityLimits?: string;
+  // liabilityLimits?: string;
   comprehensiveDeductible?: string;
   collisionDeductible?: string;
   premiumEstimate?: PAPremiumEstimate;
@@ -93,10 +93,15 @@ type PAWizardProviderProps = {
 
 const formatDate = (date: Date): string => date.toISOString().slice(0, 10);
 
-export const PAWizardProvider = ({ paFormData, children }: PAWizardProviderProps) => {
+export const PAWizardProvider = ({
+  paFormData,
+  children,
+}: PAWizardProviderProps) => {
   const [formData, setFormData] = useState<PAFormData>(paFormData);
   return (
-    <PAWizardContext.Provider value={{ paFormData: formData, setPAFormData: setFormData }}>
+    <PAWizardContext.Provider
+      value={{ paFormData: formData, setPAFormData: setFormData }}
+    >
       {children}
     </PAWizardContext.Provider>
   );
@@ -104,7 +109,8 @@ export const PAWizardProvider = ({ paFormData, children }: PAWizardProviderProps
 
 export const usePAContext = () => {
   const ctx = useContext(PAWizardContext);
-  if (!ctx) throw new Error("usePAContext must be used within a PAWizardProvider");
+  if (!ctx)
+    throw new Error("usePAContext must be used within a PAWizardProvider");
   return ctx;
 };
 

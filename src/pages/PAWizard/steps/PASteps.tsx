@@ -115,57 +115,57 @@ export const PASteps: WizardStep[] = [
       },
     },
   },
-  {
-    id: "quote",
-    type: "wizard",
-    route: "coverage",
-    component: Coverage,
-    wizardPageConfig: {
-      title: "Premium",
-      description: "Premium Breakdown",
-      stepId: "7",
+  // {
+  //   id: "quote",
+  //   type: "wizard",
+  //   route: "coverage",
+  //   component: Coverage,
+  //   wizardPageConfig: {
+  //     title: "Premium",
+  //     description: "Premium Breakdown",
+  //     stepId: "7",
 
-      buttonProps: {
-        next: { label: "Continue" },
-        previous: { label: "Back" },
-        ...saveDraft,
-      },
-    },
-  },
-  {
-    id: "premium",
-    type: "wizard",
-    route: "premium",
-    component: Premium,
-    wizardPageConfig: {
-      title: "Premium",
-      description: "Premium Selection",
-      stepId: "7",
+  //     buttonProps: {
+  //       next: { label: "Continue" },
+  //       previous: { label: "Back" },
+  //       ...saveDraft,
+  //     },
+  //   },
+  // },
+  // {
+  //   id: "premium",
+  //   type: "wizard",
+  //   route: "premium",
+  //   component: Premium,
+  //   wizardPageConfig: {
+  //     title: "Premium",
+  //     description: "Premium Selection",
+  //     stepId: "7",
 
-      buttonProps: {
-        next: { label: "Continue" },
-        previous: { label: "Back" },
-        ...saveDraft,
-      },
-    },
-  },
-  {
-    id: "documents",
-    type: "wizard",
-    route: "documents",
-    component: DocUpload,
-    wizardPageConfig: {
-      title: "Documents",
-      description: "Policy Documents",
-      stepId: "8",
+  //     buttonProps: {
+  //       next: { label: "Continue" },
+  //       previous: { label: "Back" },
+  //       ...saveDraft,
+  //     },
+  //   },
+  // },
+  // {
+  //   id: "documents",
+  //   type: "wizard",
+  //   route: "documents",
+  //   component: DocUpload,
+  //   wizardPageConfig: {
+  //     title: "Documents",
+  //     description: "Policy Documents",
+  //     stepId: "8",
 
-      buttonProps: {
-        next: { label: "Continue" },
-        previous: { label: "Back" },
-        ...saveDraft,
-      },
-    },
-  },
+  //     buttonProps: {
+  //       next: { label: "Continue" },
+  //       previous: { label: "Back" },
+  //       ...saveDraft,
+  //     },
+  //   },
+  // },
   {
     id: "reviewBind",
     type: "wizard",
