@@ -29,3 +29,40 @@ export interface ClaimContact extends Base {
 
   updatedAt?: Date | string;
 }
+export const mapContactToClaimContact = (
+  contact?: any,
+): ClaimContact | undefined => {
+  if (!contact) return undefined;
+
+  return {
+    pcSystemId: contact._id,
+
+    firstName: contact.firstName,
+
+    lastName: contact.lastName,
+
+    companyName: contact.companyName,
+
+    dateOfBirth: contact.dateOfBirth,
+
+    workPhone: contact.workPhone,
+
+    homePhone: contact.homePhone,
+
+    cellPhone: contact.phone,
+
+    emailAddress: contact.email,
+
+    type: contact.type ?? {
+      code: "person",
+      name: "Person",
+    },
+
+    roles: [
+      {
+        code: "primary",
+        name: "Primary",
+      },
+    ],
+  };
+};

@@ -37,7 +37,7 @@ export interface Claim extends Base {
   claimNumber?: string;
 
   vehicleDamaged?: DamageAreaOption[];
-  documentList?: File[];
+  documentList?: ClaimDocument[];
 
   status?: TypeKeyValue;
 }

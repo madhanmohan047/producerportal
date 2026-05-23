@@ -1,7 +1,11 @@
 import React from "react";
+
 import { useIntl } from "react-intl";
+
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
   faCircleInfo,
   faPenToSquare,
@@ -10,60 +14,77 @@ import {
   faCar,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+
 import Button from "../common/Button/Button";
+
 import Card from "../common/Card/Card";
+
 import StatusBadge from "../common/StatusBadge/StatusBadge";
-import { Base, TypeKeyValue } from "../../api/utils/types";
+
 import { PARTY_MESSAGES } from "./PartyComponent.messages";
+
 import styles from "./PartyComponent.module.scss";
 
-export interface ClaimContact extends Base {
-  name?: string;
-  phone?: string;
-  roles: TypeKeyValue[];
-  emailAddress?: string;
-  description?: string;
-}
-
-export type PrimaryClaimant = {
-  name: string;
-};
+import { ClaimContact } from "../../api/services/claim/types/ClaimContact";
 
 export const ROLE_CODES = {
   otherDriver: "other-driver",
+
   witness: "witness",
 } as const;
 
 const ROLE_ICON: Record<string, IconDefinition> = {
   [ROLE_CODES.otherDriver]: faCar,
+
   [ROLE_CODES.witness]: faUser,
 };
 
 type PartyProps = {
-  primaryClaimant: PrimaryClaimant;
-  contacts: ClaimContact[];
+  primaryClaimant?: ClaimContact;
+
+  contacts?: ClaimContact[];
+
   onEditPrimary?: () => void;
+
   onEditContact?: (id: string) => void;
+
   onDeleteContact?: (id: string) => void;
+
   onAddContact?: () => void;
+
   readOnly?: boolean;
 };
 
-const displayNameFor = (contact: ClaimContact): string => {
-  if (contact.name && contact.name.trim()) return contact.name;
-  if (contact.roles.length > 0) return contact.roles[0].name;
+const displayNameFor = (contact?: ClaimContact): string => {
+  if (!contact) {
+    return "—";
+  }
+
+  const fullName = [contact.firstName, contact.lastName]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+
+  if (fullName) {
+    return fullName;
+  }
+
+  if (contact.companyName?.trim()) {
+    return contact.companyName;
+  }
+
   return "—";
 };
 
 const rolesLabelFor = (contact: ClaimContact): string =>
-  contact.roles.map((r) => r.name).join(" / ");
+  (contact.roles ?? []).map((r) => r.name).join(" / ");
 
 const iconFor = (contact: ClaimContact): IconDefinition =>
-  ROLE_ICON[contact.roles[0]?.code] ?? faUser;
+  ROLE_ICON[contact.roles?.[0]?.code ?? ""] ?? faUser;
 
 export const PartyComponent = ({
   primaryClaimant,
-  contacts,
+  contacts = [],
   onEditPrimary,
   onEditContact,
   onDeleteContact,
@@ -78,6 +99,7 @@ export const PartyComponent = ({
         <h1 className={styles.title}>
           {intl.formatMessage(PARTY_MESSAGES.title)}
         </h1>
+
         <p className={styles.subtitle}>
           {intl.formatMessage(PARTY_MESSAGES.subtitle)}
         </p>
@@ -85,6 +107,7 @@ export const PartyComponent = ({
 
       <div className={styles.infoBanner} role="status">
         <FontAwesomeIcon icon={faCircleInfo} className={styles.infoIcon} />
+
         <span>{intl.formatMessage(PARTY_MESSAGES.infoBanner)}</span>
       </div>
 
@@ -93,27 +116,34 @@ export const PartyComponent = ({
           <span className={styles.primaryTitle}>
             {intl.formatMessage(PARTY_MESSAGES.primaryClaimantLabel)}
           </span>
+
           <StatusBadge
             status={intl.formatMessage(PARTY_MESSAGES.insuredBadge)}
             variant="success"
           />
         </div>
+
         <div className={styles.primaryBody}>
           <div>
             <div className={styles.uppercaseLabel}>
               {intl.formatMessage(PARTY_MESSAGES.namedInsuredLabel)}
             </div>
-            <div className={styles.primaryName}>{primaryClaimant.name}</div>
+
+            <div className={styles.primaryName}>
+              {displayNameFor(primaryClaimant)}
+            </div>
           </div>
-          <Button
+
+          {/* <Button
             variant="secondary"
             size="small"
             onClick={onEditPrimary}
-            disabled={readOnly}
+            disabled={readOnly || !onEditPrimary}
           >
             <FontAwesomeIcon icon={faPenToSquare} />
+
             {intl.formatMessage(PARTY_MESSAGES.editAction)}
-          </Button>
+          </Button> */}
         </div>
       </Card>
 
@@ -132,15 +162,17 @@ export const PartyComponent = ({
               <div className={styles.partyAvatar}>
                 <FontAwesomeIcon icon={iconFor(contact)} />
               </div>
+
               <div className={styles.partyInfo}>
                 <div className={styles.uppercaseLabel}>
                   {rolesLabelFor(contact)}
                 </div>
+
                 <div className={styles.partyName}>
                   {displayNameFor(contact)}
-                  {contact.description ? ` — ${contact.description}` : ""}
                 </div>
               </div>
+
               <div className={styles.partyActions}>
                 <Button
                   variant="secondary"
@@ -149,8 +181,10 @@ export const PartyComponent = ({
                   disabled={readOnly || !contact._id}
                 >
                   <FontAwesomeIcon icon={faPenToSquare} />
+
                   {intl.formatMessage(PARTY_MESSAGES.editAction)}
                 </Button>
+
                 <Button
                   variant="danger"
                   size="small"
@@ -158,6 +192,7 @@ export const PartyComponent = ({
                   disabled={readOnly || !contact._id}
                 >
                   <FontAwesomeIcon icon={faTrashCan} />
+
                   {intl.formatMessage(PARTY_MESSAGES.deleteAction)}
                 </Button>
               </div>
@@ -171,11 +206,14 @@ export const PartyComponent = ({
         size="large"
         fullWidth
         onClick={onAddContact}
-        disabled={readOnly}
+        disabled={readOnly || !onAddContact}
       >
         <FontAwesomeIcon icon={faPlus} />
+
         {intl.formatMessage(PARTY_MESSAGES.addAnotherPerson)}
       </Button>
     </div>
   );
 };
+
+export default PartyComponent;

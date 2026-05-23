@@ -5,11 +5,7 @@ import { WizardPageProps } from "../../../../types/Wizardtype";
 import styles from "./ReviewStep.module.scss";
 import { useFNOLContext } from "../../FNOLWizardContext";
 import messages from "./ReviewStep.messages";
-import {
-  getClaimById,
-  updateClaim,
-} from "../../../../api/services/claim/claimApi";
-import { Claim } from "../../../../api/services/claim/types/Claim";
+import { updateClaim } from "../../../../api/services/claim/claimApi";
 
 const ReviewStep = (wizardPageProps: WizardPageProps) => {
   const intl = useIntl();
@@ -20,32 +16,34 @@ const ReviewStep = (wizardPageProps: WizardPageProps) => {
 
   const { fnolFormData } = useFNOLContext();
 
-  const handleSubmit = () => {
-    if (isAuthorize && isCertify) {
-      setIsShowError(false);
+  const handleSubmit = async () => {
+    if (!isAuthorize || !isCertify) {
+      setIsShowError(true);
+      return;
+    }
+
+    setIsShowError(false);
+
+    try {
+      if (fnolFormData.currentClaim?._id) {
+        await updateClaim(
+          fnolFormData.currentClaim.claimNumber || "",
+          fnolFormData.currentClaim,
+        );
+      }
 
       wizardPageProps.handleNext?.();
-    } else {
+    } catch (error) {
+      console.error("Update claim failed:", error);
       setIsShowError(true);
     }
   };
 
-  const updateClaimData = (claim: Claim) => {};
   useEffect(() => {
-    getClaimById(fnolFormData?.currentClaim?.claimNumber || "").then(
-      (response) => {
-        const claim = response.data?.data;
-        updateClaimData(claim);
-        console.log("claim from api", claim);
-        console.log("claim from formdata", fnolFormData.currentClaim);
-      },
-    );
-  }, []);
-  useEffect(() => {
-    if (isShowError && isCertify && isAuthorize) {
+    if (isCertify && isAuthorize) {
       setIsShowError(false);
     }
-  }, [isAuthorize, isCertify]);
+  }, [isCertify, isAuthorize]);
 
   return (
     <WizardPage
