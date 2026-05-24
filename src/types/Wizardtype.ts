@@ -43,7 +43,6 @@ type WizardPageProps = {
   wizardSidebarprops?: WizardSidebarProps;
   children?: React.ReactNode;
   SidebarComponent?: React.ComponentType<any>;
-  nextDisabled?: boolean;
 };
 type WizardSidebarItemProps = {
   transformationKey: string;
