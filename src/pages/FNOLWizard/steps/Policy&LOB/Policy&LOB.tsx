@@ -1,26 +1,31 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { getAllPolicies } from "../../../../api/services/policy/policyApi";
 import { getAllAccounts } from "../../../../api/services/account/accountApi";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
-
 import { WizardPageProps } from "../../../../types/Wizardtype";
 import { useFNOLContext } from "../../FNOLWizardContext";
-import { SideBarProps } from "../FnolConstant";
 import styles from "./Policy&LOB.module.scss";
+import { SideBarProps } from "../FnolConstant";
+import { Policy } from "../../../../api/services/policy/types";
+import { createClaim } from "../../../../api/services/claim/claimApi";
+import { Claim } from "../../../../api/services/claim/types/Claim";
+import { mapContactToClaimContact } from "../../../../api/services/claim/types/ClaimContact";
 
 const StartClaim = (wizardPageProps: WizardPageProps) => {
+  const today = new Date().toISOString().split("T")[0];
   const { fnolFormData, setFnolFormData } = useFNOLContext();
+
+  const isSubmittingRef = useRef(false);
 
   const [LOB, setLOB] = useState(
     fnolFormData?.lineOfBusiness || "Personal Auto",
   );
 
-  const [policies, setPolicies] = useState<any[]>([]);
+  const [policies, setPolicies] = useState<Policy[]>([]);
   const [accounts, setAccounts] = useState<any[]>([]);
-
   const [filteredPolicies, setFilteredPolicies] = useState<any[]>([]);
-
   const [loading, setLoading] = useState(true);
+  const [claimNumber, setClaimNumber] = useState("");
 
   const [selectedAccount, setSelectedAccount] = useState(
     fnolFormData?.accountNumber || "",
@@ -28,32 +33,39 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
   const [selectedPolicy, setSelectedPolicy] = useState(
     fnolFormData?.policyNumber || "",
   );
-
   const [selectedDate, setSelectedDate] = useState(
     fnolFormData?.dateOfLoss || new Date().toISOString().split("T")[0],
   );
-  const today = new Date().toISOString().split("T")[0];
+  const [timeOfLoss, setTimeOfLoss] = useState(fnolFormData?.timeOfLoss || "");
+
   const currentTime = new Date().toLocaleTimeString("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
   });
 
-  const [timeOfLoss, setTimeOfLoss] = useState(
-    fnolFormData?.timeOfLoss || currentTime,
-  );
-
   useEffect(() => {
     Promise.all([getAllAccounts(), getAllPolicies()])
       .then(([accountsResult, policiesResult]) => {
-        const accts = accountsResult.data || [];
-        const pols = policiesResult.data || [];
+        const accts = Array.isArray(accountsResult?.data)
+          ? accountsResult.data
+          : Array.isArray(accountsResult?.data?.data)
+            ? accountsResult.data.data
+            : [];
+
+        const pols = Array.isArray(policiesResult?.data)
+          ? policiesResult.data
+          : Array.isArray(policiesResult?.data?.data)
+            ? policiesResult.data.data
+            : [];
 
         setAccounts(accts);
         setPolicies(pols);
       })
       .catch((error) => {
         console.error("Error loading data:", error);
+        setAccounts([]);
+        setPolicies([]);
       })
       .finally(() => {
         setLoading(false);
@@ -68,11 +80,7 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
 
     const filtered = policies.filter((policy) => {
       const matchesLOB = policy?.product?.name === LOB;
-
-      const matchesAccount =
-        policy?.accountNumber === selectedAccount ||
-        policy?.account?.accountNumber === selectedAccount;
-
+      const matchesAccount = policy?.account?.accountNumber === selectedAccount;
       return matchesLOB && matchesAccount;
     });
 
@@ -80,6 +88,7 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
   }, [selectedAccount, LOB, policies]);
 
   const selectedAccountDetails = useMemo(() => {
+    if (!Array.isArray(accounts)) return undefined;
     return accounts.find(
       (account) => account.accountNumber === selectedAccount,
     );
@@ -91,15 +100,23 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
 
   const handleAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedAccount(e.target.value);
-
     setSelectedPolicy("");
   };
 
-  useEffect(() => {
-    if (selectedDate === today && timeOfLoss > currentTime) {
-      setTimeOfLoss(currentTime);
-    }
-  }, [selectedDate, timeOfLoss, currentTime, today]);
+  const handlePolicyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
+    setSelectedPolicy(selectedValue);
+
+    const matchedPolicy = policies.find(
+      (policy) => policy._id === selectedValue,
+    );
+
+    setFnolFormData((prev) => ({
+      ...prev,
+      vehicleInvolved: matchedPolicy?.vehicles,
+      primaryClaimant: mapContactToClaimContact(matchedPolicy?.primaryInsured),
+    }));
+  };
 
   useEffect(() => {
     setFnolFormData((prev) => ({
@@ -127,8 +144,8 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
             transformationLabel: LOB,
           },
           {
-            transformationKey: SideBarProps.LossDate,
-            transformationLabel: selectedDate,
+            transformationKey: SideBarProps.ClaimNumber,
+            transformationLabel: claimNumber,
           },
         ],
       },
@@ -138,21 +155,65 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
     selectedAccountDetails,
     LOB,
     selectedPolicy,
+    claimNumber,
     selectedDate,
     timeOfLoss,
-    setFnolFormData,
   ]);
 
   useEffect(() => {
-    console.log("Updated FNOL Form Data:", fnolFormData);
-  }, [fnolFormData]);
+    if (claimNumber) {
+      wizardPageProps.handleNext?.();
+    }
+  }, [claimNumber, wizardPageProps.handleNext]);
+
+  const handleCreateClaim = async () => {
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
+
+    try {
+      const claim: Claim = {
+        account: fnolFormData.account?._id || undefined,
+        policy: fnolFormData.policyNumber,
+        product: {
+          code: fnolFormData.lineOfBusiness || "",
+          name: fnolFormData.lineOfBusiness || "",
+        },
+        partiesInvolved: fnolFormData.primaryClaimant
+          ? [fnolFormData.primaryClaimant]
+          : [],
+        lossDate: fnolFormData.dateOfLoss
+          ? new Date(fnolFormData.dateOfLoss)
+          : undefined,
+        lossDescription:
+          "Minor accident reported - details to be updated later",
+        status: {
+          code: "draft",
+          name: "Draft",
+        },
+      };
+
+      const response = await createClaim(claim);
+      const createdClaim = response.data?.data?.claimNumber;
+
+      setClaimNumber(createdClaim);
+      setFnolFormData((prev) => ({
+        ...prev,
+        claimNumber: createdClaim,
+        currentClaim: response.data?.data,
+      }));
+    } catch (err) {
+      console.error("Failed to create claim:", err);
+      isSubmittingRef.current = false;
+    }
+  };
 
   return (
     <WizardPage
       step={wizardPageProps.step}
       location={wizardPageProps.location}
-      handleNext={wizardPageProps.handleNext}
+      handleNext={handleCreateClaim}
       handlePrevious={wizardPageProps.handlePrevious}
+      showPageheader={false}
       wizardSidebarprops={wizardPageProps.wizardSidebarprops}
     >
       <div className={styles["start-claim-page"]}>
@@ -164,7 +225,6 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
             claim process.
           </p>
 
-          {/* ACCOUNT DROPDOWN */}
           <div className={styles["account-fields"]}>
             <label>
               Choose an Account <span>*</span>
@@ -178,14 +238,12 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
               >
                 <option value="">Select Account</option>
 
-                {accounts.map((account) => (
-                  <option
-                    key={account.accountNumber}
-                    value={account.accountNumber}
-                  >
-                    {account.accountNumber}
-                  </option>
-                ))}
+                {Array.isArray(accounts) &&
+                  accounts.map((account) => (
+                    <option key={account._id} value={account._id}>
+                      {account._id}
+                    </option>
+                  ))}
               </select>
 
               {selectedAccountDetails && (
@@ -221,7 +279,9 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
             </div>
 
             <div
-              className={`business-card ${LOB === "Commercial" ? "active" : ""}`}
+              className={`business-card ${
+                LOB === "Commercial" ? "active" : ""
+              }`}
             >
               <button onClick={() => handleLOBChange("Commercial")}>
                 <h3>Commercial</h3>
@@ -231,7 +291,6 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
           </div>
         </div>
 
-        {/* POLICY SECTION */}
         <div className={styles["top-fields"]}>
           <div className={styles["field-group"]}>
             <label>
@@ -241,7 +300,7 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
             <div className={styles["input-wrapper"]}>
               <select
                 value={selectedPolicy}
-                onChange={(e) => setSelectedPolicy(e.target.value)}
+                onChange={handlePolicyChange}
                 disabled={!selectedAccount}
               >
                 <option value="">
@@ -250,19 +309,18 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
                     : "Select an account first"}
                 </option>
 
-                {filteredPolicies.map((policy) => (
-                  <option key={policy.policyNumber} value={policy.policyNumber}>
-                    {policy.policyNumber}
-                  </option>
-                ))}
+                {Array.isArray(policies) &&
+                  policies.map((policy) => (
+                    <option key={policy._id} value={policy._id}>
+                      {policy._id}
+                    </option>
+                  ))}
               </select>
             </div>
 
-            {/* POLICY PREVIEW */}
             {filteredPolicies.length > 0 && (
               <div className={styles["policy-results"]}>
                 <h4>Available Policies</h4>
-
                 <ul>
                   {filteredPolicies.map((policy) => (
                     <li key={policy.policyNumber}>
@@ -276,7 +334,6 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
           </div>
         </div>
 
-        {/* LOSS DETAILS */}
         <div className={styles["bottom-fields"]}>
           <div className={styles["field-group"]}>
             <label>
@@ -286,10 +343,8 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
             <input
               type="date"
               value={selectedDate}
-              onChange={(e) => {
-                setSelectedDate(e.target.value);
-              }}
-              max={today}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              max={new Date().toISOString().split("T")[0]}
             />
           </div>
 
@@ -300,7 +355,6 @@ const StartClaim = (wizardPageProps: WizardPageProps) => {
               type="time"
               value={timeOfLoss}
               onChange={(e) => setTimeOfLoss(e.target.value)}
-              disabled={!selectedDate}
               max={selectedDate === today ? currentTime : undefined}
             />
           </div>

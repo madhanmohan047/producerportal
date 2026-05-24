@@ -1,43 +1,16 @@
 import { useState } from "react";
+
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
-import {
-  PartyComponent,
-  ClaimContact,
-  PrimaryClaimant,
-  ROLE_CODES,
-} from "../../../../components/PartyComponent/PartyComponent";
+
+import { PartyComponent } from "../../../../components/PartyComponent/PartyComponent";
+
 import AddEditPartyDialog from "../../../../components/PartyComponent/AddEditPartyDialog";
+
 import { WizardPageProps } from "../../../../types/Wizardtype";
-import { TypeKeyValue } from "../../../../api/utils/types";
+
 import { useFNOLContext } from "../../FNOLWizardContext";
 
-const INITIAL_PRIMARY: PrimaryClaimant = {
-  name: "Sarah Mitchell",
-};
-
-const otherDriverRole: TypeKeyValue = {
-  code: ROLE_CODES.otherDriver,
-  name: "Third Party",
-};
-const witnessRole: TypeKeyValue = {
-  code: ROLE_CODES.witness,
-  name: "Witness",
-};
-
-const INITIAL_CONTACTS: ClaimContact[] = [
-  {
-    _id: "c1",
-    name: "John Doe",
-    roles: [otherDriverRole],
-    description: "Blue Honda Civic (ABC-123)",
-  },
-  {
-    _id: "c2",
-    name: "Jane Smith",
-    roles: [witnessRole],
-    description: "Bystander",
-  },
-];
+import { ClaimContact } from "../../../../api/services/claim/types/ClaimContact";
 
 type DialogState =
   | { mode: "closed" }
@@ -47,42 +20,68 @@ type DialogState =
 
 const PartyStep = (wizardPageProps: WizardPageProps) => {
   const { fnolFormData, setFnolFormData } = useFNOLContext();
-  const primaryClaimant = fnolFormData.primaryClaimant ?? INITIAL_PRIMARY;
-  const contacts = fnolFormData.contacts ?? INITIAL_CONTACTS;
-  const [dialog, setDialog] = useState<DialogState>({ mode: "closed" });
+
+  const contacts: ClaimContact[] =
+    fnolFormData.currentClaim?.partiesInvolved ?? [];
+
+  const primaryClaimant = fnolFormData.currentClaim?.partiesInvolved?.[0];
+
+  const [dialog, setDialog] = useState<DialogState>({
+    mode: "closed",
+  });
 
   const updateContacts = (next: ClaimContact[]) => {
-    setFnolFormData((prev) => ({ ...prev, contacts: next }));
-  };
+    setFnolFormData((prev) => ({
+      ...prev,
 
-  const updatePrimary = (next: PrimaryClaimant) => {
-    setFnolFormData((prev) => ({ ...prev, primaryClaimant: next }));
+      currentClaim: {
+        ...prev.currentClaim,
+
+        partiesInvolved: next,
+      },
+    }));
   };
 
   const handleDelete = (id: string) => {
     updateContacts(contacts.filter((c) => c._id !== id));
   };
 
-  const handleAdd = () => setDialog({ mode: "contact-add" });
+  const handleAdd = () => {
+    setDialog({ mode: "contact-add" });
+  };
 
-  const handleEditContact = (id: string) =>
-    setDialog({ mode: "contact-edit", contactId: id });
+  const handleEditContact = (id: string) => {
+    setDialog({
+      mode: "contact-edit",
+      contactId: id,
+    });
+  };
 
-  const handleEditPrimary = () => setDialog({ mode: "primary" });
+  const handleEditPrimary = () => {
+    setDialog({ mode: "primary" });
+  };
 
-  const handleCancel = () => setDialog({ mode: "closed" });
-
-  const handleSaveContact = (saved: ClaimContact) => {
-    const exists = contacts.some((c) => c._id === saved._id);
-    const next = exists
-      ? contacts.map((c) => (c._id === saved._id ? saved : c))
-      : [...contacts, saved];
-    updateContacts(next);
+  const handleCancel = () => {
     setDialog({ mode: "closed" });
   };
 
-  const handleSavePrimary = (saved: PrimaryClaimant) => {
-    updatePrimary(saved);
+  const handleSaveContact = (saved: ClaimContact) => {
+    const exists = contacts.some((c) => c._id === saved._id);
+
+    const next = exists
+      ? contacts.map((c) => (c._id === saved._id ? saved : c))
+      : [...contacts, saved];
+
+    updateContacts(next);
+
+    setDialog({ mode: "closed" });
+  };
+
+  const handleSavePrimary = (saved: ClaimContact) => {
+    const remainingContacts = contacts.filter((c) => c._id !== saved._id);
+
+    updateContacts([saved, ...remainingContacts]);
+
     setDialog({ mode: "closed" });
   };
 
@@ -90,14 +89,18 @@ const PartyStep = (wizardPageProps: WizardPageProps) => {
     dialog.mode === "contact-edit"
       ? contacts.find((c) => c._id === dialog.contactId)
       : undefined;
-
+  const handleNextStep = () => {
+    console.log("savedparties", fnolFormData.currentClaim?.partiesInvolved);
+    wizardPageProps.handleNext?.();
+  };
   return (
     <WizardPage
       step={wizardPageProps.step}
       location={wizardPageProps.location}
-      handleNext={wizardPageProps.handleNext}
+      handleNext={handleNextStep}
       handlePrevious={wizardPageProps.handlePrevious}
       handleSaveDraft={wizardPageProps.handleSaveDraft}
+      showPageheader={false}
       wizardSidebarprops={wizardPageProps.wizardSidebarprops}
     >
       <PartyComponent

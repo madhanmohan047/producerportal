@@ -11,9 +11,7 @@ const DEFAULT_CLAIM_NUMBER = "CL-2025-004872";
 const DEFAULT_SUBMITTED_DATE = "Submitted April 15, 2025 • 2:34 PM ET";
 const DEFAULT_EMAIL = "s.mitchell@email.com";
 
-const ClaimSubmittedStep = (
-  wizardPageProps: WizardPageProps,
-) => {
+const ClaimSubmittedStep = (wizardPageProps: WizardPageProps) => {
   const navigate = useNavigate();
   const { fnolFormData } = useFNOLContext();
 
@@ -30,15 +28,10 @@ const ClaimSubmittedStep = (
       step={wizardPageProps.step}
       location={wizardPageProps.location}
       handleNext={wizardPageProps.handleNext}
-      handlePrevious={
-        wizardPageProps.handlePrevious
-      }
-      handleSaveDraft={
-        wizardPageProps.handleSaveDraft
-      }
-      wizardSidebarprops={
-        wizardPageProps.wizardSidebarprops
-      }
+      showPageheader={false}
+      handlePrevious={wizardPageProps.handlePrevious}
+      handleSaveDraft={wizardPageProps.handleSaveDraft}
+      wizardSidebarprops={wizardPageProps.wizardSidebarprops}
     >
       <ClaimSubmitted
         claimNumber={fnolFormData.claimNumber ?? DEFAULT_CLAIM_NUMBER}

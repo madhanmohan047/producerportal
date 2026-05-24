@@ -39,6 +39,7 @@ type WizardPageProps = {
   handleNext?: () => void;
   handlePrevious?: () => void;
   handleSaveDraft?: () => void;
+  showPageheader?: boolean;
   wizardSidebarprops?: WizardSidebarProps;
   children?: React.ReactNode;
   SidebarComponent?: React.ComponentType<any>;

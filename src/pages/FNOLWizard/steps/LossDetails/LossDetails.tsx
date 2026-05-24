@@ -7,6 +7,13 @@ import { getPolicyById } from "../../../../api/services/policy/policyApi";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import AddressSection from "../../../../components/AddressComponent/AddressComponent";
 import YesNoToggle from "../../../../components/common/YesNoToggle/YesNoToggle";
+import { getTypeList } from "../../../../api/services/typelist/typelistApi";
+import { TypeList } from "../../../../api/utils/types";
+import Combobox, {
+  ComboboxOption,
+} from "../../../../components/common/Combobox/Combobox";
+// import { getPolicyById } from "../../api/services/policy/policyApi";
+// import { useFNOLContext } from "../FNOLWizard/FNOLWizardContext";
 import styles from "../LossDetails/LossDetails.module.scss";
 
 const emptyAddress: Address = {
@@ -24,6 +31,11 @@ const emptyAddress: Address = {
 export const LossDetails = (wizardPageProps: WizardPageProps) => {
   const { fnolFormData, setFnolFormData } = useFNOLContext();
   const [policyDetails, setPolicyDetails] = useState<any>(null);
+  const [losscause, setlosscause] = useState<ComboboxOption[]>([]);
+  const [vehiclesInvolved, setVehiclesInvolved] = useState<ComboboxOption[]>(
+    [],
+  );
+
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const policyId = params.get("id");
@@ -36,6 +48,7 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
         ...prev,
         [key]: value,
       }));
+      console.log("updatedfnol", fnolFormData);
     },
     [setFnolFormData],
   );
@@ -43,7 +56,13 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
 
-    updateField("locationType", value);
+    setFnolFormData((prev) => ({
+      ...prev,
+      currentClaim: {
+        ...prev.currentClaim,
+        lossLocation: value,
+      },
+    }));
 
     if (value === "Add New Location") {
       setShowAddressModal(true);
@@ -81,6 +100,23 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
   // }, []);
 
   useEffect(() => {
+    console.log("newfnol", fnolFormData);
+
+    getTypeList("LossCause").then((response) => {
+      console.log("LossCause response", response);
+
+      setlosscause(Array.isArray(response) ? response : response.data || []);
+    });
+
+    setVehiclesInvolved(
+      fnolFormData?.vehicleInvolved?.map((vehicle) => ({
+        code: vehicle._id || "",
+        name: `${vehicle.make} ${vehicle.model}`,
+      })) || [],
+    );
+  }, []);
+
+  useEffect(() => {
     if (!policyId) return;
 
     const fetchPolicyDetails = async () => {
@@ -95,10 +131,6 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
 
     fetchPolicyDetails();
   }, [policyId]);
-
-  useEffect(() => {
-    console.log("FNOL UPDATED:", fnolFormData);
-  }, [fnolFormData]);
 
   return (
     <WizardPage
@@ -127,26 +159,28 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
               Cause of Loss <span>*</span>
             </label>
 
-            <select
-              value={fnolFormData.causeOfLoss || ""}
-              onChange={(e) => updateField("causeOfLoss", e.target.value)}
-            >
-              <option value="">Select cause...</option>
-
-              <option value="Fire">Fire</option>
-
-              <option value="Accident">Accident</option>
-
-              <option value="Vandalism">Vandalism</option>
-
-              <option value="Weather-related damage">
-                Weather-related damage
-              </option>
-
-              <option value="Flood">Flood</option>
-
-              <option value="Theft">Theft</option>
-            </select>
+            <Combobox
+              label={"Loss Cause"}
+              required
+              options={losscause}
+              value={(Array.isArray(losscause) ? losscause : []).find(
+                (selectedCause) =>
+                  selectedCause.code === fnolFormData.causeOfLoss,
+              )}
+              onChange={(option) => {
+                setFnolFormData((prev) => ({
+                  ...prev,
+                  currentClaim: {
+                    ...prev.currentClaim,
+                    lossCause: {
+                      code: option.code,
+                      name: option.name,
+                    },
+                  },
+                }));
+              }}
+              disabled={false}
+            />
           </div>
 
           {/* Vehicle Involved */}
@@ -154,12 +188,31 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
             <label>
               Vehicle Involved <span>*</span>
             </label>
-
-            <input
+            {/* <input
               type="text"
               value={fnolFormData.vehicleInvolved || ""}
               onChange={(e) => updateField("vehicleInvolved", e.target.value)}
-            />
+            /> */}
+            <Combobox
+              label={"Loss Cause"}
+              required
+              options={vehiclesInvolved}
+              value={vehiclesInvolved.find(
+                (selectedCause) =>
+                  selectedCause.code === fnolFormData.selectedVehicle,
+              )}
+              onChange={(option) => {
+                setFnolFormData((prev) => ({
+                  ...prev,
+                  selectedVehicle: option.code,
+                  currentClaim: {
+                    ...prev.currentClaim,
+                    vehicleInvolved: option.code,
+                  },
+                }));
+              }}
+              disabled={false}
+            />{" "}
           </div>
 
           {/* Loss Location */}
@@ -229,8 +282,17 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
             <p>Was anyone injured?</p>
 
             <YesNoToggle
-              value={fnolFormData.injured ?? undefined}
-              onChange={(val: boolean) => updateField("injured", val)}
+              value={fnolFormData.currentClaim?.isInjured ?? undefined}
+              onChange={(val: boolean) =>
+                setFnolFormData((prev) => ({
+                  ...prev,
+                  injured: val,
+                  currentClaim: {
+                    ...prev.currentClaim,
+                    isInjured: val,
+                  },
+                }))
+              }
             />
           </div>
 
@@ -238,8 +300,16 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
             <p>Police report filed?</p>
 
             <YesNoToggle
-              value={fnolFormData.policeReport ?? undefined}
-              onChange={(val: boolean) => updateField("policeReport", val)}
+              value={fnolFormData.currentClaim?.isReported ?? undefined}
+              onChange={(val: boolean) =>
+                setFnolFormData((prev) => ({
+                  ...prev,
+                  currentClaim: {
+                    ...prev.currentClaim,
+                    isReported: val,
+                  },
+                }))
+              }
             />
           </div>
         </div>
@@ -251,8 +321,16 @@ export const LossDetails = (wizardPageProps: WizardPageProps) => {
           </label>
 
           <textarea
-            value={fnolFormData.description || ""}
-            onChange={(e) => updateField("description", e.target.value)}
+            value={fnolFormData.currentClaim?.lossDescription || ""}
+            onChange={(e) =>
+              setFnolFormData((prev) => ({
+                ...prev,
+                currentClaim: {
+                  ...prev.currentClaim,
+                  lossDescription: e.target.value,
+                },
+              }))
+            }
             placeholder="Describe exactly what happened..."
           />
         </div>

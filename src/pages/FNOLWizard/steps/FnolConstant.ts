@@ -3,4 +3,5 @@ export const SideBarProps = {
   PolicyNumber: "Policy #",
   LineOfBusiness: "Line of Business",
   LossDate: "Date of Loss",
+  ClaimNumber: "Claim Number",
 };

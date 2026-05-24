@@ -28,18 +28,18 @@ export default {
         showNavbar: false,
         component: AccountDetails,
       },
-      {
-        title: "Policy Summary",
-        path: "/policy-summary",
-        showNavbar: false,
-        component: PolicySummary,
-      },
-      {
-        title: "Personal Auto Wizard",
-        path: "/pawizard",
-        showNavbar: true,
-        component: PAWizard,
-      },
+      // {
+      //   title: "Policy Summary",
+      //   path: "/policy-summary",
+      //   showNavbar: false,
+      //   component: PolicySummary,
+      // },
+      // {
+      //   title: "Personal Auto Wizard",
+      //   path: "/pawizard",
+      //   showNavbar: true,
+      //   component: PAWizard,
+      // },
       {
         title: "FNOL Wizard",
         path: "/fnol-wizard",

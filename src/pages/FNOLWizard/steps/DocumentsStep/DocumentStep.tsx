@@ -1,43 +1,55 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
+
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
 import { useFNOLContext } from "../../FNOLWizardContext";
+
 import styles from "./DocumentStep.module.scss";
+import MESSAGES from "./DocumentStep.messages";
+
 const DocumentStep = (wizardPageProps: WizardPageProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { fnolFormData, setFnolFormData } = useFNOLContext();
-
+  const converttoClaimDocument = (file: File) => ({
+    refId: file.name,
+    name: file.name,
+    security: { code: "low", name: "Low" },
+  });
   const addFiles = (fileList: FileList) => {
-    const newFiles = Array.from(fileList);
-    setFnolFormData((formData) => ({
-      ...formData,
-      documentList: [...(formData.documentList || []), ...newFiles],
-    }));
-    console.log("docs", fnolFormData.documentList);
+    setFnolFormData((prev) => {
+      const existing = prev.currentClaim?.documents || [];
+      const existingKeys = new Set(existing.map((d) => d.refId + d.name));
+
+      const newDocs = Array.from(fileList)
+        .filter((f) => !existingKeys.has(f.name + f.size + f.lastModified))
+        .map(converttoClaimDocument);
+
+      return {
+        ...prev,
+        currentClaim: {
+          ...prev.currentClaim,
+          documents: [...existing, ...newDocs],
+        },
+      };
+    });
   };
-  // const removeFile = (removeItemIndex: number) => {
-  //   setFiles((prevList) =>
-  //     prevList.filter(
-  //       (currentItem, currentIndex) => currentIndex !== removeItemIndex,
-  //     ),
-  //   );
-  // };
+
   return (
     <WizardPage
       step={wizardPageProps.step}
       location={wizardPageProps.location}
+      showPageheader={false}
       handleNext={wizardPageProps.handleNext}
       handlePrevious={wizardPageProps.handlePrevious}
       wizardSidebarprops={wizardPageProps.wizardSidebarprops}
     >
       <div className={styles["container"]}>
         <div className={styles["step-header"]}>
-          <h2>Supporting Documents</h2>
-          <p>
-            Upload photos or reports. Providing these now reduces processing
-            time by up to 48 hours.
-          </p>
+          <h2>{MESSAGES.title.defaultMessage}</h2>
+
+          <p>{MESSAGES.subtitle.defaultMessage}</p>
         </div>
+
         <div
           className={styles["upload-container"]}
           onClick={() => fileInputRef.current?.click()}
@@ -50,13 +62,16 @@ const DocumentStep = (wizardPageProps: WizardPageProps) => {
               display: "block",
               marginBottom: "10px",
             }}
-          ></i>
+          />
+
           <p className={styles["upload-container-label"]}>
-            Click to upload or drag and drop
+            {MESSAGES.uploadLabel.defaultMessage}
           </p>
+
           <p className={styles["upload-container-hint"]}>
-            Maximum file size: 25MB (JPG, PNG, PDF)
+            {MESSAGES.uploadHint.defaultMessage}
           </p>
+
           <input
             ref={fileInputRef}
             type="file"
@@ -70,14 +85,19 @@ const DocumentStep = (wizardPageProps: WizardPageProps) => {
             onClick={(e) => e.stopPropagation()}
           />
         </div>
+
         <div className={styles["uploadedList"]}>
-          {fnolFormData.documentList?.map((file) => (
-            <div className={styles["upload-list-item"]}>
-              <i className="fa-solid fa-paperclip"></i>
+          {fnolFormData.currentClaim?.documents?.map((file) => (
+            <div
+              key={file.name + file.size}
+              className={styles["upload-list-item"]}
+            >
+              <i className="fa-solid fa-paperclip" />
               <span>{file.name}</span>
+
               <div className={styles["alignend"]}>
-                <span className={styles["size"]}>{`${file.size} MB`}</span>
-                <i className="fa-solid fa-check"></i>
+                <span className={styles["size"]}>{file.size} MB</span>
+                <i className="fa-solid fa-check" />
               </div>
             </div>
           ))}
@@ -86,4 +106,5 @@ const DocumentStep = (wizardPageProps: WizardPageProps) => {
     </WizardPage>
   );
 };
+
 export default DocumentStep;

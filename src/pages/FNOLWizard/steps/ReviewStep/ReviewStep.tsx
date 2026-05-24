@@ -1,85 +1,135 @@
 import React, { useState, useEffect } from "react";
+import { useIntl } from "react-intl";
 import WizardPage from "../../../../components/Wizard/WizardPage/Wizardpage";
 import { WizardPageProps } from "../../../../types/Wizardtype";
 import styles from "./ReviewStep.module.scss";
 import { useFNOLContext } from "../../FNOLWizardContext";
+import messages from "./ReviewStep.messages";
+import { updateClaim } from "../../../../api/services/claim/claimApi";
+
 const ReviewStep = (wizardPageProps: WizardPageProps) => {
+  const intl = useIntl();
+
   const [isCertify, setIsCertify] = useState(false);
   const [isAuthorize, setIsAuthorize] = useState(false);
   const [isShowError, setIsShowError] = useState(false);
+
   const { fnolFormData } = useFNOLContext();
-  const handleSubmit = () => {
-    if (isAuthorize && isCertify) {
-      setIsShowError(false);
-      //todo post api
+
+  const handleSubmit = async () => {
+    if (!isAuthorize || !isCertify) {
+      setIsShowError(true);
+      return;
+    }
+
+    setIsShowError(false);
+
+    try {
+      if (fnolFormData.currentClaim?._id) {
+        await updateClaim(
+          fnolFormData.currentClaim.claimNumber || "",
+          fnolFormData.currentClaim,
+        );
+      }
+
       wizardPageProps.handleNext?.();
-    } else {
+    } catch (error) {
+      console.error("Update claim failed:", error);
       setIsShowError(true);
     }
   };
-  console.log("reviewfnol", fnolFormData);
+
   useEffect(() => {
-    if (isShowError && isCertify && isAuthorize) {
+    if (isCertify && isAuthorize) {
       setIsShowError(false);
     }
-  }, [isAuthorize, isCertify]);
+  }, [isCertify, isAuthorize]);
+
   return (
     <WizardPage
       step={wizardPageProps.step}
       location={wizardPageProps.location}
       handleNext={handleSubmit}
+      showPageheader={false}
       handlePrevious={wizardPageProps.handlePrevious}
       wizardSidebarprops={wizardPageProps.wizardSidebarprops}
     >
       <div className={styles.container}>
         <div className={styles["step-header"]}>
-          <h2>Review & Submit</h2>
-          <p>
-            Confirm that the information provided is correct before official
-            submission.
-          </p>
+          <h2>{intl.formatMessage(messages.title)}</h2>
+
+          <p>{intl.formatMessage(messages.subtitle)}</p>
+
           <div className={styles["summary-table"]}>
             <div className={styles["summary-row"]}>
-              <span className={styles["summary-label"]}>Policy Number</span>
+              <span className={styles["summary-label"]}>
+                {intl.formatMessage(messages.policyNumber)}
+              </span>
+
               <span className={styles["summary-val"]}>
                 {fnolFormData.policyNumber}
               </span>
             </div>
+
             <div className={styles["summary-row"]}>
-              <span className={styles["summary-label"]}>Line of Business</span>
+              <span className={styles["summary-label"]}>
+                {intl.formatMessage(messages.lineOfBusiness)}
+              </span>
+
               <span className={styles["summary-val"]}>
                 {fnolFormData.lineOfBusiness}
               </span>
             </div>
+
             <div className={styles["summary-row"]}>
-              <span className={styles["summary-label"]}>Date of Loss</span>
+              <span className={styles["summary-label"]}>
+                {intl.formatMessage(messages.dateOfLoss)}
+              </span>
+
               <span className={styles["summary-val"]}>
                 {fnolFormData.dateOfLoss}
               </span>
             </div>
+
             <div className={styles["summary-row"]}>
-              <span className={styles["summary-label"]}>Injuries Reported</span>
+              <span className={styles["summary-label"]}>
+                {intl.formatMessage(messages.injuriesReported)}
+              </span>
+
               <span className={styles["summary-val"]}>
-                {fnolFormData.injured ? "Yes" : "No"}
+                {fnolFormData.injured
+                  ? intl.formatMessage(messages.yes)
+                  : intl.formatMessage(messages.no)}
               </span>
             </div>
+
             <div className={styles["summary-row"]}>
-              <span className={styles["summary-label"]}>Police Report</span>
+              <span className={styles["summary-label"]}>
+                {intl.formatMessage(messages.policeReport)}
+              </span>
+
               <span className={styles["summary-val"]}>
-                {fnolFormData.policeReport ? "Yes" : "No"}
+                {fnolFormData.policeReport
+                  ? intl.formatMessage(messages.yes)
+                  : intl.formatMessage(messages.no)}
               </span>
             </div>
+
             <div className={styles["summary-row"]}>
-              <span className={styles["summary-label"]}>Damage Areas</span>
+              <span className={styles["summary-label"]}>
+                {intl.formatMessage(messages.damageAreas)}
+              </span>
+
               <div className={styles["summary-val"]}>
                 <span className={styles["summary-val"]}>
-                  {fnolFormData.damagedAreas
-                    ?.map((damagedArea) => damagedArea.label)
+                  {fnolFormData.damage?.damageAreas
+                    ?.map((damagedArea) => damagedArea)
                     .join(", ")}
                 </span>
-              </div>{" "}
+              </div>
             </div>
           </div>
+
           <div className={styles.confirmcontainer}>
             <div className={styles.checkboxrow}>
               <input
@@ -87,35 +137,35 @@ const ReviewStep = (wizardPageProps: WizardPageProps) => {
                 checked={isCertify}
                 onChange={(e) => setIsCertify(e.target.checked)}
               />
+
               <span className={styles.chekboxspan}>
-                I certify that the information provided is accurate and
-                complete.
+                {intl.formatMessage(messages.certifyText)}
               </span>
             </div>
+
             <div className={styles.checkboxrow}>
               <input
                 type="checkbox"
                 checked={isAuthorize}
                 onChange={(e) => setIsAuthorize(e.target.checked)}
               />
+
               <span className={styles.chekboxspan}>
-                I authorize the insurer to collect data necessary to process
-                this claim.
+                {intl.formatMessage(messages.authorizeText)}
               </span>
             </div>
+
             <div className={styles.alert}>
-              <i className="fa-solid fa-triangle-exclamation"></i>{" "}
-              <span>
-                Submitting a fraudulent claim is a legal offense. All
-                information is subject to verification.
-              </span>
+              <i className="fa-solid fa-triangle-exclamation"></i>
+
+              <span>{intl.formatMessage(messages.fraudWarning)}</span>
             </div>
+
             {isShowError && (
               <div className={styles.error}>
-                <i className="fa-solid fa-triangle-exclamation"></i>{" "}
-                <span>
-                  You must agree to the terms before sumitting the claim
-                </span>
+                <i className="fa-solid fa-triangle-exclamation"></i>
+
+                <span>{intl.formatMessage(messages.validationError)}</span>
               </div>
             )}
           </div>
@@ -124,4 +174,5 @@ const ReviewStep = (wizardPageProps: WizardPageProps) => {
     </WizardPage>
   );
 };
+
 export default ReviewStep;
