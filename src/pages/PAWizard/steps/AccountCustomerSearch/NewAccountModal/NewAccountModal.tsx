@@ -194,7 +194,7 @@ export const NewAccountModal = ({ isOpen, onCancel, onSubmitSuccess }: Props) =>
         },
       } as any);
 
-      const accountData = unwrapApiData(response as any);
+      const accountData = unwrapApiData(response.data as any);
 
       const createdAccount = {
         ...accountData,

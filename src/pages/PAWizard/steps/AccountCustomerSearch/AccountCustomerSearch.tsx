@@ -27,10 +27,10 @@ export const AccountCustomerSearch = (wizardPageProps: WizardPageProps) => {
       try {
         const response = await getAllAccounts();
         const raw = response.data as any;
-        const list: Account[] = Array.isArray(raw)
-          ? raw
-          : Array.isArray(raw?.data)
+        const list: Account[] = Array.isArray(raw.data)
           ? raw.data
+          : Array.isArray(raw)
+          ? raw
           : [];
         setAccounts(list);
         if (paFormData.accountId) {

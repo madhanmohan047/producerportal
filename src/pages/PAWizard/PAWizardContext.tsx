@@ -59,7 +59,6 @@ export type PAFormData = {
 
   // Coverage selections & computed premium
   selectedCoverages?: CoverageLineItem[];
-  liabilityLimits?: string;
   compDeductible?: string;
   collDeductible?: string;
   monthlyPremium?: number;

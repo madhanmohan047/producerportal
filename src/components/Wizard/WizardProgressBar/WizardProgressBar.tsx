@@ -42,7 +42,7 @@ const WizardProgressBar = ({
             {progressbarProps.title}
           </div>
         )}
-      </button>
+      </div>
 
       {!progressbarProps.isSubmission && (
         <div
