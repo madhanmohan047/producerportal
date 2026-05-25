@@ -4,9 +4,9 @@ import { PolicyLobSelection } from "./PolicyLobSelection/PolicyLobSelection";
 import DriversStep from "./DriversStep/DriversStep";
 import VehiclesStep from "./VehiclesStep/VehiclesStep";
 import RiskInfoStep from "./RiskInfoStep/RiskInfoStep";
-import CoverageStep from "./CoverageStep/CoverageStep";
+import Coverage from "./Coverage/Coverage";
 import QuoteStep from "./QuoteStep/QuoteStep";
-import DocumentsStep from "./DocumentsStep/DocumentsStep";
+import DocUpload from "./DocUpload/DocUpload";
 import ReviewBindStep from "./ReviewBindStep/ReviewBindStep";
 import ConfirmationStep from "./ConfirmationStep/ConfirmationStep";
 
@@ -102,7 +102,7 @@ export const PASteps: WizardStep[] = [
     id: "coverage",
     type: "wizard",
     route: "coverage",
-    component: CoverageStep,
+    component: Coverage,
     wizardPageConfig: {
       title: "Coverage",
       description: "Coverage Selection",
@@ -118,28 +118,11 @@ export const PASteps: WizardStep[] = [
   {
     id: "quote",
     type: "wizard",
-    route: "coverage",
-    component: Coverage,
+    route: "quote",
+    component: QuoteStep,
     wizardPageConfig: {
       title: "Premium",
       description: "Premium Breakdown",
-      stepId: "7",
-
-      buttonProps: {
-        next: { label: "Continue" },
-        previous: { label: "Back" },
-        ...saveDraft,
-      },
-    },
-  },
-  {
-    id: "premium",
-    type: "wizard",
-    route: "premium",
-    component: Premium,
-    wizardPageConfig: {
-      title: "Premium",
-      description: "Premium Selection",
       stepId: "7",
 
       buttonProps: {
